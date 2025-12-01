@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>SomarDrive</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <!-- Tesseract OCR -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Montserrat", sans-serif;
+      background: linear-gradient(135deg, #0d1b3d, #253b70);
+      color: #fff;
+    }
+
+    .app-container {
+      max-width: 960px;
+      margin: 30px auto;
+      padding: 25px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    h1 .logo {
+      background: #1e88e5;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    h2 { margin-top: 20px; font-size: 22px; }
+    p  { line-height: 1.5; }
+
+    hr {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      margin: 30px 0;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      background: #1e88e5;
+      color: #fff;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #1565c0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    }
+
+    button.secondary {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+    }
+
+    #preview {
+      margin-top: 8px;
+      max-width: 100%;
+      display: none;
+      border-radius: 10px;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+
+    #linesContainer {
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 10px;
+      max-height: 250px;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+
+    #linesContainer div {
+      padding: 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    #savedList {
+      padding-left: 20px;
+      font-size: 14px;
+    }
+
+    #savedList li {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: rgba(255,255,255,0.15);
+      padding: 6px 10px;
+      border-radius: 8px;
+    }
+
+    .address-text {
+      flex: 1 1 auto;
+    }
+
+    footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 13px;
+      opacity: 0.7;
+    }
+
+    /* ---------- BANNER SIN ANIMACIÓN ---------- */
+.truck-static {
+  width: 40%;
+  max-width: 320px;
+  margin: 0 auto 12px auto;
+}
+
+.truck-banner {
+  margin-top: 35px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 16px;
+  padding: 15px 20px;
+  border: 2px solid #ff4b4b;
+  text-align: center;
+}
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="app-container">
+
+    <!-- CABECERA -->
+    <h1>
+      SomarDrive 🚚
+      <span class="logo">LUX</span>
+    </h1>
+
+    <div style="background:rgba(255,255,255,0.15); padding:14px; border-radius:12px; margin-bottom:20px;">
+      <h2 style="margin:0; font-size:20px;">🙏 El primer lugar es de DIOS</h2>
+      <p style="margin:6px 0 0;">Conduce con cuidado… en casa tus familiares te esperan.</p>
+    </div>
+
+    <!-- PASO 1 -->
+    <h2>📸 1. Sube o toma una foto</h2>
+    <p style="font-size:14px;">En móvil puedes usar la cámara directamente.</p>
+
+    <input type="file" accept="image/*" id="fileInput" style="display:none;">
+    <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display:none;">
+
+    <div class="button-row">
+      <button id="selectFileBtn">Elegir desde galería</button>
+      <button id="takePhotoBtn">Tomar con cámara</button>
+    </div>
+
+    <img id="preview">
+
+    <hr>
+
+    <!-- PASO 2 -->
+    <h2>📝 2. Marca las líneas de UNA dirección</h2>
+
+    <div id="linesContainer"></div>
+    <button id="saveSelectedBtn">Guardar dirección</button>
+
+    <hr>
+
+    <!-- PASO 3 -->
+    <h2>📍 3. Direcciones guardadas</h2>
+    <ol id="savedList"></ol>
+
+    <div class="button-row">
+      <button class="secondary" id="clearCurrentBtn">Borrar foto actual</button>
+      <button class="secondary" id="clearSavedBtn">Borrar TODAS</button>
+    </div>
+
+    <!-- NUEVO CAMIÓN FIJO -->
+   <div class="truck-banner">
+  <img src="somardrive-truck.png" class="truck-static" alt="Camión SomarDrive">
+  <div class="safety-message">
+    USA SIEMPRE EL CINTURÓN DE SEGURIDAD
+    <span>Dios cuida de ti, y tú cuidas de los que te esperan en casa.</span>
+  </div>
+</div>
+
+    <footer>
+      SomarDrive LUX · Creado contigo, para conductores con propósito ✨
+    </footer>
+
+  </div>
+
+<script>
+  const fileInput = document.getElementById("fileInput");
+  const cameraInput = document.getElementById("cameraInput");
+  const selectFileBtn = document.getElementById("selectFileBtn");
+  const takePhotoBtn = document.getElementById("takePhotoBtn");
+
+  const preview = document.getElementById("preview");
+  const linesContainer = document.getElementById("linesContainer");
+  const saveSelectedBtn = document.getElementById("saveSelectedBtn");
+  const savedList = document.getElementById("savedList");
+  const clearCurrentBtn = document.getElementById("clearCurrentBtn");
+  const clearSavedBtn = document.getElementById("clearSavedBtn");
+
+  let savedAddresses = [];
+
+  function renderSavedList() {
+    savedList.innerHTML = "";
+
+    if (savedAddresses.length === 0) {
+      savedList.innerHTML = "<li>No hay direcciones guardadas</li>";
+      return;
+    }
+
+    savedAddresses.forEach((address, index) => {
+      const li = document.createElement("li");
+
+      const span = document.createElement("span");
+      span.className = "address-text";
+      span.textContent = address;
+
+      const mapsBtn = document.createElement("button");
+      mapsBtn.textContent = "Ver en Maps";
+      mapsBtn.classList.add("secondary");
+      mapsBtn.dataset.index = index;
+
+      const editBtn = document.createElement("button");
+      editBtn.textContent = "Editar";
+      editBtn.classList.add("secondary");
+      editBtn.dataset.index = index;
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "Borrar";
+      deleteBtn.classList.add("secondary");
+      deleteBtn.dataset.index = index;
+
+      li.appendChild(span);
+      li.appendChild(mapsBtn);
+      li.appendChild(editBtn);
+      li.appendChild(deleteBtn);
+      savedList.appendChild(li);
+    });
+  }
+
+  function handleNewImage(file) {
+    if (file) {
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = "block";
+      runOCR(file);
+    } else {
+      preview.style.display = "none";
+      preview.src = "";
+      linesContainer.innerHTML = "";
+    }
+  }
+
+  selectFileBtn.addEventListener("click", () => fileInput.click());
+  takePhotoBtn.addEventListener("click", () => cameraInput.click());
+
+  fileInput.addEventListener("change", () => {
+    handleNewImage(fileInput.files[0]);
+    cameraInput.value = "";
+  });
+
+  cameraInput.addEventListener("change", () => {
+    handleNewImage(cameraInput.files[0]);
+    fileInput.value = "";
+  });
+
+  /** OCR */
+  async function runOCR(file) {
+    linesContainer.innerHTML = "<p>Extrayendo texto...</p>";
+    saveSelectedBtn.disabled = true;
+
+    const result = await Tesseract.recognize(file, "spa+eng+ita");
+    const text = result.data.text;
+
+    const lines = text
+      .split("\n")
+      .map(l => l.trim())
+      .filter(l => l.length > 0);
+
+    linesContainer.innerHTML = "";
+
+    lines.forEach((line, i) => {
+      const div = document.createElement("div");
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.value = line;
+      cb.dataset.index = i;
+
+      const label = document.createElement("label");
+      label.textContent = " " + line;
+
+      div.appendChild(cb);
+      div.appendChild(label);
+      linesContainer.appendChild(div);
+    });
+
+    if (lines.length > 0) saveSelectedBtn.disabled = false;
+    else linesContainer.innerHTML = "<p>No se detectó texto.</p>";
+  }
+
+  saveSelectedBtn.addEventListener("click", () => {
+    const checkboxes = Array.from(linesContainer.querySelectorAll("input[type='checkbox']:checked"));
+    if (checkboxes.length === 0) return alert("Marca al menos una línea.");
+
+    checkboxes.sort((a, b) => a.dataset.index - b.dataset.index);
+    const combined = checkboxes.map(c => c.value).join(", ").trim();
+
+    if (!savedAddresses.includes(combined)) {
+      savedAddresses.push(combined);
+      renderSavedList();
+    }
+  });
+
+  clearCurrentBtn.addEventListener("click", () => {
+    fileInput.value = "";
+    cameraInput.value = "";
+    handleNewImage(null);
+  });
+
+  clearSavedBtn.addEventListener("click", () => {
+    if (confirm("¿Eliminar TODAS las direcciones?")) {
+      savedAddresses = [];
+      renderSavedList();
+    }
+  });
+
+  savedList.addEventListener("click", e => {
+    const index = e.target.dataset.index;
+    if (index == null) return;
+
+    const address = savedAddresses[index];
+
+    if (e.target.textContent === "Ver en Maps") {
+      const url = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(address);
+      window.open(url, "_blank");
+    }
+
+    if (e.target.textContent === "Editar") {
+      const updated = prompt("Edita:", address);
+      if (updated) {
+        savedAddresses[index] = updated.trim();
+        renderSavedList();
+      }
+    }
+
+    if (e.target.textContent === "Borrar") {
+      if (confirm("¿Borrar?")) {
+        savedAddresses.splice(index, 1);
+        renderSavedList();
+      }
+    }
+  });
+
+  renderSavedList();
+</script>
+
+</body>
+</html>
