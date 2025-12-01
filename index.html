@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>SomarDrive LUX</title>
+
+  <!-- Vista responsive para móviles -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Tesseract OCR -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-main: #0d1b3d;
+      --bg-card: #1e3160;
+      --accent: #1e88e5;
+      --accent-soft: rgba(255, 255, 255, 0.15);
+      --danger: #ff4b4b;
+      --text-main: #ffffff;
+      --text-soft: rgba(255, 255, 255, 0.8);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Montserrat", sans-serif;
+      background: radial-gradient(circle at top, #253b70 0, #0b1630 55%, #020617 100%);
+      color: var(--text-main);
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 520px;
+      margin: 10px auto 24px;
+      padding: 16px 14px 22px;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+    }
+
+    @media (min-width: 768px) {
+      .app-container {
+        max-width: 880px;
+        padding: 22px 26px 30px;
+        margin: 26px auto;
+      }
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    h1 span.title-icon {
+      font-size: 1.2rem;
+      margin-left: 6px;
+    }
+
+    h1 .logo {
+      background: var(--accent);
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin: 16px 0 6px;
+      font-size: 1.05rem;
+    }
+
+    p {
+      margin: 0 0 6px;
+      line-height: 1.45;
+      font-size: 0.92rem;
+      color: var(--text-soft);
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid rgba(148, 163, 184, 0.4);
+      margin: 18px 0;
+    }
+
+    .highlight-card {
+      background: var(--accent-soft);
+      padding: 10px 12px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    .highlight-card h2 {
+      margin: 0;
+      font-size: 0.98rem;
+    }
+
+    .highlight-card p {
+      font-size: 0.86rem;
+      margin-top: 4px;
+    }
+
+    .section-text {
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    /* Botones */
+
+    .button-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    @media (min-width: 600px) {
+      .button-row {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+    }
+
+    button {
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      background: var(--accent);
+      color: #fff;
+      transition: 0.15s transform, 0.15s box-shadow, 0.15s background;
+      width: 100%;
+    }
+
+    @media (min-width: 600px) {
+      button {
+        width: auto;
+      }
+    }
+
+    button:hover {
+      background: #1565c0;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    }
+
+    button.secondary {
+      background: rgba(148, 163, 184, 0.4);
+      color: #e5e7eb;
+    }
+
+    button.secondary:hover {
+      background: rgba(148, 163, 184, 0.8);
+    }
+
+    #preview {
+      margin-top: 8px;
+      width: 100%;
+      height: auto;
+      display: none;
+      border-radius: 10px;
+      border: 2px solid rgba(148, 163, 184, 0.6);
+    }
+
+    /* Contenedor de líneas OCR */
+
+    #linesContainer {
+      background: rgba(15, 23, 42, 0.8);
+      border-radius: 10px;
+      padding: 8px 10px;
+      max-height: 210px;
+      overflow-y: auto;
+      font-size: 0.86rem;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    #linesContainer p {
+      margin: 4px 0;
+      font-size: 0.86rem;
+      color: var(--text-soft);
+    }
+
+    #linesContainer div {
+      padding: 5px 2px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    #linesContainer div:last-child {
+      border-bottom: none;
+    }
+
+    #linesContainer label {
+      cursor: pointer;
+    }
+
+    /* Lista de direcciones guardadas */
+
+    #savedList {
+      padding-left: 18px;
+      font-size: 0.86rem;
+      margin-top: 4px;
+    }
+
+    #savedList li {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      background: rgba(15, 23, 42, 0.9);
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .address-text {
+      flex: 1 1 auto;
+      min-width: 160px;
+      font-size: 0.86rem;
+    }
+
+    footer {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 0.78rem;
+      opacity: 0.75;
+      color: var(--text-soft);
+    }
+
+    /* Banner del camión */
+
+    .truck-banner {
+      margin-top: 16px;
+      background: #020617;
+      border-radius: 16px;
+      padding: 18px 12px 14px;
+      border: 2px solid var(--danger);
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .truck-banner {
+        padding: 20px 18px 16px;
+      }
+    }
+
+    .truck-static {
+      width: 70%;
+      max-width: 320px;
+      height: auto;
+      display: block;
+      margin: 0 auto 10px auto;
+    }
+
+    .safety-message {
+      margin-top: 4px;
+      text-align: center;
+      font-size: 0.88rem;
+      color: var(--danger);
+      font-weight: 700;
+    }
+
+    .safety-message span {
+      display: block;
+      font-size: 0.78rem;
+      margin-top: 3px;
+      font-weight: 500;
+      color: #fecaca;
+    }
+
+    /* Ajustes tipográficos en pantallas grandes */
+    @media (min-width: 768px) {
+      h1 {
+        font-size: 1.6rem;
+      }
+      h2 {
+        font-size: 1.12rem;
+      }
+      p {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-container">
+    <!-- CABECERA -->
+    <h1>
+      <span>SomarDrive <span class="title-icon">🚚</span></span>
+      <span class="logo">LUX</span>
+    </h1>
+
+    <div class="highlight-card">
+      <h2>🙏 El primer lugar es de DIOS</h2>
+      <p>Conduce con cuidado… en casa tus familiares te esperan.</p>
+    </div>
+
+    <!-- PASO 1 -->
+    <h2>📸 1. Sube o toma una foto</h2>
+    <p class="section-text">
+      En móvil puedes usar la cámara directamente. Intenta enfocar solo la parte donde están las direcciones.
+    </p>
+
+    <input type="file" accept="image/*" id="fileInput" style="display:none;" />
+    <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display:none;" />
+
+    <div class="button-row">
+      <button id="selectFileBtn">Elegir desde galería</button>
+      <button id="takePhotoBtn">Tomar con cámara</button>
+    </div>
+
+    <img id="preview" alt="Vista previa de la foto" />
+
+    <hr />
+
+    <!-- PASO 2 -->
+    <h2>📝 2. Marca las líneas de UNA dirección</h2>
+    <p class="section-text">
+      Marca nombre, calle y ciudad del cliente. Luego toca <strong>“Guardar dirección”</strong>.
+    </p>
+
+    <div id="linesContainer">
+      <p>Aquí aparecerán las líneas detectadas cuando subas una foto.</p>
+    </div>
+
+    <div class="button-row" style="margin-top:10px;">
+      <button id="saveSelectedBtn">Guardar dirección</button>
+    </div>
+
+    <hr />
+
+    <!-- PASO 3 -->
+    <h2>📍 3. Direcciones guardadas</h2>
+    <ol id="savedList"></ol>
+
+    <div class="button-row">
+      <button class="secondary" id="clearCurrentBtn">Borrar foto actual</button>
+      <button class="secondary" id="clearSavedBtn">Borrar TODAS</button>
+    </div>
+
+    <!-- CAMIÓN -->
+    <div class="truck-banner">
+      <img src="somardrive-truck.png" class="truck-static" alt="Camión SomarDrive" />
+      <div class="safety-message">
+        USA SIEMPRE EL CINTURÓN DE SEGURIDAD
+        <span>Dios cuida de ti, y tú cuidas de los que te esperan en casa.</span>
+      </div>
+    </div>
+
+    <footer>
+      SomarDrive LUX · Creado contigo, para conductores con propósito ✨
+    </footer>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById("fileInput");
+    const cameraInput = document.getElementById("cameraInput");
+    const selectFileBtn = document.getElementById("selectFileBtn");
+    const takePhotoBtn = document.getElementById("takePhotoBtn");
+
+    const preview = document.getElementById("preview");
+    const linesContainer = document.getElementById("linesContainer");
+    const saveSelectedBtn = document.getElementById("saveSelectedBtn");
+    const savedList = document.getElementById("savedList");
+    const clearCurrentBtn = document.getElementById("clearCurrentBtn");
+    const clearSavedBtn = document.getElementById("clearSavedBtn");
+
+    let savedAddresses = [];
+
+    function renderSavedList() {
+      savedList.innerHTML = "";
+
+      if (savedAddresses.length === 0) {
+        savedList.innerHTML = "<li><span class='address-text'>No hay direcciones guardadas</span></li>";
+        return;
+      }
+
+      savedAddresses.forEach((address, index) => {
+        const li = document.createElement("li");
+
+        const span = document.createElement("span");
+        span.className = "address-text";
+        span.textContent = address;
+
+        const mapsBtn = document.createElement("button");
+        mapsBtn.textContent = "Ver en Maps";
+        mapsBtn.classList.add("secondary");
+        mapsBtn.dataset.index = index;
+
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "Editar";
+        editBtn.classList.add("secondary");
+        editBtn.dataset.index = index;
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Borrar";
+        deleteBtn.classList.add("secondary");
+        deleteBtn.dataset.index = index;
+
+        li.appendChild(span);
+        li.appendChild(mapsBtn);
+        li.appendChild(editBtn);
+        li.appendChild(deleteBtn);
+        savedList.appendChild(li);
+      });
+    }
+
+    function handleNewImage(file) {
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = "block";
+        runOCR(file);
+      } else {
+        preview.style.display = "none";
+        preview.src = "";
+        linesContainer.innerHTML = "<p>Aquí aparecerán las líneas detectadas cuando subas una foto.</p>";
+      }
+    }
+
+    selectFileBtn.addEventListener("click", () => fileInput.click());
+    takePhotoBtn.addEventListener("click", () => cameraInput.click());
+
+    fileInput.addEventListener("change", () => {
+      if (fileInput.files[0]) {
+        handleNewImage(fileInput.files[0]);
+      }
+      cameraInput.value = "";
+    });
+
+    cameraInput.addEventListener("change", () => {
+      if (cameraInput.files[0]) {
+        handleNewImage(cameraInput.files[0]);
+      }
+      fileInput.value = "";
+    });
+
+    async function runOCR(file) {
+      linesContainer.innerHTML = "<p>⏳ Extrayendo texto, espera un momento…</p>";
+      saveSelectedBtn.disabled = true;
+
+      try {
+        const result = await Tesseract.recognize(file, "spa+eng+ita");
+        const text = result.data.text || "";
+
+        const lines = text
+          .split("\n")
+          .map((l) => l.trim())
+          .filter((l) => l.length > 0);
+
+        if (lines.length === 0) {
+          linesContainer.innerHTML = "<p>No se detectó texto. Prueba con otra foto o más enfoque.</p>";
+          return;
+        }
+
+        linesContainer.innerHTML = "";
+        lines.forEach((line, i) => {
+          const div = document.createElement("div");
+
+          const cb = document.createElement("input");
+          cb.type = "checkbox";
+          cb.value = line;
+          cb.dataset.index = i;
+
+          const label = document.createElement("label");
+          label.textContent = " " + line;
+
+          div.appendChild(cb);
+          div.appendChild(label);
+          linesContainer.appendChild(div);
+        });
+
+        saveSelectedBtn.disabled = false;
+      } catch (err) {
+        console.error(err);
+        linesContainer.innerHTML =
+          "<p>Ocurrió un error al leer la imagen. Intenta con otra foto o revisa la conexión.</p>";
+      }
+    }
+
+    saveSelectedBtn.addEventListener("click", () => {
+      const checkboxes = Array.from(
+        linesContainer.querySelectorAll("input[type='checkbox']:checked")
+      );
+
+      if (checkboxes.length === 0) {
+        alert("Marca al menos una línea para formar la dirección.");
+        return;
+      }
+
+      checkboxes.sort((a, b) => Number(a.dataset.index) - Number(b.dataset.index));
+
+      const combined = checkboxes.map((c) => c.value).join(", ").trim();
+
+      if (!combined) return;
+
+      const exists = savedAddresses.some(
+        (addr) => addr.toLowerCase() === combined.toLowerCase()
+      );
+      if (exists) {
+        alert("⚠️ Esa dirección ya está guardada.");
+        return;
+      }
+
+      savedAddresses.push(combined);
+      renderSavedList();
+    });
+
+    clearCurrentBtn.addEventListener("click", () => {
+      fileInput.value = "";
+      cameraInput.value = "";
+      handleNewImage(null);
+    });
+
+    clearSavedBtn.addEventListener("click", () => {
+      if (confirm("¿Eliminar TODAS las direcciones guardadas?")) {
+        savedAddresses = [];
+        renderSavedList();
+      }
+    });
+
+    savedList.addEventListener("click", (e) => {
+      const index = e.target.dataset.index;
+      if (index == null) return;
+
+      const address = savedAddresses[index];
+
+      if (e.target.textContent === "Ver en Maps") {
+        const url =
+          "https://www.google.com/maps/search/?api=1&query=" +
+          encodeURIComponent(address);
+        window.open(url, "_blank");
+      }
+
+      if (e.target.textContent === "Editar") {
+        const updated = prompt("Edita la dirección:", address);
+        if (updated && updated.trim().length > 0) {
+          savedAddresses[index] = updated.trim();
+          renderSavedList();
+        }
+      }
+
+      if (e.target.textContent === "Borrar") {
+        if (confirm("¿Borrar esta dirección?")) {
+          savedAddresses.splice(index, 1);
+          renderSavedList();
+        }
+      }
+    });
+
+    // Inicializar lista vacía al cargar
+    renderSavedList();
+  </script>
+</body>
+</html>
