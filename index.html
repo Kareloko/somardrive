@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>SomarDrive Global 🌎</title>
+  <title>SomarDrive v7 Auto-Detect 🌎</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#0d1b3d">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -55,11 +55,11 @@
     .sort-arrow { background: none; border: 1px solid #475569; color: #94a3b8; border-radius: 4px; padding: 2px 6px; cursor: pointer; font-size: 0.8rem; }
 
     .card-meta { margin-top: 5px; font-size: 0.8rem; color: #94a3b8; display: flex; gap: 10px; align-items: center; }
-    .meta-dist { color: var(--accent); font-weight: 800; }
+    .meta-dist { color: var(--accent); font-weight: 800; font-size: 0.95rem; }
 
     /* ACCIONES */
-    .card-actions { display: flex; gap: 5px; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; }
-    .icon-btn { flex: 1; padding: 10px 0; border: none; border-radius: 8px; font-size: 1.4rem; cursor: pointer; background: #334155; color: white; }
+    .card-actions { display: flex; gap: 5px; margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
+    .icon-btn { flex: 1; padding: 12px 0; border: none; border-radius: 8px; font-size: 1.3rem; cursor: pointer; background: #334155; color: white; }
     .btn-wa { background: var(--wa); } 
     
     /* BACKUP */
@@ -91,7 +91,7 @@
 
   <div id="previewContainer">
     <img id="preview" />
-    <button class="btn-main btn-red" onclick="clearImage()" style="margin-top:10px;">❌ Cancelar</button>
+    <button class="btn-main btn-red" onclick="clearImage()" style="margin-top:10px;">❌ Borrar Foto</button>
   </div>
   <div id="ocrStatus" style="text-align:center; color:var(--accent); display:none; margin:10px;">⏳ Leyendo (ES/IT)...</div>
 
@@ -136,8 +136,8 @@
 <script>
   /* CONFIG */
   const API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImI5NjlmYzJiMDY0YjQzMWQ5NDBmMGE0NjYzOWJiMWI2IiwiaCI6Im11cm11cjY0In0=";
-  const DB_KEY = "SomarDrive_Global_v6";
-  const HIST_KEY = "SomarDrive_History_Global"; 
+  const DB_KEY = "SomarDrive_V7_Auto";
+  const HIST_KEY = "SomarDrive_History_V7"; 
   
   let addresses = [];
   let historyDB = [];
@@ -157,7 +157,7 @@
   function showToast(msg) { const t=document.getElementById("toast"); t.textContent=msg; t.className="show"; setTimeout(()=>t.className="",3000); }
   function updateHistoryBadge() { document.getElementById("historyBadge").textContent = `Memoria: ${historyDB.length}`; }
 
-  /* FOTO OCR (HÍBRIDO IT/ES) */
+  /* FOTO OCR */
   function processImage(input) {
     if(!input.files[0]) return;
     const file = input.files[0];
@@ -166,17 +166,15 @@
     document.getElementById('ocrStatus').style.display = "block";
     document.getElementById('editorSection').style.display = "none";
 
-    // 'spa+ita' busca patrones en AMBOS idiomas
     Tesseract.recognize(file, 'spa+ita').then(({ data: { text } }) => {
       document.getElementById('ocrStatus').style.display = "none";
       showEditor(text);
-    }).catch(e => { alert("Error de lectura"); document.getElementById('ocrStatus').style.display = "none"; });
+    }).catch(e => { alert("Error lectura"); document.getElementById('ocrStatus').style.display = "none"; });
   }
 
   function showEditor(text) {
     document.getElementById('editorSection').style.display = "block";
     const linesDiv = document.getElementById('linesContainer'); linesDiv.innerHTML = "";
-    // Filtro básico para quitar ruido corto
     text.split('\n').filter(l => l.trim().length > 3).forEach(l => {
       linesDiv.innerHTML += `<div class="line-item"><input type="checkbox" value="${l}" onchange="updateInput()"><span>${l}</span></div>`;
     });
@@ -220,40 +218,26 @@
     return match / l.length;
   }
 
-  /* RENDER LISTA CON DETECCIÓN DE PAÍS */
+  /* RENDER LISTA */
   function renderList() {
     const list = document.getElementById('addressList'); list.innerHTML = "";
     document.getElementById('countPending').textContent = addresses.filter(a => a.status === 'pending').length;
 
-    if(addresses.length === 0) { list.innerHTML = "<div style='text-align:center;color:#64748b;padding:20px;'>Sin entregas / Nessuna consegna</div>"; return; }
+    if(addresses.length === 0) { list.innerHTML = "<div style='text-align:center;color:#64748b;padding:20px;'>Lista vacía / Vuoto</div>"; return; }
 
     addresses.forEach((item, index) => {
       const li = document.createElement('li');
       li.className = `card ${item.status}`;
       
-      // --- LÓGICA DE TELÉFONO HÍBRIDA (IT/PE) ---
+      // TELEFONO IT/PE
       let waBtn = "";
-      // Buscamos números de 9 o 10 dígitos que empiecen con 9 (PE) o 3 (IT)
       const phoneMatch = item.text.replace(/\s/g, '').match(/(?:\+|00)?(3\d{9}|9\d{8})/);
-      
       if (phoneMatch) {
-         let rawNum = phoneMatch[1]; // El número capturado
-         let countryCode = "";
-         let waMsg = "";
-
-         if (rawNum.startsWith('3')) { 
-            // ITALIA
-            countryCode = "39";
-            waMsg = "Ciao,%20sono%20il%20corriere%20(SomarDrive).%20Sono%20qui%20fuori.";
-         } else if (rawNum.startsWith('9')) {
-            // PERÚ
-            countryCode = "51";
-            waMsg = "Hola,%20soy%20tu%20repartidor%20(SomarDrive).%20Estoy%20afuera.";
-         }
-         
-         if(countryCode) {
-            waBtn = `<button class="icon-btn btn-wa" onclick="window.open('https://wa.me/${countryCode}${rawNum}?text=${waMsg}', '_blank')">📞</button>`;
-         }
+         let rawNum = phoneMatch[1]; 
+         let countryCode = ""; let waMsg = "";
+         if (rawNum.startsWith('3')) { countryCode = "39"; waMsg = "Ciao,%20sono%20il%20corriere."; } 
+         else if (rawNum.startsWith('9')) { countryCode = "51"; waMsg = "Hola,%20soy%20el%20repartidor."; }
+         if(countryCode) waBtn = `<button class="icon-btn btn-wa" onclick="window.open('https://wa.me/${countryCode}${rawNum}?text=${waMsg}', '_blank')">📞</button>`;
       }
 
       const histTag = item.fromHistory ? `<span style="color:#d946ef;">🧠 Memoria</span>` : "";
@@ -288,17 +272,19 @@
     const item = addresses[index]; addresses.splice(index, 1); addresses.splice(index + dir, 0, item); saveData();
   }
 
-  /* COMPLETAR / ESTADOS */
+  /* ESTADOS + MEMORIA */
   function markDone(index) {
     const item = addresses[index];
     item.status = 'done';
+    
+    // GUARDAR EN MEMORIA (SOLO SI TIENE GPS VÁLIDO)
     if(item.lat && item.lon && !historyDB.some(h => h.text === item.text)) { 
       historyDB.push({ text: item.text, lat: item.lat, lon: item.lon }); 
       saveHistory(); 
     }
-    // mover al final
+    
     addresses.push(addresses.splice(index, 1)[0]); 
-    showToast("🎉 ¡Listo! / Fatto!");
+    showToast("🎉 ¡Listo!");
     saveData();
   }
 
@@ -314,20 +300,35 @@
     window.open(url, '_blank');
   }
 
-  /* ORDENAR POR GPS UNA VEZ */
+  /* --- ORDENAR GPS AUTOMÁTICO (IT/PE) --- */
   async function sortWithGPS() {
     const btn=document.getElementById('sortBtn');
-    if(!navigator.geolocation) return alert("Activa GPS / Attiva GPS");
+    if(!navigator.geolocation) return alert("Activa GPS");
     btn.disabled=true; btn.textContent="🛰️ ...";
     
     navigator.geolocation.getCurrentPosition(async p => {
       const myLat=p.coords.latitude; const myLon=p.coords.longitude;
+      
       for(let item of addresses) {
         if(item.status==='pending' && !item.lat && !item.fromHistory) {
            try {
-               // Limpieza bilingüe
-               const clean = item.text.replace(/cliente|entregar|consegna|tel|cel|cell|citofono|piso|piano|scala/gi,"").trim();
-               const res = await fetch(`https://api.openrouteservice.org/geocode/search?api_key=${API_KEY}&text=${encodeURIComponent(clean)}&size=1`);
+               // 1. LIMPIEZA AGRESIVA (Quitar nombres de negocios)
+               let clean = item.text.replace(/cliente|entregar|consegna|tel|cel|cell|citofono|piso|piano|scala|gomme|autoservice|pneumatici|srl|spa|taller|llantas/gi,"").trim();
+               
+               // 2. DETECTOR DE PAÍS (AUTO)
+               let countrySuffix = "";
+               // Palabras clave Italia: Via, Piazza, Viale, Corso, Sondrio, SO, números postales 23xxx
+               if (clean.match(/via|viale|piazza|corso|strada|sondrio|so\b|23\d{3}/i)) {
+                   countrySuffix = ", Italia";
+               }
+               // Palabras clave Perú: Calle, Av, Avenida, Jiron, Jr, Lima
+               else if (clean.match(/calle|av\.|avenida|jr\.|jiron|lima|peru/i)) {
+                   countrySuffix = ", Peru";
+               }
+
+               let searchQuery = clean + countrySuffix;
+               
+               const res = await fetch(`https://api.openrouteservice.org/geocode/search?api_key=${API_KEY}&text=${encodeURIComponent(searchQuery)}&size=1`);
                const d = await res.json();
                if(d.features?.length) { 
                  item.lon = d.features[0].geometry.coordinates[0]; 
@@ -348,111 +349,60 @@
     const dLat=(lat2-lat1)*(Math.PI/180); 
     const dLon=(lon2-lon1)*(Math.PI/180);
     const a = Math.sin(dLat/2)*Math.sin(dLat/2) + 
-              Math.cos(lat1*(Math.PI/180))*Math.cos(lat2*(Math.PI/180)) * 
-              Math.sin(dLon/2)*Math.sin(dLon/2);
+              Math.cos(lat1*(Math.PI/180))*Math.cos(lat2*(Math.PI/180)) * Math.sin(dLon/2)*Math.sin(dLon/2);
     return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
   }
 
-  /* RASTREO VIVO + VISITADO AUTOMÁTICO */
+  /* RASTREO VIVO */
+  function startLiveTracking() {
+    if (!navigator.geolocation) { alert("GPS Error"); return; }
+    liveWatchId = navigator.geolocation.watchPosition(
+      (pos) => { updateDistancesLive(pos.coords.latitude, pos.coords.longitude); },
+      (err) => { stopLiveTracking(); },
+      { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 }
+    );
+    liveTrackingActive = true;
+    document.getElementById('liveBtn').textContent = "🛰️ Detener";
+  }
+
+  function stopLiveTracking() {
+    if (liveWatchId != null) { navigator.geolocation.clearWatch(liveWatchId); liveWatchId = null; }
+    liveTrackingActive = false;
+    document.getElementById('liveBtn').textContent = "🛰️ Rastreo Vivo";
+  }
+
+  function toggleLiveTracking() {
+    if (!addresses.length) return alert("Lista vacía");
+    if (!liveTrackingActive) startLiveTracking(); else stopLiveTracking();
+  }
+  
   function updateDistancesLive(lat, lon) {
     let changed = false;
-
     for (let item of addresses) {
       if (item.lat && item.lon && item.status === 'pending') {
         item.dist = calcDist(lat, lon, item.lat, item.lon);
         changed = true;
       }
     }
-
-    if (changed) {
-      handleAutoArrival();
-      saveData();
-    }
+    if (changed) { handleAutoArrival(); saveData(); }
   }
 
   function handleAutoArrival() {
-    const pending = addresses
-      .map((item, index) => ({ item, index }))
-      .filter(p => p.item.status === 'pending' && typeof p.item.dist === 'number');
-
+    const pending = addresses.map((item, index) => ({ item, index })).filter(p => p.item.status === 'pending' && typeof p.item.dist === 'number');
     if (pending.length === 0) return;
-
     pending.sort((a, b) => a.item.dist - b.item.dist);
-    const closest = pending[0];
-
-    // ~80 metros
-    if (closest.item.dist <= 0.08) {
-      const i = closest.index;
-      const item = addresses[i];
-
-      item.status = 'done';
-
-      if(item.lat && item.lon && !historyDB.some(h => h.text === item.text)) { 
-        historyDB.push({ text: item.text, lat: item.lat, lon: item.lon }); 
-        saveHistory(); 
-      }
-
-      addresses.push(addresses.splice(i, 1)[0]);
-      showToast("✅ Punto completado automáticamente");
-    }
-  }
-
-  function startLiveTracking() {
-    if (!navigator.geolocation) {
-      alert("Tu dispositivo no permite rastreo en vivo.");
-      return;
-    }
-
-    liveWatchId = navigator.geolocation.watchPosition(
-      (pos) => {
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-        updateDistancesLive(lat, lon);
-      },
-      (err) => {
-        console.error(err);
-        alert("No se pudo seguir tu ubicación en vivo.");
-        stopLiveTracking();
-      },
-      {
-        enableHighAccuracy: true,
-        maximumAge: 5000,
-        timeout: 20000,
-      }
-    );
-
-    liveTrackingActive = true;
-    document.getElementById('liveBtn').textContent = "🛰️ Detener Rastreo";
-  }
-
-  function stopLiveTracking() {
-    if (liveWatchId != null) {
-      navigator.geolocation.clearWatch(liveWatchId);
-      liveWatchId = null;
-    }
-    liveTrackingActive = false;
-    document.getElementById('liveBtn').textContent = "🛰️ Rastreo Vivo";
-  }
-
-  function toggleLiveTracking() {
-    if (!addresses.length) {
-      alert("Primero guarda algunas direcciones.");
-      return;
-    }
-
-    if (!liveTrackingActive) {
-      startLiveTracking();
-    } else {
-      stopLiveTracking();
+    if (pending[0].item.dist <= 0.15) {
+       const i = pending[0].index;
+       markDone(i); 
+       showToast("📍 Llegaste!");
+       if(navigator.vibrate) navigator.vibrate([200,100,200]);
     }
   }
 
   /* BACKUP */
   function exportData() {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(addresses));
-    const node = document.createElement('a'); 
-    node.setAttribute("href", dataStr); 
-    node.setAttribute("download", "backup_somardrive.json");
+    const node = document.createElement('a'); node.setAttribute("href", dataStr); node.setAttribute("download", "backup_somardrive.json");
     document.body.appendChild(node); node.click(); node.remove();
   }
   function importData(input) {
