@@ -4,15 +4,12 @@
   <meta charset="UTF-8" />
   <title>SomarDrive LUX</title>
 
-  <!-- Vista responsive para móviles -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet" />
 
-  <!-- Tesseract OCR -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
   <style>
@@ -117,8 +114,6 @@
       margin-bottom: 4px;
     }
 
-    /* Botones */
-
     .button-row {
       display: flex;
       flex-direction: column;
@@ -167,6 +162,13 @@
       background: rgba(148, 163, 184, 0.8);
     }
 
+    .icon-btn {
+      padding: 4px 8px;
+      font-size: 0.8rem;
+      border-radius: 999px;
+      min-width: auto;
+    }
+
     #preview {
       margin-top: 8px;
       width: 100%;
@@ -175,8 +177,6 @@
       border-radius: 10px;
       border: 2px solid rgba(148, 163, 184, 0.6);
     }
-
-    /* Contenedor de líneas OCR */
 
     #linesContainer {
       background: rgba(15, 23, 42, 0.8);
@@ -210,8 +210,6 @@
       cursor: pointer;
     }
 
-    /* Lista de direcciones guardadas */
-
     #savedList {
       padding-left: 18px;
       font-size: 0.86rem;
@@ -236,6 +234,13 @@
       font-size: 0.86rem;
     }
 
+    .status-badge {
+      font-size: 0.78rem;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.2);
+    }
+
     footer {
       margin-top: 14px;
       text-align: center;
@@ -243,8 +248,6 @@
       opacity: 0.75;
       color: var(--text-soft);
     }
-
-    /* Banner del camión */
 
     .truck-banner {
       margin-top: 16px;
@@ -285,24 +288,16 @@
       color: #fecaca;
     }
 
-    /* Ajustes tipográficos en pantallas grandes */
     @media (min-width: 768px) {
-      h1 {
-        font-size: 1.6rem;
-      }
-      h2 {
-        font-size: 1.12rem;
-      }
-      p {
-        font-size: 0.95rem;
-      }
+      h1 { font-size: 1.6rem; }
+      h2 { font-size: 1.12rem; }
+      p { font-size: 0.95rem; }
     }
   </style>
 </head>
 
 <body>
   <div class="app-container">
-    <!-- CABECERA -->
     <h1>
       <span>SomarDrive <span class="title-icon">🚚</span></span>
       <span class="logo">LUX</span>
@@ -329,6 +324,10 @@
 
     <img id="preview" alt="Vista previa de la foto" />
 
+    <div class="button-row" style="margin-top:8px;">
+      <button class="secondary" id="clearCurrentBtn">Borrar foto actual</button>
+    </div>
+
     <hr />
 
     <!-- PASO 2 -->
@@ -352,12 +351,11 @@
     <ol id="savedList"></ol>
 
     <div class="button-row">
-      <button class="secondary" id="clearCurrentBtn">Borrar foto actual</button>
       <button class="secondary" id="clearSavedBtn">Borrar TODAS</button>
       <button id="sortByDistanceBtn">Ordenar por distancia</button>
+      <button id="liveTrackBtn" class="secondary">Seguir km en vivo</button>
     </div>
 
-    <!-- CAMIÓN -->
     <div class="truck-banner">
       <img src="somardrive-truck.png" class="truck-static" alt="Camión SomarDrive" />
       <div class="safety-message">
@@ -372,8 +370,8 @@
   </div>
 
   <script>
-    // ⚠️ PON AQUÍ TU CLAVE REAL DE OPENROUTESERVICE
     const ORS_API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImI5NjlmYzJiMDY0YjQzMWQ5NDBmMGE0NjYzOWJiMWI2IiwiaCI6Im11cm11cjY0In0=";
+    const STORAGE_KEY = "somardrive_saved_addresses_v2";
 
     const fileInput = document.getElementById("fileInput");
     const cameraInput = document.getElementById("cameraInput");
@@ -387,9 +385,56 @@
     const clearCurrentBtn = document.getElementById("clearCurrentBtn");
     const clearSavedBtn = document.getElementById("clearSavedBtn");
     const sortByDistanceBtn = document.getElementById("sortByDistanceBtn");
+    const liveTrackBtn = document.getElementById("liveTrackBtn");
 
-    // Cada dirección será { text, lat, lon, distanceKm }
     let savedAddresses = [];
+    let liveWatchId = null;
+    let liveTrackingActive = false;
+
+    // ---------- PERSISTENCIA ----------
+
+    function saveToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(savedAddresses));
+      } catch (e) {
+        console.error("Error guardando en localStorage", e);
+      }
+    }
+
+    function loadFromStorage() {
+      try {
+        const data = localStorage.getItem(STORAGE_KEY);
+        if (!data) return;
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed)) {
+          // Aseguramos que cada item tenga status
+          savedAddresses = parsed.map(item => ({
+            text: item.text,
+            lat: item.lat ?? null,
+            lon: item.lon ?? null,
+            distanceKm: item.distanceKm ?? null,
+            status: item.status || "pending"
+          }));
+        }
+      } catch (e) {
+        console.error("Error leyendo localStorage", e);
+      }
+    }
+
+    // ---------- RENDER LISTA ----------
+
+    function getStatusBadge(status) {
+      const span = document.createElement("span");
+      span.className = "status-badge";
+      if (status === "done") {
+        span.textContent = "🟢 visitado";
+      } else if (status === "issue") {
+        span.textContent = "🔴 problema";
+      } else {
+        span.textContent = "🟡 pendiente";
+      }
+      return span;
+    }
 
     function renderSavedList() {
       savedList.innerHTML = "";
@@ -413,28 +458,50 @@
           span.textContent = item.text;
         }
 
+        const statusSpan = getStatusBadge(item.status);
+
         const mapsBtn = document.createElement("button");
-        mapsBtn.textContent = "Ver en Maps";
-        mapsBtn.classList.add("secondary");
+        mapsBtn.classList.add("secondary", "icon-btn");
         mapsBtn.dataset.index = index;
+        mapsBtn.title = "Ver en Google Maps";
+        mapsBtn.textContent = "🗺️";
 
         const editBtn = document.createElement("button");
-        editBtn.textContent = "Editar";
-        editBtn.classList.add("secondary");
+        editBtn.classList.add("secondary", "icon-btn");
         editBtn.dataset.index = index;
+        editBtn.title = "Editar dirección";
+        editBtn.textContent = "✏️";
+
+        const doneBtn = document.createElement("button");
+        doneBtn.classList.add("secondary", "icon-btn");
+        doneBtn.dataset.index = index;
+        doneBtn.title = "Marcar visitado";
+        doneBtn.textContent = "✅";
+
+        const issueBtn = document.createElement("button");
+        issueBtn.classList.add("secondary", "icon-btn");
+        issueBtn.dataset.index = index;
+        issueBtn.title = "Marcar problema";
+        issueBtn.textContent = "⚠️";
 
         const deleteBtn = document.createElement("button");
-        deleteBtn.textContent = "Borrar";
-        deleteBtn.classList.add("secondary");
+        deleteBtn.classList.add("secondary", "icon-btn");
         deleteBtn.dataset.index = index;
+        deleteBtn.title = "Borrar dirección";
+        deleteBtn.textContent = "🗑️";
 
         li.appendChild(span);
+        li.appendChild(statusSpan);
         li.appendChild(mapsBtn);
         li.appendChild(editBtn);
+        li.appendChild(doneBtn);
+        li.appendChild(issueBtn);
         li.appendChild(deleteBtn);
         savedList.appendChild(li);
       });
     }
+
+    // ---------- IMAGEN / OCR ----------
 
     function handleNewImage(file) {
       if (file) {
@@ -510,6 +577,8 @@
       }
     }
 
+    // ---------- GUARDAR DIRECCIÓN ----------
+
     saveSelectedBtn.addEventListener("click", () => {
       const checkboxes = Array.from(
         linesContainer.querySelectorAll("input[type='checkbox']:checked")
@@ -539,15 +608,19 @@
         return;
       }
 
-      savedAddresses.push({
+      savedAddresses.unshift({
         text: combined,
         lat: null,
         lon: null,
-        distanceKm: null
+        distanceKm: null,
+        status: "pending"
       });
 
+      saveToStorage();
       renderSavedList();
     });
+
+    // ---------- BOTONES VARIOS ----------
 
     clearCurrentBtn.addEventListener("click", () => {
       fileInput.value = "";
@@ -558,6 +631,7 @@
     clearSavedBtn.addEventListener("click", () => {
       if (confirm("¿Eliminar TODAS las direcciones guardadas?")) {
         savedAddresses = [];
+        saveToStorage();
         renderSavedList();
       }
     });
@@ -568,7 +642,7 @@
 
       const item = savedAddresses[index];
 
-      if (e.target.textContent === "Ver en Maps") {
+      if (e.target.title === "Ver en Google Maps") {
         let url;
         if (item.lat != null && item.lon != null) {
           url =
@@ -584,34 +658,61 @@
         window.open(url, "_blank");
       }
 
-      if (e.target.textContent === "Editar") {
+      if (e.target.title === "Editar dirección") {
         const updated = prompt("Edita la dirección:", item.text);
         if (updated && updated.trim().length > 0) {
           item.text = updated.trim();
           item.lat = null;
           item.lon = null;
           item.distanceKm = null;
+          item.status = "pending";
+          saveToStorage();
           renderSavedList();
         }
       }
 
-      if (e.target.textContent === "Borrar") {
+      if (e.target.title === "Marcar visitado") {
+        item.status = "done";
+        saveToStorage();
+        renderSavedList();
+      }
+
+      if (e.target.title === "Marcar problema") {
+        item.status = "issue";
+        saveToStorage();
+        renderSavedList();
+      }
+
+      if (e.target.title === "Borrar dirección") {
         if (confirm("¿Borrar esta dirección?")) {
           savedAddresses.splice(index, 1);
+          saveToStorage();
           renderSavedList();
         }
       }
     });
 
-    // --- FUNCIONES PARA ORDENAR POR DISTANCIA ---
+    // ---------- GEO / NAVEGACIÓN BÁSICA ----------
+
+    function normalizeAddressText(text) {
+      let t = text.replace(/\s+/g, " ").trim();
+      t = t.replace(/(cliente|telefono|tel\.?|celular|nota|referencia)\s*:?/gi, "");
+      const parts = t.split(",");
+      if (parts.length > 3) {
+        t = parts.slice(-3).join(",").trim();
+      }
+      return t;
+    }
 
     async function geocodeAddress(text) {
+      const clean = normalizeAddressText(text);
+
       const url =
         "https://api.openrouteservice.org/geocode/search?" +
         "api_key=" +
         encodeURIComponent(ORS_API_KEY) +
         "&text=" +
-        encodeURIComponent(text) +
+        encodeURIComponent(clean) +
         "&size=1";
 
       const res = await fetch(url);
@@ -622,12 +723,12 @@
       if (!data.features || data.features.length === 0) {
         throw new Error("Sin resultados");
       }
-      const coords = data.features[0].geometry.coordinates; // [lon, lat]
+      const coords = data.features[0].geometry.coordinates;
       return { lon: coords[0], lat: coords[1] };
     }
 
     function haversineKm(lat1, lon1, lat2, lon2) {
-      const R = 6371; // radio tierra km
+      const R = 6371;
       const toRad = (deg) => (deg * Math.PI) / 180;
       const dLat = toRad(lat2 - lat1);
       const dLon = toRad(lon2 - lon1);
@@ -684,7 +785,6 @@
             }
           }
 
-          // Ordenar: primero las que tienen distancia, luego las que no
           savedAddresses.sort((a, b) => {
             if (a.distanceKm == null && b.distanceKm == null) return 0;
             if (a.distanceKm == null) return 1;
@@ -692,6 +792,7 @@
             return a.distanceKm - b.distanceKm;
           });
 
+          saveToStorage();
           renderSavedList();
           sortByDistanceBtn.disabled = false;
           sortByDistanceBtn.textContent = "Ordenar por distancia";
@@ -705,7 +806,94 @@
       );
     });
 
-    // Inicializar lista vacía al cargar
+    // ---------- KM EN VIVO + AUTO-LLEGADA ----------
+
+    function updateDistancesLive(lat, lon) {
+      let changed = false;
+      for (const item of savedAddresses) {
+        if (item.lat != null && item.lon != null) {
+          item.distanceKm = haversineKm(lat, lon, item.lat, item.lon);
+          changed = true;
+        }
+      }
+      if (changed) {
+        handleAutoArrival();
+        renderSavedList();
+        saveToStorage();
+      }
+    }
+
+    function handleAutoArrival() {
+      const pending = savedAddresses
+        .map((item, index) => ({ item, index }))
+        .filter((p) => p.item.status === "pending" && p.item.distanceKm != null);
+
+      if (pending.length === 0) return;
+
+      pending.sort((a, b) => a.item.distanceKm - b.item.distanceKm);
+      const closest = pending[0];
+
+      if (closest.item.distanceKm <= 0.08) {
+        closest.item.status = "done";
+
+        const [removed] = savedAddresses.splice(closest.index, 1);
+        savedAddresses.push(removed);
+      }
+    }
+
+    function startLiveTracking() {
+      if (!navigator.geolocation) {
+        alert("Tu dispositivo no permite obtener ubicación en vivo.");
+        return;
+      }
+
+      liveWatchId = navigator.geolocation.watchPosition(
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          updateDistancesLive(lat, lon);
+        },
+        (err) => {
+          console.error(err);
+          alert("No se pudo seguir tu ubicación en vivo.");
+          stopLiveTracking();
+        },
+        {
+          enableHighAccuracy: true,
+          maximumAge: 5000,
+          timeout: 20000
+        }
+      );
+
+      liveTrackingActive = true;
+      liveTrackBtn.textContent = "Detener km en vivo";
+    }
+
+    function stopLiveTracking() {
+      if (liveWatchId != null) {
+        navigator.geolocation.clearWatch(liveWatchId);
+        liveWatchId = null;
+      }
+      liveTrackingActive = false;
+      liveTrackBtn.textContent = "Seguir km en vivo";
+    }
+
+    liveTrackBtn.addEventListener("click", () => {
+      if (!savedAddresses.length) {
+        alert("Primero guarda algunas direcciones.");
+        return;
+      }
+
+      if (!liveTrackingActive) {
+        startLiveTracking();
+      } else {
+        stopLiveTracking();
+      }
+    });
+
+    // ---------- INICIO ----------
+
+    loadFromStorage();
     renderSavedList();
   </script>
 </body>
