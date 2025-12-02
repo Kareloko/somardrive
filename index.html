@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>SomarDrive v7 Auto-Detect 🌎</title>
+  <title>SomarDrive V8 Final 🚛</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#0d1b3d">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -61,6 +61,11 @@
     .card-actions { display: flex; gap: 5px; margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
     .icon-btn { flex: 1; padding: 12px 0; border: none; border-radius: 8px; font-size: 1.3rem; cursor: pointer; background: #334155; color: white; }
     .btn-wa { background: var(--wa); } 
+    .btn-map { background: #2563eb; }
+    .btn-edit { background: #64748b; }
+    .btn-done { background: #16a34a; }
+    .btn-issue { background: #d97706; }
+    .btn-del { background: #dc2626; }
     
     /* BACKUP */
     .backup-area { margin-top: 30px; padding: 15px; background: #0f172a; border-radius: 10px; border: 1px dashed #475569; text-align: center; }
@@ -136,8 +141,8 @@
 <script>
   /* CONFIG */
   const API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImI5NjlmYzJiMDY0YjQzMWQ5NDBmMGE0NjYzOWJiMWI2IiwiaCI6Im11cm11cjY0In0=";
-  const DB_KEY = "SomarDrive_V7_Auto";
-  const HIST_KEY = "SomarDrive_History_V7"; 
+  const DB_KEY = "SomarDrive_V8";
+  const HIST_KEY = "SomarDrive_History_V8"; 
   
   let addresses = [];
   let historyDB = [];
@@ -255,7 +260,8 @@
           <span class="meta-dist">${distTag}</span> ${histTag}
         </div>
         <div class="card-actions">
-          <button class="icon-btn btn-map" onclick="openMap('${item.text.replace(/'/g,"\\'")}', ${item.lat}, ${item.lon})">🗺️</button>
+          <button class="icon-btn btn-map" onclick="openMap('${item.text.replace(/'/g,"\\'")}')">🗺️</button>
+          
           <button class="icon-btn btn-edit" onclick="editItem(${index})">✏️</button>
           ${waBtn} 
           <button class="icon-btn btn-done" onclick="markDone(${index})">✅</button>
@@ -277,7 +283,7 @@
     const item = addresses[index];
     item.status = 'done';
     
-    // GUARDAR EN MEMORIA (SOLO SI TIENE GPS VÁLIDO)
+    // GUARDAR EN MEMORIA
     if(item.lat && item.lon && !historyDB.some(h => h.text === item.text)) { 
       historyDB.push({ text: item.text, lat: item.lat, lon: item.lon }); 
       saveHistory(); 
@@ -291,16 +297,15 @@
   function markIssue(idx) { addresses[idx].status='issue'; saveData(); }
   function deleteItem(idx) { if(confirm("¿Borrar?")) { addresses.splice(idx,1); saveData(); } }
   function deleteAll() { if(confirm("¿BORRAR TODO?")) { addresses=[]; saveData(); } }
-  function editItem(idx) { const txt = prompt("Editar:", addresses[idx].text); if(txt) { addresses[idx].text = txt; addresses[idx].lat=null; addresses[idx].lon=null; addresses[idx].dist=null; addresses[idx].fromHistory=false; saveData(); } }
+  function editItem(idx) { const txt = prompt("Editar:", addresses[idx].text); if(txt) { addresses[idx].text = txt; addresses[idx].lat=null; addresses[idx].fromHistory=false; saveData(); } }
 
-  function openMap(txt, lat, lon) {
-    const url = (lat && lon) 
-      ? `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}` 
-      : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(txt)}`;
+  /* CORRECCIÓN: EL MAPA SIEMPRE USA GOOGLE MAPS DIRECTO (Texto) */
+  function openMap(txt) {
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(txt)}`;
     window.open(url, '_blank');
   }
 
-  /* --- ORDENAR GPS AUTOMÁTICO (IT/PE) --- */
+  /* --- ORDENAR GPS INTELIGENTE --- */
   async function sortWithGPS() {
     const btn=document.getElementById('sortBtn');
     if(!navigator.geolocation) return alert("Activa GPS");
@@ -312,19 +317,23 @@
       for(let item of addresses) {
         if(item.status==='pending' && !item.lat && !item.fromHistory) {
            try {
-               // 1. LIMPIEZA AGRESIVA (Quitar nombres de negocios)
-               let clean = item.text.replace(/cliente|entregar|consegna|tel|cel|cell|citofono|piso|piano|scala|gomme|autoservice|pneumatici|srl|spa|taller|llantas/gi,"").trim();
+               let clean = item.text.toLowerCase();
                
-               // 2. DETECTOR DE PAÍS (AUTO)
+               // 1. DETECCIÓN DE CALLE (CORTAR EL RUIDO)
+               // Busca palabras clave de calles (IT/ES) y toma todo lo que sigue
+               const streetMatch = clean.match(/\b(via|viale|piazza|corso|vicolo|strada|calle|av\.|avenida|jiron|jr\.|pasaje)\b/i);
+               
+               if(streetMatch) {
+                   clean = clean.substring(streetMatch.index); // Cortar desde "Via..."
+               } else {
+                   // Fallback: limpieza básica
+                   clean = clean.replace(/cliente|entregar|consegna|tel|cel|cell|citofono|piso|piano|scala|gomme|autoservice|pneumatici|srl|spa|taller|llantas|autoservizi|di\s+[a-z]+/gi, "").trim();
+               }
+
+               // 2. DETECCIÓN DE PAÍS
                let countrySuffix = "";
-               // Palabras clave Italia: Via, Piazza, Viale, Corso, Sondrio, SO, números postales 23xxx
-               if (clean.match(/via|viale|piazza|corso|strada|sondrio|so\b|23\d{3}/i)) {
-                   countrySuffix = ", Italia";
-               }
-               // Palabras clave Perú: Calle, Av, Avenida, Jiron, Jr, Lima
-               else if (clean.match(/calle|av\.|avenida|jr\.|jiron|lima|peru/i)) {
-                   countrySuffix = ", Peru";
-               }
+               if (clean.match(/via|viale|piazza|corso|strada|sondrio|so\b|23\d{3}/i)) countrySuffix = ", Italia";
+               else if (clean.match(/calle|av\.|avenida|jr\.|jiron|lima|peru/i)) countrySuffix = ", Peru";
 
                let searchQuery = clean + countrySuffix;
                
