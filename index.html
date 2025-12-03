@@ -14,80 +14,337 @@
   <style>
     /* --- DISEÑO PRO V15 --- */
     :root {
-      --bg-dark: #020617; --card-bg: #1e293b; --accent: #3b82f6; --text: #f1f5f9;
-      --green: #22c55e; --red: #ef4444; --yellow: #eab308; --wa: #25D366;
+      --bg-dark: #020617;
+      --card-bg: #1e293b;
+      --accent: #3b82f6;
+      --text: #f1f5f9;
+      --green: #22c55e;
+      --red: #ef4444;
+      --yellow: #eab308;
+      --wa: #25D366;
     }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; background-color: var(--bg-dark); color: var(--text); padding-bottom: 220px; }
-    .container { max-width: 600px; margin: 0 auto; padding: 15px; }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text);
+      padding-bottom: 220px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 15px;
+    }
 
     /* Header */
     .god-banner {
-      background: linear-gradient(135deg, #1e3a8a, #172554); padding: 15px; border-radius: 12px;
-      margin-bottom: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.1);
+      background: linear-gradient(135deg, #1e3a8a, #172554);
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.1);
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
-    .god-title { font-weight: 800; color: #fbbf24; font-size: 1.1rem; margin-bottom: 5px; text-transform: uppercase; }
-    .god-text { font-size: 0.9rem; line-height: 1.4; color: #e2e8f0; font-style: italic; }
+
+    .god-title {
+      font-weight: 800;
+      color: #fbbf24;
+      font-size: 1.1rem;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    .god-text {
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: #e2e8f0;
+      font-style: italic;
+    }
 
     /* Botones */
-    .btn-main { width: 100%; padding: 14px; margin-bottom: 10px; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: transform 0.1s, opacity 0.2s; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-    .btn-main:active { transform: scale(0.96); }
-    .btn-blue { background: linear-gradient(to bottom, #3b82f6, #2563eb); box-shadow: 0 4px 0 #1d4ed8; }
-    .btn-gray { background: linear-gradient(to bottom, #475569, #334155); box-shadow: 0 4px 0 #1e293b; color: #cbd5e1; }
-    .btn-red { background: linear-gradient(to bottom, #ef4444, #dc2626); box-shadow: 0 4px 0 #b91c1c; }
-    .btn-green { background: linear-gradient(to bottom, #22c55e, #16a34a); box-shadow: 0 4px 0 #15803d; }
-    .btn-gold { background: linear-gradient(to bottom, #fbbf24, #d97706); box-shadow: 0 4px 0 #b45309; color: #000; text-shadow: none; }
-
-    /* UI Foto y Editor */
-    #previewContainer { display: none; margin-top: 15px; border-radius: 10px; overflow: hidden; border: 2px solid #334155; position: relative; }
-    #preview { width: 100%; display: block; }
-    #ocrStatus { text-align: center; color: var(--accent); margin: 15px; font-weight: 600; display: none; }
-    
-    #editorSection { display: none; background: var(--card-bg); padding: 15px; border-radius: 15px; margin-top: 20px; border: 1px solid #334155; }
-    .address-input { width: 100%; background: #0f172a; border: 2px solid #334155; color: white; padding: 12px; border-radius: 10px; font-size: 1rem; min-height: 80px; font-family: inherit; margin-top: 10px; }
-    .address-input:focus { border-color: var(--accent); outline: none; }
-    #linesContainer { max-height: 150px; overflow-y: auto; margin-bottom: 10px; }
-    .line-item { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; gap: 10px; align-items: center; }
-
-    /* Tarjetas */
-    #addressList { list-style: none; padding: 0; margin-top: 15px; }
-    .card { background: var(--card-bg); margin-bottom: 12px; border-radius: 12px; padding: 15px; border-left: 5px solid var(--yellow); position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-    .card.done { border-left-color: var(--green); opacity: 0.7; order: 100; } /* Se van al fondo */
-    .card.issue { border-left-color: var(--red); }
-    
-    .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-    .card-text { font-size: 1.05rem; font-weight: 600; line-height: 1.3; color: white; word-break: break-word; }
-    .card-meta { margin-top: 8px; font-size: 0.85rem; color: #94a3b8; display: flex; gap: 10px; align-items: center; }
-    
-    /* Botones Acciones */
-    .card-actions { display: flex; gap: 8px; margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
-    .icon-btn { flex: 1; padding: 10px 0; border: none; border-radius: 8px; font-size: 1.4rem; cursor: pointer; background: rgba(255,255,255,0.05); transition: background 0.2s; }
-    .icon-btn:hover { background: rgba(255,255,255,0.15); }
-
-    /* Backup Area */
-    .backup-area { margin-top: 30px; padding: 20px; background: #0f172a; border-radius: 15px; border: 2px dashed #334155; text-align: center; }
-    .backup-label { color: #94a3b8; font-size: 0.9rem; display: block; margin-bottom: 10px; font-weight: 600; text-transform: uppercase; }
-
-    /* Footer Estático */
-    .footer-static {
-      position: fixed; bottom: 0; left: 0; width: 100%; height: auto;
-      background: linear-gradient(to top, #020617 85%, transparent);
-      z-index: 900; text-align: center; padding-bottom: 10px; pointer-events: none;
+    .btn-main {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.1s, opacity 0.2s;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
-    .truck-image { width: 85%; max-width: 162px; display: block; margin: 0 auto; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); transform: translateY(5px); }
-    .safety-text { color: var(--red); font-weight: 800; font-size: 0.9rem; margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); text-transform: uppercase; letter-spacing: 1px; }
 
-    /* Modal Celebración */
-    #celebrationModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 20px; }
-    .confetti { position: absolute; width: 10px; height: 10px; background-color: #f00; animation: fall linear forwards; }
-    @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+    .btn-main:active {
+      transform: scale(0.96);
+    }
+
+    .btn-blue {
+      background: linear-gradient(to bottom, #3b82f6, #2563eb);
+      box-shadow: 0 4px 0 #1d4ed8;
+    }
+
+    .btn-gray {
+      background: linear-gradient(to bottom, #475569, #334155);
+      box-shadow: 0 4px 0 #1e293b;
+      color: #cbd5e1;
+    }
+
+    .btn-red {
+      background: linear-gradient(to bottom, #ef4444, #dc2626);
+      box-shadow: 0 4px 0 #b91c1c;
+    }
+
+    .btn-green {
+      background: linear-gradient(to bottom, #22c55e, #16a34a);
+      box-shadow: 0 4px 0 #15803d;
+    }
+
+    .btn-gold {
+      background: linear-gradient(to bottom, #fbbf24, #d97706);
+      box-shadow: 0 4px 0 #b45309;
+      color: #000;
+      text-shadow: none;
+    }
+
+    /* Foto & OCR */
+    #previewContainer {
+      display: none;
+      margin-top: 15px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid #334155;
+      position: relative;
+    }
+
+    #preview {
+      width: 100%;
+      display: block;
+    }
+
+    #ocrStatus {
+      text-align: center;
+      color: var(--accent);
+      margin: 15px;
+      font-weight: 600;
+      display: none;
+    }
+
+    /* Editor */
+    #editorSection {
+      display: none;
+      background: var(--card-bg);
+      padding: 15px;
+      border-radius: 15px;
+      margin-top: 20px;
+      border: 1px solid #334155;
+    }
+
+    .address-input {
+      width: 100%;
+      background: #0f172a;
+      border: 2px solid #334155;
+      color: white;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 1rem;
+      min-height: 80px;
+      font-family: inherit;
+      margin-top: 10px;
+    }
+
+    .address-input:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    #linesContainer {
+      max-height: 150px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+
+    .line-item {
+      padding: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    /* Lista de direcciones */
+    #addressList {
+      list-style: none;
+      padding: 0;
+      margin-top: 15px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      margin-bottom: 12px;
+      border-radius: 12px;
+      padding: 15px;
+      border-left: 5px solid var(--yellow);
+      position: relative;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .card.done {
+      border-left-color: var(--green);
+      opacity: 0.7;
+    }
+
+    .card.issue {
+      border-left-color: var(--red);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .card-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.3;
+      color: white;
+      word-break: break-word;
+    }
+
+    .card-meta {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* Acciones */
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 10px;
+    }
+
+    .icon-btn {
+      flex: 1;
+      padding: 8px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      background: rgba(255,255,255,0.05);
+      transition: background 0.2s;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
+    /* Backup */
+    .backup-area {
+      margin-top: 30px;
+      padding: 20px;
+      background: #0f172a;
+      border-radius: 15px;
+      border: 2px dashed #334155;
+      text-align: center;
+    }
+
+    .backup-label {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    /* Footer estático */
+    .footer-static {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      background: linear-gradient(to top, #020617 85%, transparent);
+      z-index: 900;
+      text-align: center;
+      padding-bottom: 10px;
+      pointer-events: none;
+    }
+
+    .truck-image {
+      width: 85%;
+      max-width: 162px;
+      display: block;
+      margin: 0 auto;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+      transform: translateY(5px);
+    }
+
+    .safety-text {
+      color: var(--red);
+      font-weight: 800;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
 
     /* Toast */
-    #toast { visibility: hidden; min-width: 280px; background-color: #333; color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 1000; left: 50%; bottom: 40px; transform: translateX(-50%); box-shadow: 0 10px 30px rgba(0,0,0,0.7); font-weight: 600; }
-    #toast.show { visibility: visible; animation: fadein 0.3s, fadeout 0.3s 2.5s; }
-    @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 40px; opacity: 1;} }
-    @keyframes fadeout { from {bottom: 40px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+    #toast {
+      visibility: hidden;
+      min-width: 280px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 50px;
+      padding: 16px;
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      bottom: 40px;
+      transform: translateX(-50%);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+      font-weight: 600;
+    }
+
+    #toast.show {
+      visibility: visible;
+      animation: fadein 0.3s, fadeout 0.3s 2.5s;
+    }
+
+    @keyframes fadein {
+      from { bottom: 0; opacity: 0; }
+      to   { bottom: 40px; opacity: 1; }
+    }
+
+    @keyframes fadeout {
+      from { bottom: 40px; opacity: 1; }
+      to   { bottom: 0; opacity: 0; }
+    }
   </style>
 </head>
 <body>
@@ -111,17 +368,20 @@
     <img id="preview" />
     <button class="btn-main btn-red" onclick="clearImage()" style="margin:10px; width:calc(100% - 20px);">❌ Cancelar Foto</button>
   </div>
-  <div id="ocrStatus">⏳ Analizando Imagen (ES/IT)...</div>
+  <div id="ocrStatus">⏳ Analizando imagen (ES/IT)...</div>
 
   <div id="editorSection">
-    <h3 style="margin-top:0; color:#fbbf24;">📝 Verificar Datos</h3>
+    <h3 style="margin-top:0; color:#fbbf24;">📝 Verificar datos</h3>
     <div id="linesContainer"></div>
     <textarea id="finalText" class="address-input" placeholder="La dirección aparecerá aquí..."></textarea>
-    <button class="btn-main btn-green" onclick="saveAddress()" style="margin-top:10px;">💾 Guardar en Ruta</button>
+    <button class="btn-main btn-green" onclick="saveAddress()" style="margin-top:10px;">💾 Guardar en ruta</button>
   </div>
 
   <div style="display:flex; justify-content:space-between; align-items:center; margin-top:30px;">
-    <h2 style="margin:0; display:flex; align-items:center; gap:8px;">📍 Ruta <span style="background:#334155; padding:2px 8px; border-radius:10px; font-size:0.9rem;" id="countPending">0</span></h2>
+    <h2 style="margin:0; display:flex; align-items:center; gap:8px;">
+      📍 Ruta
+      <span style="background:#334155; padding:2px 8px; border-radius:10px; font-size:0.9rem;" id="countPending">0</span>
+    </h2>
     <small style="color:#fbbf24; font-weight:bold;" id="historyBadge">Memoria: 0</small>
   </div>
   
@@ -133,7 +393,7 @@
   <ul id="addressList"></ul>
 
   <div style="margin-top:40px;">
-    <button class="btn-main btn-gold" onclick="saveDayToMemory()">🧠 Guardar Día en Memoria</button>
+    <button class="btn-main btn-gold" onclick="saveDayToMemory()">🧠 Guardar día en Memoria</button>
     
     <div class="backup-area">
       <span class="backup-label">🛡️ COPIA DE SEGURIDAD TOTAL</span>
@@ -144,7 +404,20 @@
       <input type="file" id="importInput" accept=".json" hidden onchange="importData(this)">
     </div>
 
-    <button class="btn-main btn-red" onclick="deleteAll()" style="margin-top:20px;">🗑️ BORRAR TODO (Ruta y Memoria)</button>
+    <!-- Borrar SOLO ruta -->
+    <button class="btn-main btn-red" onclick="clearRoute()" style="margin-top:20px;">
+      🗑️ Borrar SOLO Ruta
+    </button>
+
+    <!-- Borrar SOLO memoria -->
+    <button class="btn-main btn-gray" onclick="clearMemory()" style="margin-top:10px;">
+      🧠 Borrar SOLO Memoria
+    </button>
+
+    <!-- Reset TOTAL -->
+    <button class="btn-main btn-red" onclick="deleteAll()" style="margin-top:10px;">
+      ⚠️ Reset TOTAL (Ruta + Memoria)
+    </button>
   </div>
 
 </div>
@@ -154,19 +427,13 @@
   <img src="camion.png" class="truck-image" alt="SomarDrive Truck" onerror="this.style.display='none'">
 </div>
 
-<div id="celebrationModal" onclick="this.style.display='none'">
-    <h1 style="color:#fbbf24; font-size:3rem; margin-bottom:10px; text-shadow:0 0 20px rgba(251,191,36,0.5);">🎉 ¡FINITO! 🎉</h1>
-    <p style="color:#fff; font-size:1.3rem; margin-bottom:30px; font-style:italic;">"Todo lo puedo en Cristo que me fortalece."</p>
-    <button class="btn-main btn-blue" style="width:auto; padding:10px 40px;">Cerrar</button>
-</div>
-
 <div id="toast">Notificación</div>
 
 <script>
   /* ================= CONFIGURACIÓN ================= */
-  const API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImI5NjlmYzJiMDY0YjQzMWQ5NDBmMGE0NjYzOWJiMWI2IiwiaCI6Im11cm11cjY0In0=";
-  const DB_KEY = "SomarDrive_V15_Route";
-  const HIST_KEY = "SomarDrive_V15_Memory"; 
+  const API_KEY = "PON_AQUI_TU_API_KEY_DE_OPENROUTESERVICE"; // NO la compartas con nadie
+  const DBKEY   = "SomarDriveV15_Route";
+  const HISTKEY = "SomarDriveV15_Memory"; 
   
   let addresses = [];
   let historyDB = [];
@@ -174,145 +441,201 @@
 
   /* ================= INICIO ================= */
   window.onload = () => {
-    if(localStorage.getItem(DB_KEY)) addresses = JSON.parse(localStorage.getItem(DB_KEY));
-    if(localStorage.getItem(HIST_KEY)) historyDB = JSON.parse(localStorage.getItem(HIST_KEY));
-    renderList(); updateBadge();
+    try {
+      const saved = localStorage.getItem(DBKEY);
+      const hist  = localStorage.getItem(HISTKEY);
+      if (saved) addresses = JSON.parse(saved);
+      if (hist)  historyDB = JSON.parse(hist);
+    } catch (e) {
+      console.error("Error leyendo localStorage", e);
+      addresses = [];
+      historyDB = [];
+    }
+    renderList();
+    updateBadge();
   };
-  
-  // Guardado Automático
-  function saveData() { localStorage.setItem(DB_KEY, JSON.stringify(addresses)); renderList(); }
-  function saveMem() { localStorage.setItem(HIST_KEY, JSON.stringify(historyDB)); updateBadge(); }
-  
-  function showToast(msg) { 
-    const t = document.getElementById("toast"); t.textContent = msg; t.className = "show"; 
-    setTimeout(() => t.className = "", 3000); 
+
+  function saveData() {
+    localStorage.setItem(DBKEY, JSON.stringify(addresses));
+    renderList();
   }
-  function updateBadge() { document.getElementById("historyBadge").textContent = `Memoria: ${historyDB.length}`; }
+
+  function saveMem() {
+    localStorage.setItem(HISTKEY, JSON.stringify(historyDB));
+    updateBadge();
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.className = "show";
+    setTimeout(() => { t.className = ""; }, 3000);
+  }
+
+  function updateBadge() {
+    document.getElementById("historyBadge").textContent = `Memoria: ${historyDB.length}`;
+  }
 
   /* ================= OCR & FOTO ================= */
   function processImage(input) {
-    if(!input.files[0]) return;
+    if (!input.files[0]) return;
     const file = input.files[0];
-    document.getElementById('preview').src = URL.createObjectURL(file);
-    document.getElementById('previewContainer').style.display = "block";
-    document.getElementById('ocrStatus').style.display = "block";
-    document.getElementById('editorSection').style.display = "none";
+    const preview = document.getElementById('preview');
+    const previewContainer = document.getElementById('previewContainer');
+    const ocrStatus = document.getElementById('ocrStatus');
+    const editorSection = document.getElementById('editorSection');
+
+    preview.src = URL.createObjectURL(file);
+    previewContainer.style.display = "block";
+    ocrStatus.style.display = "block";
+    editorSection.style.display = "none";
 
     Tesseract.recognize(file, 'spa+ita').then(({ data: { text } }) => {
-      document.getElementById('ocrStatus').style.display = "none";
-      checkMemory(text); // Verificar memoria
+      ocrStatus.style.display = "none";
       showEditor(text);
-    }).catch(e => { alert("Error al leer imagen"); document.getElementById('ocrStatus').style.display = "none"; });
-  }
-
-  // --- CEREBRO: BUSCADOR INTELIGENTE EN MEMORIA ---
-  function checkMemory(scannedText) {
-      const cleanScan = scannedText.toLowerCase();
-      // Buscamos coincidencia parcial
-      const found = historyDB.find(h => {
-          // Si el texto de memoria está dentro del escaneado
-          if (cleanScan.includes(h.text.toLowerCase())) return true;
-          // O si se parecen mucho (palabras clave)
-          const keys = h.text.toLowerCase().split(/[\s,.-]+/).filter(w => w.length > 2);
-          if(keys.length === 0) return false;
-          let hits = 0;
-          keys.forEach(k => { if(cleanScan.includes(k)) hits++; });
-          return (hits / keys.length) >= 0.6; // 60% coincidencia
-      });
-
-      if(found) {
-          if(navigator.vibrate) navigator.vibrate(200);
-          if(confirm(`🧠 ¡ENCONTRÉ ESTO EN MEMORIA!\n\n"${found.text}"\n\n¿Usar datos guardados?`)) {
-              document.getElementById('finalText').value = found.text;
-          }
-      }
+    }).catch(e => {
+      console.error(e);
+      alert("Error al leer imagen. Inténtalo de nuevo.");
+      ocrStatus.style.display = "none";
+    });
   }
 
   function showEditor(text) {
-    document.getElementById('editorSection').style.display = "block";
-    const box = document.getElementById('linesContainer'); box.innerHTML = "";
-    text.split('\n').filter(l => l.trim().length > 3).forEach(l => {
-      box.innerHTML += `<div class="line-item"><input type="checkbox" value="${l}" onchange="updateInput()"><span>${l}</span></div>`;
-    });
-    if(!document.getElementById('finalText').value) document.getElementById('finalText').value = "";
+    const editorSection = document.getElementById('editorSection');
+    const linesDiv = document.getElementById('linesContainer');
+    const finalText = document.getElementById('finalText');
+
+    editorSection.style.display = "block";
+    linesDiv.innerHTML = "";
+    finalText.value = "";
+
+    text.split('\n')
+        .map(l => l.trim())
+        .filter(l => l.length > 3)
+        .forEach(l => {
+          const row = document.createElement('div');
+          row.className = "line-item";
+          row.innerHTML = `
+            <input type="checkbox" value="${l.replace(/"/g, '&quot;')}" onchange="updateInput()">
+            <span>${l}</span>
+          `;
+          linesDiv.appendChild(row);
+        });
   }
   
   function updateInput() {
-    const vals = Array.from(document.querySelectorAll('#linesContainer input:checked')).map(c => c.value);
+    const checks = Array.from(document.querySelectorAll('#linesContainer input[type="checkbox"]:checked'));
+    const vals = checks.map(c => c.value);
     document.getElementById('finalText').value = vals.join(", ");
   }
   
   function clearImage() {
-    document.getElementById('previewContainer').style.display="none";
-    document.getElementById('editorSection').style.display="none";
-    document.getElementById('cameraInput').value=""; 
-    document.getElementById('fileInput').value=""; 
-    document.getElementById('finalText').value="";
+    document.getElementById('previewContainer').style.display = "none";
+    document.getElementById('editorSection').style.display = "none";
+    document.getElementById('cameraInput').value = "";
+    document.getElementById('fileInput').value = "";
+    document.getElementById('finalText').value = "";
   }
 
-  /* ================= GUARDAR Y MEMORIZAR ================= */
+  /* ================= GUARDAR & MEMORIA ================= */
   function saveAddress() {
     const txt = document.getElementById('finalText').value.trim();
-    if(!txt) return showToast("⚠️ Escribe algo");
+    if (!txt) {
+      showToast("⚠️ Escribe o selecciona una dirección.");
+      return;
+    }
 
-    // Verificar si ya existe en memoria
-    let exists = historyDB.find(h => h.text === txt);
-    
-    // Si NO existe, lo guardamos YA MISMO en memoria (Aprendizaje Rápido)
-    if (!exists) {
-        historyDB.push({ text: txt, lat: null, lon: null });
-        saveMem();
-        exists = true;
+    // Busca si ya está en memoria exacto
+    let mem = historyDB.find(h => h.text === txt);
+    if (!mem) {
+      mem = { text: txt, lat: null, lon: null };
+      historyDB.push(mem);
+      saveMem();
+    }
+
+    // Evitar duplicado en la ruta actual
+    const duplicated = addresses.some(a => a.text === txt && a.status === 'pending');
+    if (duplicated) {
+      showToast("⚠️ Esa dirección ya está en la ruta.");
+      return;
     }
 
     addresses.unshift({
-      id: Date.now(), text: txt, status: 'pending',
-      lat: exists.lat || null, lon: exists.lon || null, dist: null, fromMemory: !!exists
+      id: Date.now(),
+      text: txt,
+      status: 'pending',
+      lat: mem.lat,
+      lon: mem.lon,
+      dist: null,
+      fromMemory: true
     });
-    
-    saveData(); clearImage(); showToast("🧠 ¡Guardado y Memorizado!");
+
+    saveData();
+    clearImage();
+    showToast("🧠 Guardado en ruta (y Memoria).");
   }
 
-  /* ================= RENDERIZADO ================= */
+  /* ================= LISTA & TARJETAS ================= */
   function renderList() {
-    const list = document.getElementById('addressList'); list.innerHTML = "";
+    const list = document.getElementById('addressList');
+    list.innerHTML = "";
+
     const pending = addresses.filter(a => a.status === 'pending').length;
     document.getElementById('countPending').textContent = pending;
 
-    if(pending === 0 && addresses.length > 0 && !sessionStorage.getItem('celebrated')) {
-        triggerConfetti(); 
-        document.getElementById('celebrationModal').style.display = 'flex';
-        sessionStorage.setItem('celebrated', 'true');
+    if (addresses.length === 0) {
+      list.innerHTML = `
+        <div style="text-align:center;padding:30px;color:#64748b;">
+          Lista vacía.<br>¡Buen trabajo!
+        </div>
+      `;
+      return;
     }
-
-    if(addresses.length === 0) list.innerHTML = "<div style='text-align:center;padding:30px;color:#64748b;'>Lista vacía.<br>¡Buen trabajo!</div>";
 
     addresses.forEach((item, index) => {
       const li = document.createElement('li');
       li.className = `card ${item.status}`;
-      
+
       // WhatsApp IT/PE
       let waBtn = "";
-      const phone = item.text.replace(/\s/g, '').match(/(?:\+|00)?(3\d{9}|9\d{8})/);
-      if (phone) {
-         let num = phone[1], code = num.startsWith('3') ? "39" : "51";
-         waBtn = `<button class="icon-btn" style="color:#25D366;background:rgba(37,211,102,0.1);" onclick="window.open('https://wa.me/${code}${num}', '_blank')">📞</button>`;
+      const phoneRaw = item.text.replace(/\s/g, '');
+      const phoneMatch = phoneRaw.match(/(?:\+|00)?(3\d{9}|9\d{8})/);
+
+      if (phoneMatch) {
+        let num = phoneMatch[1];
+        let code = num.startsWith('3') ? "39" : "51";
+        waBtn = `
+          <button class="icon-btn"
+                  style="color:#25D366;background:rgba(37,211,102,0.12);"
+                  onclick="window.open('https://wa.me/${code}${num}', '_blank')">
+            📞
+          </button>
+        `;
       }
 
-      const memTag = item.fromMemory ? `<span style="color:#d946ef;font-weight:700;font-size:0.8rem;">🧠 MEMORIA</span>` : "";
-      const distTag = (item.dist) ? `<span style="color:var(--accent);font-weight:800;">🏁 ${item.dist.toFixed(1)} km</span>` : "";
+      const memTag  = item.fromMemory ? `<span style="color:#d946ef;font-weight:700;font-size:0.8rem;">🧠 MEMORIA</span>` : "";
+      const distTag = (item.dist != null)
+        ? `<span style="color:var(--accent);font-weight:800;">🏁 ${item.dist.toFixed(1)} km</span>`
+        : "";
+
+      const safeTextForMap = item.text.replace(/'/g, "\\'");
 
       li.innerHTML = `
         <div class="card-header">
           <div class="card-text">${item.text}</div>
           <div style="display:flex; flex-direction:column; gap:2px;">
             <button onclick="moveItem(${index}, -1)" style="background:none;border:1px solid #475569;color:#94a3b8;border-radius:4px;">▲</button>
-            <button onclick="moveItem(${index}, 1)" style="background:none;border:1px solid #475569;color:#94a3b8;border-radius:4px;">▼</button>
+            <button onclick="moveItem(${index}, 1)"  style="background:none;border:1px solid #475569;color:#94a3b8;border-radius:4px;">▼</button>
           </div>
         </div>
-        <div class="card-meta">${distTag} ${memTag}</div>
+        <div class="card-meta">
+          ${distTag} ${memTag}
+        </div>
         <div class="card-actions">
-          <button class="icon-btn" style="color:#60a5fa" onclick="openMap('${item.text.replace(/'/g,"\\'")}')">🗺️</button>
+          <button class="icon-btn" style="color:#60a5fa"
+                  onclick="openMap('${safeTextForMap}', ${item.lat != null ? item.lat : 'null'}, ${item.lon != null ? item.lon : 'null'})">
+            🗺️
+          </button>
           <button class="icon-btn" onclick="editItem(${index})">✏️</button>
           ${waBtn}
           <button class="icon-btn" style="color:#34d399" onclick="markDone(${index})">✅</button>
@@ -320,43 +643,297 @@
           <button class="icon-btn" style="color:#f87171" onclick="deleteItem(${index})">🗑️</button>
         </div>
       `;
+
       list.appendChild(li);
     });
   }
 
-  function moveItem(i, dir) { if(i+dir<0 || i+dir>=addresses.length) return; const t=addresses[i]; addresses.splice(i,1); addresses.splice(i+dir,0,t); saveData(); }
+  function moveItem(i, dir) {
+    const j = i + dir;
+    if (j < 0 || j >= addresses.length) return;
+    const tmp = addresses[i];
+    addresses.splice(i, 1);
+    addresses.splice(j, 0, tmp);
+    saveData();
+  }
+
   function markDone(i) {
-    const item = addresses[i]; item.status = 'done';
-    // Si tiene GPS, actualizamos la memoria para hacerla más precisa
-    if(item.lat) { 
-        let mIdx = historyDB.findIndex(h => h.text === item.text);
-        if(mIdx >= 0) { historyDB[mIdx].lat = item.lat; historyDB[mIdx].lon = item.lon; saveMem(); }
+    const item = addresses[i];
+    item.status = 'done';
+
+    // Actualiza memoria con coordenadas si las tiene
+    if (item.lat != null && item.lon != null) {
+      const idx = historyDB.findIndex(h => h.text === item.text);
+      if (idx >= 0) {
+        historyDB[idx].lat = item.lat;
+        historyDB[idx].lon = item.lon;
+        saveMem();
+      }
     }
-    addresses.push(addresses.splice(i, 1)[0]); saveData(); checkFinish();
-  }
-  function checkFinish() {
-      const pending = addresses.filter(a => a.status === 'pending').length;
-      if(pending === 0 && addresses.length > 0) { triggerConfetti(); document.getElementById('celebrationModal').style.display = 'flex'; sessionStorage.setItem('celebrated', 'true'); }
-  }
-  
-  // GUARDAR MANUAL DEL DÍA
-  function saveDayToMemory() {
-      let c = 0;
-      addresses.forEach(a => { if(!historyDB.some(h => h.text === a.text)) { historyDB.push({ text: a.text, lat: a.lat, lon: a.lon }); c++; } });
-      saveMem(); alert(`✅ ${c} direcciones nuevas guardadas en Memoria.`);
+
+    // Mover al final
+    addresses.push(addresses.splice(i, 1)[0]);
+    saveData();
   }
 
-  function markIssue(i) { addresses[i].status='issue'; saveData(); }
-  function deleteItem(i) { if(confirm("¿Borrar?")) { addresses.splice(i,1); saveData(); } }
-  function deleteAll() { if(confirm("¿BORRAR TODO (RUTA Y MEMORIA)?")) { addresses=[]; historyDB=[]; saveData(); saveMem(); sessionStorage.removeItem('celebrated'); } }
-  function editItem(i) { const t=prompt("Editar:", addresses[i].text); if(t) { addresses[i].text=t; addresses[i].lat=null; saveData(); } }
-  function openMap(txt) { window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(txt)}`, '_blank'); }
+  function markIssue(i) {
+    addresses[i].status = 'issue';
+    saveData();
+  }
 
-  /* ================= ORDENAR GPS ================= */
+  function deleteItem(i) {
+    if (!confirm("¿Borrar esta dirección de la ruta?")) return;
+    addresses.splice(i, 1);
+    saveData();
+  }
+
+  function editItem(i) {
+    const current = addresses[i].text;
+    const updated = prompt("Editar dirección:", current);
+    if (!updated || !updated.trim()) return;
+    addresses[i].text = updated.trim();
+    // Al cambiar texto, ya no confiamos en lat/lon
+    addresses[i].lat = null;
+    addresses[i].lon = null;
+    addresses[i].dist = null;
+    saveData();
+  }
+
+  /* ================= MAPAS & DISTANCIA ================= */
+  function openMap(txt, lat, lon) {
+    let url;
+    if (lat != null && lon != null) {
+      // Navegación directa
+      url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`;
+    } else {
+      // Búsqueda por texto
+      url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(txt)}`;
+    }
+    window.open(url, '_blank');
+  }
+
+  function calcDist(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const toRad = d => d * Math.PI / 180;
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  async function geocodeAddress(text) {
+    if (!API_KEY || API_KEY === "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImI5NjlmYzJiMDY0YjQzMWQ5NDBmMGE0NjYzOWJiMWI2IiwiaCI6Im11cm11cjY0In0=") {
+      console.warn("No hay API_KEY configurada.");
+      return null;
+    }
+    const clean = text.replace(/cliente|entregar|consegna|tel|cel|cell|citofono|piso|piano|scala/gi,"").trim();
+    const url = `https://api.openrouteservice.org/geocode/search?api_key=${encodeURIComponent(API_KEY)}&text=${encodeURIComponent(clean)}&size=1`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Error en geocoding");
+    const data = await res.json();
+    if (!data.features || !data.features.length) return null;
+    const [lon, lat] = data.features[0].geometry.coordinates;
+    return { lat, lon };
+  }
+
   async function sortWithGPS() {
-    const btn=document.getElementById('sortBtn'); if(!navigator.geolocation) return alert("Activa GPS");
-    btn.disabled=true; btn.textContent="🛰️ Calculando...";
-    navigator.geolocation.getCurrentPosition(async p => {
-      const myLat=p.coords.latitude, myLon=p.coords.longitude;
-      for(let item of addresses) {
-        if(item.statu
+    const btn = document.getElementById('sortBtn');
+    if (!navigator.geolocation) {
+      alert("Activa el GPS en tu dispositivo.");
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "🛰️ Calculando...";
+
+    navigator.geolocation.getCurrentPosition(async pos => {
+      const myLat = pos.coords.latitude;
+      const myLon = pos.coords.longitude;
+
+      for (const item of addresses) {
+        if (item.status !== 'pending') continue;
+
+        try {
+          if (item.lat == null || item.lon == null) {
+            const geo = await geocodeAddress(item.text);
+            if (geo) {
+              item.lat = geo.lat;
+              item.lon = geo.lon;
+            }
+            await new Promise(r => setTimeout(r, 600)); // pequeña pausa
+          }
+
+          if (item.lat != null && item.lon != null) {
+            item.dist = calcDist(myLat, myLon, item.lat, item.lon);
+          } else {
+            item.dist = null;
+          }
+        } catch (e) {
+          console.error("Error geocoding", item.text, e);
+          item.dist = null;
+        }
+      }
+
+      // Ordenar: primero pendientes por distancia, luego el resto
+      addresses.sort((a, b) => {
+        if (a.status !== 'pending' && b.status === 'pending') return 1;
+        if (a.status === 'pending' && b.status !== 'pending') return -1;
+        const da = a.dist != null ? a.dist : 99999;
+        const db = b.dist != null ? b.dist : 99999;
+        return da - db;
+      });
+
+      saveData();
+      btn.disabled = false;
+      btn.textContent = "🔄 Ordenar GPS";
+      showToast("✅ Ruta ordenada por distancia.");
+    }, err => {
+      console.error(err);
+      alert("No se pudo obtener tu ubicación.");
+      btn.disabled = false;
+      btn.textContent = "🔄 Ordenar GPS";
+    });
+  }
+
+  /* ================= RASTREO EN VIVO ================= */
+  function toggleLiveTracking() {
+    const btn = document.getElementById('liveBtn');
+
+    // Si ya está activo, lo apagamos
+    if (liveWatchId != null) {
+      navigator.geolocation.clearWatch(liveWatchId);
+      liveWatchId = null;
+      btn.textContent = "🛰️ Rastreo Vivo";
+      showToast("GPS detenido.");
+      return;
+    }
+
+    if (!navigator.geolocation) {
+      alert("Tu dispositivo no soporta GPS o está desactivado.");
+      return;
+    }
+
+    btn.textContent = "🛰️ Rastreo ON";
+
+    liveWatchId = navigator.geolocation.watchPosition(pos => {
+      const myLat = pos.coords.latitude;
+      const myLon = pos.coords.longitude;
+      let changed = false;
+
+      for (const item of addresses) {
+        if (item.lat != null && item.lon != null) {
+          const d = calcDist(myLat, myLon, item.lat, item.lon);
+          item.dist = d;
+          // Si está muy cerca y pendiente, marcar como hecho automáticamente
+          if (item.status === 'pending' && d < 0.08) { // ~80 metros
+            item.status = 'done';
+            changed = true;
+          } else {
+            changed = true;
+          }
+        }
+      }
+
+      if (changed) {
+        saveData();
+      }
+    }, err => {
+      console.error(err);
+      showToast("No se pudo activar el rastreo.");
+      navigator.geolocation.clearWatch(liveWatchId);
+      liveWatchId = null;
+      btn.textContent = "🛰️ Rastreo Vivo";
+    }, {
+      enableHighAccuracy: true,
+      maximumAge: 10000,
+      timeout: 20000
+    });
+  }
+
+  /* ================= BACKUP & MEMORIA ================= */
+  function saveDayToMemory() {
+    let c = 0;
+    addresses.forEach(a => {
+      if (!historyDB.some(h => h.text === a.text)) {
+        historyDB.push({
+          text: a.text,
+          lat: a.lat || null,
+          lon: a.lon || null
+        });
+        c++;
+      }
+    });
+    saveMem();
+    alert(`✅ ${c} direcciones nuevas guardadas en Memoria.`);
+  }
+
+  function exportData() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(addresses));
+    const node = document.createElement('a');
+    node.setAttribute("href", dataStr);
+    node.setAttribute("download", "backup_somardrive_v15.json");
+    document.body.appendChild(node);
+    node.click();
+    node.remove();
+  }
+
+  function importData(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        addresses = JSON.parse(e.target.result);
+        saveData();
+        showToast("✅ Copia cargada.");
+      } catch (err) {
+        alert("Archivo inválido.");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  /* ================= BORRADOS (RUTA / MEMORIA / TOTAL) ================= */
+  function clearRoute() {
+    if (!confirm("¿Borrar SOLO la ruta actual?\n\nLas direcciones en pantalla se eliminarán,\npero la memoria seguirá guardada.")) return;
+    addresses = [];
+    saveData();
+
+    // Si había rastreo activo, lo apagamos
+    if (liveWatchId != null) {
+      navigator.geolocation.clearWatch(liveWatchId);
+      liveWatchId = null;
+      document.getElementById('liveBtn').textContent = "🛰️ Rastreo Vivo";
+    }
+
+    showToast("🧼 Ruta borrada, memoria intacta.");
+  }
+
+  function clearMemory() {
+    if (!confirm("¿Borrar la MEMORIA de SomarDrive?\n\nSe olvidarán las direcciones aprendidas.\nLa ruta actual seguirá en pantalla.")) return;
+    historyDB = [];
+    saveMem();
+    showToast("🧠 Memoria borrada. SomarDrive empieza de cero.");
+  }
+
+  function deleteAll() {
+    if (!confirm("⚠️ RESET TOTAL\n\n¿Borrar RUTA + MEMORIA?\n\nUsa esto solo si quieres empezar COMPLETAMENTE de cero.")) return;
+    addresses = [];
+    historyDB = [];
+    saveData();
+    saveMem();
+
+    if (liveWatchId != null) {
+      navigator.geolocation.clearWatch(liveWatchId);
+      liveWatchId = null;
+      document.getElementById('liveBtn').textContent = "🛰️ Rastreo Vivo";
+    }
+
+    showToast("♻️ Todo reseteado.");
+  }
+</script>
+</body>
+</html>
