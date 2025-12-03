@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>SomarDrive V14 🚛</title>
+  <title>SomarDrive V15 Final 🚛</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#0d1b3d">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,76 +12,82 @@
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
   <style>
-    /* ESTILOS (Igual que V13 para mantener tu diseño) */
+    /* --- DISEÑO PRO V15 --- */
     :root {
       --bg-dark: #020617; --card-bg: #1e293b; --accent: #3b82f6; --text: #f1f5f9;
       --green: #22c55e; --red: #ef4444; --yellow: #eab308; --wa: #25D366;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; background-color: var(--bg-dark); color: var(--text); padding-bottom: 30px; }
+    body { margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; background-color: var(--bg-dark); color: var(--text); padding-bottom: 220px; }
     .container { max-width: 600px; margin: 0 auto; padding: 15px; }
 
-    .god-banner { background: linear-gradient(135deg, #1e3a8a, #172554); padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
-    .god-title { font-weight: 800; color: #fbbf24; font-size: 1.1rem; margin-bottom: 5px; }
+    /* Header */
+    .god-banner {
+      background: linear-gradient(135deg, #1e3a8a, #172554); padding: 15px; border-radius: 12px;
+      margin-bottom: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .god-title { font-weight: 800; color: #fbbf24; font-size: 1.1rem; margin-bottom: 5px; text-transform: uppercase; }
     .god-text { font-size: 0.9rem; line-height: 1.4; color: #e2e8f0; font-style: italic; }
 
-    .btn-main { width: 100%; padding: 14px; margin-bottom: 10px; border: none; border-radius: 30px; font-weight: 600; font-size: 1rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: transform 0.1s; }
-    .btn-main:active { transform: scale(0.95); }
-    .btn-blue { background-color: var(--accent); color: white; }
-    .btn-gray { background-color: #475569; color: #cbd5e1; }
-    .btn-red { background-color: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid #ef4444; }
-    .btn-green { background-color: var(--green); color: white; }
-    .btn-gold { background: linear-gradient(45deg, #fbbf24, #d97706); color: #000; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4); border: 1px solid #f59e0b; }
+    /* Botones */
+    .btn-main { width: 100%; padding: 14px; margin-bottom: 10px; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: transform 0.1s, opacity 0.2s; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+    .btn-main:active { transform: scale(0.96); }
+    .btn-blue { background: linear-gradient(to bottom, #3b82f6, #2563eb); box-shadow: 0 4px 0 #1d4ed8; }
+    .btn-gray { background: linear-gradient(to bottom, #475569, #334155); box-shadow: 0 4px 0 #1e293b; color: #cbd5e1; }
+    .btn-red { background: linear-gradient(to bottom, #ef4444, #dc2626); box-shadow: 0 4px 0 #b91c1c; }
+    .btn-green { background: linear-gradient(to bottom, #22c55e, #16a34a); box-shadow: 0 4px 0 #15803d; }
+    .btn-gold { background: linear-gradient(to bottom, #fbbf24, #d97706); box-shadow: 0 4px 0 #b45309; color: #000; text-shadow: none; }
 
-    #previewContainer { display: none; margin-top: 10px; text-align: center; }
-    #preview { width: 100%; border-radius: 10px; border: 2px solid #334155; }
-    #editorSection { display: none; margin-top: 20px; }
-    .address-input { width: 100%; background: #0f172a; border: 2px solid var(--accent); color: white; padding: 12px; border-radius: 10px; font-size: 1rem; min-height: 80px; }
-    #linesContainer { background: #0f172a; padding: 10px; border-radius: 10px; max-height: 200px; overflow-y: auto; margin-bottom: 10px; border: 1px solid #334155; }
-    .line-item { display: flex; gap: 10px; padding: 8px; border-bottom: 1px solid #1e293b; align-items: center; }
-
-    #addressList { list-style: none; padding: 0; margin-top: 10px; }
-    .card { background: var(--card-bg); margin-bottom: 12px; border-radius: 12px; padding: 12px; border-left: 5px solid var(--yellow); position: relative; transition: all 0.3s ease; }
-    .card.done { border-left-color: var(--green); opacity: 0.6; }
-    .card.issue { border-left-color: var(--red); }
-    .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
-    .card-text { font-size: 1rem; font-weight: 600; line-height: 1.3; color: white; width: 80%; }
-    .manual-sort { display: flex; flex-direction: column; gap: 2px; }
-    .sort-arrow { background: none; border: 1px solid #475569; color: #94a3b8; border-radius: 4px; padding: 2px 6px; cursor: pointer; font-size: 0.8rem; }
-    .card-meta { margin-top: 5px; font-size: 0.8rem; color: #94a3b8; display: flex; gap: 10px; align-items: center; }
-    .meta-dist { color: var(--accent); font-weight: 800; font-size: 0.95rem; }
-
-    .card-actions { display: flex; gap: 5px; margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
-    .icon-btn { flex: 1; padding: 12px 0; border: none; border-radius: 8px; font-size: 1.3rem; cursor: pointer; background: #334155; color: white; }
-    .btn-wa { background: var(--wa); } 
-    .btn-map { background: #2563eb; }
-    .btn-edit { background: #64748b; }
-    .btn-done { background: #16a34a; }
-    .btn-issue { background: #d97706; }
-    .btn-del { background: #dc2626; }
+    /* UI Foto y Editor */
+    #previewContainer { display: none; margin-top: 15px; border-radius: 10px; overflow: hidden; border: 2px solid #334155; position: relative; }
+    #preview { width: 100%; display: block; }
+    #ocrStatus { text-align: center; color: var(--accent); margin: 15px; font-weight: 600; display: none; }
     
+    #editorSection { display: none; background: var(--card-bg); padding: 15px; border-radius: 15px; margin-top: 20px; border: 1px solid #334155; }
+    .address-input { width: 100%; background: #0f172a; border: 2px solid #334155; color: white; padding: 12px; border-radius: 10px; font-size: 1rem; min-height: 80px; font-family: inherit; margin-top: 10px; }
+    .address-input:focus { border-color: var(--accent); outline: none; }
+    #linesContainer { max-height: 150px; overflow-y: auto; margin-bottom: 10px; }
+    .line-item { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; gap: 10px; align-items: center; }
+
+    /* Tarjetas */
+    #addressList { list-style: none; padding: 0; margin-top: 15px; }
+    .card { background: var(--card-bg); margin-bottom: 12px; border-radius: 12px; padding: 15px; border-left: 5px solid var(--yellow); position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    .card.done { border-left-color: var(--green); opacity: 0.7; order: 100; } /* Se van al fondo */
+    .card.issue { border-left-color: var(--red); }
+    
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+    .card-text { font-size: 1.05rem; font-weight: 600; line-height: 1.3; color: white; word-break: break-word; }
+    .card-meta { margin-top: 8px; font-size: 0.85rem; color: #94a3b8; display: flex; gap: 10px; align-items: center; }
+    
+    /* Botones Acciones */
+    .card-actions { display: flex; gap: 8px; margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
+    .icon-btn { flex: 1; padding: 10px 0; border: none; border-radius: 8px; font-size: 1.4rem; cursor: pointer; background: rgba(255,255,255,0.05); transition: background 0.2s; }
+    .icon-btn:hover { background: rgba(255,255,255,0.15); }
+
+    /* Backup Area */
+    .backup-area { margin-top: 30px; padding: 20px; background: #0f172a; border-radius: 15px; border: 2px dashed #334155; text-align: center; }
+    .backup-label { color: #94a3b8; font-size: 0.9rem; display: block; margin-bottom: 10px; font-weight: 600; text-transform: uppercase; }
+
+    /* Footer Estático */
+    .footer-static {
+      position: fixed; bottom: 0; left: 0; width: 100%; height: auto;
+      background: linear-gradient(to top, #020617 85%, transparent);
+      z-index: 900; text-align: center; padding-bottom: 10px; pointer-events: none;
+    }
+    .truck-image { width: 85%; max-width: 162px; display: block; margin: 0 auto; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); transform: translateY(5px); }
+    .safety-text { color: var(--red); font-weight: 800; font-size: 0.9rem; margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); text-transform: uppercase; letter-spacing: 1px; }
+
+    /* Modal Celebración */
     #celebrationModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 20px; }
-    .cel-title { font-size: 2rem; color: #fbbf24; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px #fbbf24; }
-    .cel-text { font-size: 1.2rem; color: #fff; margin-bottom: 30px; font-style: italic; }
     .confetti { position: absolute; width: 10px; height: 10px; background-color: #f00; animation: fall linear forwards; }
     @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
 
-    .backup-area { margin-top: 30px; padding: 15px; background: #0f172a; border-radius: 10px; border: 1px dashed #475569; text-align: center; }
-    
-    #toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 100; left: 50%; bottom: 30px; transform: translateX(-50%); box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
-    #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
-    @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
-    @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
-
-    /* FOOTER ESTÁTICO IMAGEN */
-    .footer-static {
-      position: fixed; bottom: 0; left: 0; width: 100%; height: auto;
-      background: linear-gradient(to top, #0f172a 90%, transparent); 
-      z-index: 100; text-align: center; padding-bottom: 5px; pointer-events: none;
-    }
-    .safety-text { color: #ef4444; font-weight: 800; font-size: 0.9rem; margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-    .truck-image { width: 90%; max-width: 162px; height: auto; display: block; margin: 0 auto; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6)); }
-
+    /* Toast */
+    #toast { visibility: hidden; min-width: 280px; background-color: #333; color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 1000; left: 50%; bottom: 40px; transform: translateX(-50%); box-shadow: 0 10px 30px rgba(0,0,0,0.7); font-weight: 600; }
+    #toast.show { visibility: visible; animation: fadein 0.3s, fadeout 0.3s 2.5s; }
+    @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 40px; opacity: 1;} }
+    @keyframes fadeout { from {bottom: 40px; opacity: 1;} to {bottom: 0; opacity: 0;} }
   </style>
 </head>
 <body>
@@ -93,7 +99,7 @@
     <div class="god-text">"Encomienda a Jehová tu camino, y confía en él; y él hará." (Salmos 37:5)</div>
   </div>
 
-  <h2>📸 1. Capturar</h2>
+  <h2 style="color:#94a3b8; margin:20px 0 10px;">📸 Capturar</h2>
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
     <button class="btn-main btn-blue" onclick="document.getElementById('cameraInput').click()">📷 Cámara</button>
     <button class="btn-main btn-gray" onclick="document.getElementById('fileInput').click()">📂 Galería</button>
@@ -103,75 +109,87 @@
 
   <div id="previewContainer">
     <img id="preview" />
-    <button class="btn-main btn-red" onclick="clearImage()" style="margin-top:10px;">❌ Borrar Foto</button>
+    <button class="btn-main btn-red" onclick="clearImage()" style="margin:10px; width:calc(100% - 20px);">❌ Cancelar Foto</button>
   </div>
-  <div id="ocrStatus" style="text-align:center; color:var(--accent); display:none; margin:10px;">⏳ Leyendo (ES/IT)...</div>
+  <div id="ocrStatus">⏳ Analizando Imagen (ES/IT)...</div>
 
   <div id="editorSection">
-    <h2>📝 2. Verificar</h2>
+    <h3 style="margin-top:0; color:#fbbf24;">📝 Verificar Datos</h3>
     <div id="linesContainer"></div>
-    <textarea id="finalText" class="address-input" placeholder="Dirección..."></textarea>
-    <button class="btn-main btn-blue" onclick="saveAddress()" style="margin-top:10px;">💾 Guardar</button>
+    <textarea id="finalText" class="address-input" placeholder="La dirección aparecerá aquí..."></textarea>
+    <button class="btn-main btn-green" onclick="saveAddress()" style="margin-top:10px;">💾 Guardar en Ruta</button>
   </div>
 
-  <h2 style="display:flex; justify-content:space-between; align-items:center;">
-    📍 Ruta (<span id="countPending">0</span>)
-    <small style="font-size:0.7rem; color:#94a3b8;" id="historyBadge">Memoria: 0</small>
-  </h2>
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-top:30px;">
+    <h2 style="margin:0; display:flex; align-items:center; gap:8px;">📍 Ruta <span style="background:#334155; padding:2px 8px; border-radius:10px; font-size:0.9rem;" id="countPending">0</span></h2>
+    <small style="color:#fbbf24; font-weight:bold;" id="historyBadge">Memoria: 0</small>
+  </div>
   
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-    <button id="sortBtn" class="btn-main btn-gray" style="font-size:0.9rem;" onclick="sortWithGPS()">🔄 Ordenar GPS (Seguro)</button>
-    <button id="liveBtn" class="btn-main btn-gray" style="font-size:0.9rem;" onclick="toggleLiveTracking()">🛰️ Rastreo Vivo</button>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
+    <button id="sortBtn" class="btn-main btn-gray" onclick="sortWithGPS()">🔄 Ordenar GPS</button>
+    <button id="liveBtn" class="btn-main btn-gray" onclick="toggleLiveTracking()">🛰️ Rastreo Vivo</button>
   </div>
 
   <ul id="addressList"></ul>
 
-  <button class="btn-main btn-gold" onclick="saveDayToMemory()" style="margin-top:20px;">💾 GUARDAR DÍA EN MEMORIA</button>
-
-  <div class="backup-area">
-    <span style="color:#94a3b8; font-size:0.9rem;">🛡️ SEGURIDAD DE DATOS</span>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-      <button class="btn-main btn-green" onclick="exportData()" style="font-size:0.8rem; margin:0;">⬇️ Guardar Copia</button>
-      <button class="btn-main btn-gray" onclick="document.getElementById('importInput').click()" style="font-size:0.8rem; margin:0;">⬆️ Cargar Copia</button>
+  <div style="margin-top:40px;">
+    <button class="btn-main btn-gold" onclick="saveDayToMemory()">🧠 Guardar Día en Memoria</button>
+    
+    <div class="backup-area">
+      <span class="backup-label">🛡️ COPIA DE SEGURIDAD TOTAL</span>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <button class="btn-main btn-green" style="font-size:0.9rem;" onclick="exportData()">⬇️ Descargar Copia</button>
+        <button class="btn-main btn-gray" style="font-size:0.9rem;" onclick="document.getElementById('importInput').click()">⬆️ Cargar Copia</button>
+      </div>
+      <input type="file" id="importInput" accept=".json" hidden onchange="importData(this)">
     </div>
-    <input type="file" id="importInput" accept=".json" hidden onchange="importData(this)">
-  </div>
 
-  <button class="btn-main btn-red" onclick="deleteAll()" style="margin-top:20px; margin-bottom:150px;">🗑️ BORRAR TODO</button>
+    <button class="btn-main btn-red" onclick="deleteAll()" style="margin-top:20px;">🗑️ BORRAR TODO (Ruta y Memoria)</button>
+  </div>
 
 </div>
 
 <div class="footer-static">
   <div class="safety-text">⚠️ CONDUCE CON CUIDADO</div>
-  <img src="camion.png" class="truck-image" alt="SomarDrive" onerror="this.style.display='none'">
+  <img src="camion.png" class="truck-image" alt="SomarDrive Truck" onerror="this.style.display='none'">
 </div>
 
-<div id="celebrationModal" onclick="closeCelebration()">
-    <div class="cel-title">🎉 ¡FINITO! 🎉</div>
-    <div class="cel-text">"Todo lo puedo en Cristo que me fortalece."<br>(Filipenses 4:13)</div>
-    <div class="cel-text" style="font-size:1rem; margin-top:20px;">¡Gran trabajo hoy, conductor! 🚚💨<br>Toca para cerrar.</div>
+<div id="celebrationModal" onclick="this.style.display='none'">
+    <h1 style="color:#fbbf24; font-size:3rem; margin-bottom:10px; text-shadow:0 0 20px rgba(251,191,36,0.5);">🎉 ¡FINITO! 🎉</h1>
+    <p style="color:#fff; font-size:1.3rem; margin-bottom:30px; font-style:italic;">"Todo lo puedo en Cristo que me fortalece."</p>
+    <button class="btn-main btn-blue" style="width:auto; padding:10px 40px;">Cerrar</button>
 </div>
 
 <div id="toast">Notificación</div>
 
 <script>
+  /* ================= CONFIGURACIÓN ================= */
   const API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImI5NjlmYzJiMDY0YjQzMWQ5NDBmMGE0NjYzOWJiMWI2IiwiaCI6Im11cm11cjY0In0=";
-  const DB_KEY = "SomarDrive_V14";
-  const HIST_KEY = "SomarDrive_History_V14"; 
-  let addresses = [], historyDB = [], liveWatchId = null;
+  const DB_KEY = "SomarDrive_V15_Route";
+  const HIST_KEY = "SomarDrive_V15_Memory"; 
+  
+  let addresses = [];
+  let historyDB = [];
+  let liveWatchId = null;
 
+  /* ================= INICIO ================= */
   window.onload = () => {
     if(localStorage.getItem(DB_KEY)) addresses = JSON.parse(localStorage.getItem(DB_KEY));
     if(localStorage.getItem(HIST_KEY)) historyDB = JSON.parse(localStorage.getItem(HIST_KEY));
-    renderList(); updateHistoryBadge();
+    renderList(); updateBadge();
   };
-  window.onbeforeunload = () => "¡Guarda copia!";
   
+  // Guardado Automático
   function saveData() { localStorage.setItem(DB_KEY, JSON.stringify(addresses)); renderList(); }
-  function saveHistory() { localStorage.setItem(HIST_KEY, JSON.stringify(historyDB)); updateHistoryBadge(); }
-  function showToast(msg) { const t=document.getElementById("toast"); t.textContent=msg; t.className="show"; setTimeout(()=>t.className="",3000); }
-  function updateHistoryBadge() { document.getElementById("historyBadge").textContent = `Memoria: ${historyDB.length}`; }
+  function saveMem() { localStorage.setItem(HIST_KEY, JSON.stringify(historyDB)); updateBadge(); }
+  
+  function showToast(msg) { 
+    const t = document.getElementById("toast"); t.textContent = msg; t.className = "show"; 
+    setTimeout(() => t.className = "", 3000); 
+  }
+  function updateBadge() { document.getElementById("historyBadge").textContent = `Memoria: ${historyDB.length}`; }
 
+  /* ================= OCR & FOTO ================= */
   function processImage(input) {
     if(!input.files[0]) return;
     const file = input.files[0];
@@ -182,31 +200,24 @@
 
     Tesseract.recognize(file, 'spa+ita').then(({ data: { text } }) => {
       document.getElementById('ocrStatus').style.display = "none";
-      checkAutoLink(text); // RECONOCIMIENTO MEJORADO
+      checkMemory(text); // Verificar memoria
       showEditor(text);
-    }).catch(e => { alert("Error lectura"); document.getElementById('ocrStatus').style.display = "none"; });
+    }).catch(e => { alert("Error al leer imagen"); document.getElementById('ocrStatus').style.display = "none"; });
   }
 
-  // --- NUEVA LÓGICA DE RECONOCIMIENTO (EL CEREBRO POTENTE) ---
-  function checkAutoLink(scannedText) {
+  // --- CEREBRO: BUSCADOR INTELIGENTE EN MEMORIA ---
+  function checkMemory(scannedText) {
       const cleanScan = scannedText.toLowerCase();
-      
-      // Buscar en TODA la memoria
-      const found = historyDB.find(savedItem => {
-          // Dividir la dirección guardada en palabras clave (ej: "Via", "Roma", "35")
-          // Ignoramos palabras muy cortas (1 letra)
-          const keywords = savedItem.text.toLowerCase().split(/[\s,.-]+/).filter(w => w.length > 1);
-          
-          if(keywords.length === 0) return false;
-
-          // Contar cuántas palabras clave aparecen en el texto escaneado
+      // Buscamos coincidencia parcial
+      const found = historyDB.find(h => {
+          // Si el texto de memoria está dentro del escaneado
+          if (cleanScan.includes(h.text.toLowerCase())) return true;
+          // O si se parecen mucho (palabras clave)
+          const keys = h.text.toLowerCase().split(/[\s,.-]+/).filter(w => w.length > 2);
+          if(keys.length === 0) return false;
           let hits = 0;
-          keywords.forEach(word => {
-              if (cleanScan.includes(word)) hits++;
-          });
-
-          // Si el 70% de las palabras coinciden, es la misma dirección
-          return (hits / keywords.length) > 0.70;
+          keys.forEach(k => { if(cleanScan.includes(k)) hits++; });
+          return (hits / keys.length) >= 0.6; // 60% coincidencia
       });
 
       if(found) {
@@ -234,23 +245,23 @@
   function clearImage() {
     document.getElementById('previewContainer').style.display="none";
     document.getElementById('editorSection').style.display="none";
-    document.getElementById('cameraInput').value="";
-    document.getElementById('fileInput').value="";
+    document.getElementById('cameraInput').value=""; 
+    document.getElementById('fileInput').value=""; 
     document.getElementById('finalText').value="";
   }
 
-  // GUARDAR: AHORA AGREGA A MEMORIA INMEDIATAMENTE
+  /* ================= GUARDAR Y MEMORIZAR ================= */
   function saveAddress() {
     const txt = document.getElementById('finalText').value.trim();
-    if(!txt) return showToast("⚠️ Texto vacío");
+    if(!txt) return showToast("⚠️ Escribe algo");
 
-    // Verificar si ya existe en memoria (Exacto)
+    // Verificar si ya existe en memoria
     let exists = historyDB.find(h => h.text === txt);
     
-    // Si no existe, lo guardamos YA MISMO (para que aprenda rápido)
+    // Si NO existe, lo guardamos YA MISMO en memoria (Aprendizaje Rápido)
     if (!exists) {
         historyDB.push({ text: txt, lat: null, lon: null });
-        saveHistory();
+        saveMem();
         exists = true;
     }
 
@@ -259,105 +270,93 @@
       lat: exists.lat || null, lon: exists.lon || null, dist: null, fromMemory: !!exists
     });
     
-    saveData(); clearImage(); showToast("🧠 Guardado y Memorizado");
+    saveData(); clearImage(); showToast("🧠 ¡Guardado y Memorizado!");
   }
 
+  /* ================= RENDERIZADO ================= */
   function renderList() {
     const list = document.getElementById('addressList'); list.innerHTML = "";
     const pending = addresses.filter(a => a.status === 'pending').length;
     document.getElementById('countPending').textContent = pending;
 
     if(pending === 0 && addresses.length > 0 && !sessionStorage.getItem('celebrated')) {
-        triggerConfetti(); document.getElementById('celebrationModal').style.display = 'flex';
+        triggerConfetti(); 
+        document.getElementById('celebrationModal').style.display = 'flex';
         sessionStorage.setItem('celebrated', 'true');
     }
 
-    if(addresses.length === 0) list.innerHTML = "<div style='text-align:center;color:#64748b;padding:20px;'>Lista vacía</div>";
+    if(addresses.length === 0) list.innerHTML = "<div style='text-align:center;padding:30px;color:#64748b;'>Lista vacía.<br>¡Buen trabajo!</div>";
 
     addresses.forEach((item, index) => {
       const li = document.createElement('li');
       li.className = `card ${item.status}`;
       
+      // WhatsApp IT/PE
       let waBtn = "";
       const phone = item.text.replace(/\s/g, '').match(/(?:\+|00)?(3\d{9}|9\d{8})/);
       if (phone) {
          let num = phone[1], code = num.startsWith('3') ? "39" : "51";
-         waBtn = `<button class="icon-btn btn-wa" onclick="window.open('https://wa.me/${code}${num}', '_blank')">📞</button>`;
+         waBtn = `<button class="icon-btn" style="color:#25D366;background:rgba(37,211,102,0.1);" onclick="window.open('https://wa.me/${code}${num}', '_blank')">📞</button>`;
       }
 
-      const memTag = item.fromMemory ? `<span style="color:#d946ef; font-size:0.8rem;">🧠 Memoria</span>` : "";
-      const distTag = (item.dist) ? `<span style="color:var(--accent); font-weight:800; font-size:0.9rem;">🏁 ${item.dist.toFixed(1)} km</span>` : "";
+      const memTag = item.fromMemory ? `<span style="color:#d946ef;font-weight:700;font-size:0.8rem;">🧠 MEMORIA</span>` : "";
+      const distTag = (item.dist) ? `<span style="color:var(--accent);font-weight:800;">🏁 ${item.dist.toFixed(1)} km</span>` : "";
 
       li.innerHTML = `
         <div class="card-header">
           <div class="card-text">${item.text}</div>
-          <div class="manual-sort">
-            <button class="sort-arrow" onclick="moveItem(${index}, -1)">▲</button>
-            <button class="sort-arrow" onclick="moveItem(${index}, 1)">▼</button>
+          <div style="display:flex; flex-direction:column; gap:2px;">
+            <button onclick="moveItem(${index}, -1)" style="background:none;border:1px solid #475569;color:#94a3b8;border-radius:4px;">▲</button>
+            <button onclick="moveItem(${index}, 1)" style="background:none;border:1px solid #475569;color:#94a3b8;border-radius:4px;">▼</button>
           </div>
         </div>
-        <div class="card-meta"><span class="meta-dist">${distTag}</span> ${memTag}</div>
+        <div class="card-meta">${distTag} ${memTag}</div>
         <div class="card-actions">
-          <button class="icon-btn btn-map" onclick="openMap('${item.text.replace(/'/g,"\\'")}')">🗺️</button>
-          <button class="icon-btn btn-edit" onclick="editItem(${index})">✏️</button>
-          ${waBtn} 
-          <button class="icon-btn btn-done" onclick="markDone(${index})">✅</button>
-          <button class="icon-btn btn-issue" onclick="markIssue(${index})">⚠️</button>
-          <button class="icon-btn btn-del" onclick="deleteItem(${index})">🗑️</button>
+          <button class="icon-btn" style="color:#60a5fa" onclick="openMap('${item.text.replace(/'/g,"\\'")}')">🗺️</button>
+          <button class="icon-btn" onclick="editItem(${index})">✏️</button>
+          ${waBtn}
+          <button class="icon-btn" style="color:#34d399" onclick="markDone(${index})">✅</button>
+          <button class="icon-btn" style="color:#f59e0b" onclick="markIssue(${index})">⚠️</button>
+          <button class="icon-btn" style="color:#f87171" onclick="deleteItem(${index})">🗑️</button>
         </div>
       `;
       list.appendChild(li);
     });
   }
 
-  function moveItem(i, dir) { if(i+dir < 0 || i+dir >= addresses.length) return; const t = addresses[i]; addresses.splice(i, 1); addresses.splice(i+dir, 0, t); saveData(); }
+  function moveItem(i, dir) { if(i+dir<0 || i+dir>=addresses.length) return; const t=addresses[i]; addresses.splice(i,1); addresses.splice(i+dir,0,t); saveData(); }
   function markDone(i) {
     const item = addresses[i]; item.status = 'done';
-    // Si al llegar tienes GPS, actualiza la memoria con coordenadas precisas
-    if(item.lat && !historyDB.some(h => h.text === item.text && h.lat)) { 
-        // Actualizar entrada existente
-        let memIndex = historyDB.findIndex(h => h.text === item.text);
-        if(memIndex >= 0) { historyDB[memIndex].lat = item.lat; historyDB[memIndex].lon = item.lon; }
-        else { historyDB.push({ text: item.text, lat: item.lat, lon: item.lon }); }
-        saveHistory(); 
+    // Si tiene GPS, actualizamos la memoria para hacerla más precisa
+    if(item.lat) { 
+        let mIdx = historyDB.findIndex(h => h.text === item.text);
+        if(mIdx >= 0) { historyDB[mIdx].lat = item.lat; historyDB[mIdx].lon = item.lon; saveMem(); }
     }
     addresses.push(addresses.splice(i, 1)[0]); saveData(); checkFinish();
   }
-
-  function saveDayToMemory() {
-      let count = 0;
-      addresses.forEach(item => {
-          if(!historyDB.some(h => h.text === item.text)) {
-              historyDB.push({ text: item.text, lat: item.lat || null, lon: item.lon || null });
-              count++;
-          }
-      });
-      saveHistory(); alert(`✅ Guardadas ${count} nuevas.`);
-  }
-
   function checkFinish() {
       const pending = addresses.filter(a => a.status === 'pending').length;
-      if(pending === 0 && addresses.length > 0) {
-          triggerConfetti(); document.getElementById('celebrationModal').style.display = 'flex';
-          sessionStorage.setItem('celebrated', 'true');
-      }
+      if(pending === 0 && addresses.length > 0) { triggerConfetti(); document.getElementById('celebrationModal').style.display = 'flex'; sessionStorage.setItem('celebrated', 'true'); }
   }
-  function closeCelebration() { document.getElementById('celebrationModal').style.display = 'none'; }
+  
+  // GUARDAR MANUAL DEL DÍA
+  function saveDayToMemory() {
+      let c = 0;
+      addresses.forEach(a => { if(!historyDB.some(h => h.text === a.text)) { historyDB.push({ text: a.text, lat: a.lat, lon: a.lon }); c++; } });
+      saveMem(); alert(`✅ ${c} direcciones nuevas guardadas en Memoria.`);
+  }
+
   function markIssue(i) { addresses[i].status='issue'; saveData(); }
   function deleteItem(i) { if(confirm("¿Borrar?")) { addresses.splice(i,1); saveData(); } }
-  function deleteAll() { if(confirm("¿TODO?")) { addresses=[]; saveData(); sessionStorage.removeItem('celebrated'); } }
-  function editItem(i) { const t = prompt("Editar:", addresses[i].text); if(t) { addresses[i].text = t; addresses[i].lat=null; saveData(); } }
+  function deleteAll() { if(confirm("¿BORRAR TODO (RUTA Y MEMORIA)?")) { addresses=[]; historyDB=[]; saveData(); saveMem(); sessionStorage.removeItem('celebrated'); } }
+  function editItem(i) { const t=prompt("Editar:", addresses[i].text); if(t) { addresses[i].text=t; addresses[i].lat=null; saveData(); } }
   function openMap(txt) { window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(txt)}`, '_blank'); }
 
+  /* ================= ORDENAR GPS ================= */
   async function sortWithGPS() {
     const btn=document.getElementById('sortBtn'); if(!navigator.geolocation) return alert("Activa GPS");
-    btn.disabled=true; btn.textContent="🛰️ ...";
+    btn.disabled=true; btn.textContent="🛰️ Calculando...";
     navigator.geolocation.getCurrentPosition(async p => {
       const myLat=p.coords.latitude, myLon=p.coords.longitude;
       for(let item of addresses) {
-        if(item.status==='pending' && !item.lat && !item.fromMemory) {
-           try {
-               let q = item.text.toLowerCase().replace(/cliente|entregar|consegna|tel|cel|cell|citofono|piso|piano|scala|gomme|autoservice|pneumatici|srl|spa|taller|llantas|autoservizi|di\s+[a-z]+/gi, "").trim();
-               let s = ""; if (q.match(/via|viale|piazza|sondrio|so\b/)) s = ", Italia"; else if (q.match(/calle|av\.|jiron|lima/)) s = ", Peru";
-               const res = await fetch(`https://api.openrouteservice.org/geocode/search?api_key=${API_KEY}&text=${encodeURIComponent(q + s)}&size=1`);
-               const d = await res.
+        if(item.statu
