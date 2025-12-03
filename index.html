@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>SomarDrive V8 Final 🚛</title>
+  <title>SomarDrive V10 Final 🚛</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#0d1b3d">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,7 +17,7 @@
       --green: #22c55e; --red: #ef4444; --yellow: #eab308; --wa: #25D366;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; background-color: var(--bg-dark); color: var(--text); padding-bottom: 60px; }
+    body { margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; background-color: var(--bg-dark); color: var(--text); padding-bottom: 20px; }
     .container { max-width: 600px; margin: 0 auto; padding: 15px; }
 
     /* HEADER */
@@ -29,11 +29,13 @@
     .god-text { font-size: 0.9rem; line-height: 1.4; color: #e2e8f0; font-style: italic; }
 
     /* BOTONES */
-    .btn-main { width: 100%; padding: 14px; margin-bottom: 10px; border: none; border-radius: 30px; font-weight: 600; font-size: 1rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
+    .btn-main { width: 100%; padding: 14px; margin-bottom: 10px; border: none; border-radius: 30px; font-weight: 600; font-size: 1rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: transform 0.1s; }
+    .btn-main:active { transform: scale(0.95); }
     .btn-blue { background-color: var(--accent); color: white; }
     .btn-gray { background-color: #475569; color: #cbd5e1; }
     .btn-red { background-color: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid #ef4444; }
     .btn-green { background-color: var(--green); color: white; }
+    .btn-gold { background: linear-gradient(45deg, #fbbf24, #d97706); color: #000; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4); border: 1px solid #f59e0b; }
 
     /* UI ELEMENTOS */
     #previewContainer { display: none; margin-top: 10px; text-align: center; }
@@ -45,7 +47,7 @@
 
     /* TARJETAS */
     #addressList { list-style: none; padding: 0; margin-top: 10px; }
-    .card { background: var(--card-bg); margin-bottom: 12px; border-radius: 12px; padding: 12px; border-left: 5px solid var(--yellow); position: relative; }
+    .card { background: var(--card-bg); margin-bottom: 12px; border-radius: 12px; padding: 12px; border-left: 5px solid var(--yellow); position: relative; transition: all 0.3s ease; }
     .card.done { border-left-color: var(--green); opacity: 0.6; }
     .card.issue { border-left-color: var(--red); }
     .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
@@ -67,6 +69,17 @@
     .btn-issue { background: #d97706; }
     .btn-del { background: #dc2626; }
     
+    /* MODAL DE CELEBRACIÓN */
+    #celebrationModal {
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center; flex-direction: column;
+        text-align: center; padding: 20px;
+    }
+    .cel-title { font-size: 2rem; color: #fbbf24; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px #fbbf24; }
+    .cel-text { font-size: 1.2rem; color: #fff; margin-bottom: 30px; font-style: italic; }
+    .confetti { position: absolute; width: 10px; height: 10px; background-color: #f00; animation: fall linear forwards; }
+    @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+
     /* BACKUP */
     .backup-area { margin-top: 30px; padding: 15px; background: #0f172a; border-radius: 10px; border: 1px dashed #475569; text-align: center; }
     
@@ -75,6 +88,41 @@
     #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
     @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
     @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+
+    /* --- ANIMACIÓN CAMIÓN (CSS) --- */
+    .footer-animation-container {
+      position: relative; width: 100%; height: 100px;
+      background: linear-gradient(to bottom, #0f172a 0%, #1e293b 60%, #334155 100%);
+      overflow: hidden; margin-top: 0; /* Pegado al texto */
+      border-radius: 0 0 15px 15px;
+    }
+    .moving-road {
+      position: absolute; bottom: 0; left: 0; width: 200%; height: 40%; background: #334155;
+      background-image: linear-gradient(90deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.5) 50%, transparent 50%);
+      background-size: 80px 10px; background-repeat: repeat-x; background-position: 0 center;
+      animation: moveRoad 1s linear infinite; z-index: 1;
+    }
+    .moving-landscape {
+      position: absolute; bottom: 35%; left: 0; width: 200%; height: 50px;
+      background-image: linear-gradient(135deg, #0f172a 25%, transparent 25%), linear-gradient(225deg, #0f172a 25%, transparent 25%);
+      background-size: 100px 50px; animation: moveRoad 5s linear infinite; opacity: 0.5; z-index: 0;
+    }
+    @keyframes moveRoad { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    
+    .truck-container {
+      position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
+      width: 140px; height: auto; z-index: 10;
+      animation: truckBounce 0.8s ease-in-out infinite alternate;
+    }
+    @keyframes truckBounce { 0% { transform: translateX(-50%) translateY(0); } 100% { transform: translateX(-50%) translateY(-2px); } }
+    
+    .truck-text-overlay {
+      position: absolute; top: 15px; left: 38px; color: #fbbf24; font-weight: 900; font-size: 0.8rem;
+      letter-spacing: 1px; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); transform: skewX(-10deg);
+    }
+    .truck-wheel { transform-origin: center; animation: spinWheel 0.6s linear infinite; }
+    @keyframes spinWheel { 100% { transform: rotate(360deg); } }
+
   </style>
 </head>
 <body>
@@ -113,11 +161,13 @@
   </h2>
   
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-    <button id="sortBtn" class="btn-main btn-gray" style="font-size:0.9rem;" onclick="sortWithGPS()">🔄 Ordenar GPS</button>
+    <button id="sortBtn" class="btn-main btn-gray" style="font-size:0.9rem;" onclick="sortWithGPS()">🔄 Ordenar GPS (Seguro)</button>
     <button id="liveBtn" class="btn-main btn-gray" style="font-size:0.9rem;" onclick="toggleLiveTracking()">🛰️ Rastreo Vivo</button>
   </div>
 
   <ul id="addressList"></ul>
+
+  <button class="btn-main btn-gold" onclick="saveDayToMemory()" style="margin-top:20px;">💾 GUARDAR DÍA EN MEMORIA</button>
 
   <div class="backup-area">
     <span style="color:#94a3b8; font-size:0.9rem;">🛡️ SEGURIDAD DE DATOS</span>
@@ -130,19 +180,54 @@
 
   <button class="btn-main btn-red" onclick="deleteAll()" style="margin-top:20px;">🗑️ BORRAR TODO</button>
 
-  <div style="text-align:center; margin-top:30px; padding:20px; color:#ef4444; font-weight:bold; border-top:1px solid #334155;">
-    ⚠️ CONDUCE CON CUIDADO<br>
-    <span style="font-weight:normal; color:#94a3b8; font-size:0.8rem;">En casa tus familiares te esperan.</span>
+  <div style="margin-top:30px; background:#0f172a; border-radius:15px; border-top:1px solid #334155; overflow:hidden;">
+      <div style="text-align:center; padding:15px 20px 5px 20px;">
+        <span style="color:#ef4444; font-weight:800; font-size:1rem; display:block; margin-bottom:5px;">⚠️ CONDUCE CON CUIDADO</span>
+        <span style="font-weight:normal; color:#94a3b8; font-size:0.85rem;">En casa tus familiares te esperan.</span>
+      </div>
+
+      <div class="footer-animation-container">
+        <div class="moving-landscape"></div>
+        <div class="moving-road"></div>
+        <div class="truck-container">
+            <div class="truck-text-overlay">SOMARDRIVE</div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" width="140" height="70">
+            <path d="M10,70 L10,30 L40,10 L80,10 L80,70 Z" fill="#1e3a8a" stroke="#3b82f6" stroke-width="2"/>
+            <rect x="80" y="15" width="110" height="55" fill="#334155" stroke="#475569" stroke-width="2"/>
+            <rect x="82" y="17" width="106" height="51" fill="#1e293b"/>
+            <path d="M40,15 L75,15 L75,40 L35,40 Z" fill="#94a3b8" opacity="0.7"/>
+            <g class="truck-wheel" transform="translate(45, 75)">
+                <circle cx="0" cy="0" r="15" fill="#000" stroke="#333" stroke-width="3"/>
+                <circle cx="0" cy="0" r="5" fill="#94a3b8"/><line x1="-10" y1="0" x2="10" y2="0" stroke="#94a3b8" stroke-width="2"/><line x1="0" y1="-10" x2="0" y2="10" stroke="#94a3b8" stroke-width="2"/>
+            </g>
+            <g class="truck-wheel" transform="translate(110, 75)">
+                <circle cx="0" cy="0" r="15" fill="#000" stroke="#333" stroke-width="3"/>
+                <circle cx="0" cy="0" r="5" fill="#94a3b8"/><line x1="-10" y1="0" x2="10" y2="0" stroke="#94a3b8" stroke-width="2"/><line x1="0" y1="-10" x2="0" y2="10" stroke="#94a3b8" stroke-width="2"/>
+            </g>
+            <g class="truck-wheel" transform="translate(155, 75)">
+                <circle cx="0" cy="0" r="15" fill="#000" stroke="#333" stroke-width="3"/>
+                <circle cx="0" cy="0" r="5" fill="#94a3b8"/><line x1="-10" y1="0" x2="10" y2="0" stroke="#94a3b8" stroke-width="2"/><line x1="0" y1="-10" x2="0" y2="10" stroke="#94a3b8" stroke-width="2"/>
+            </g>
+            </svg>
+        </div>
+      </div>
   </div>
 
 </div>
+
+<div id="celebrationModal" onclick="closeCelebration()">
+    <div class="cel-title">🎉 ¡FINITO! 🎉</div>
+    <div class="cel-text">"Todo lo puedo en Cristo que me fortalece."<br>(Filipenses 4:13)</div>
+    <div class="cel-text" style="font-size:1rem; margin-top:20px;">¡Gran trabajo hoy, conductor! 🚚💨<br>Toca para cerrar.</div>
+</div>
+
 <div id="toast">Notificación</div>
 
 <script>
   /* CONFIG */
   const API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImI5NjlmYzJiMDY0YjQzMWQ5NDBmMGE0NjYzOWJiMWI2IiwiaCI6Im11cm11cjY0In0=";
-  const DB_KEY = "SomarDrive_V8";
-  const HIST_KEY = "SomarDrive_History_V8"; 
+  const DB_KEY = "SomarDrive_V10";
+  const HIST_KEY = "SomarDrive_History_V10"; 
   
   let addresses = [];
   let historyDB = [];
@@ -173,8 +258,20 @@
 
     Tesseract.recognize(file, 'spa+ita').then(({ data: { text } }) => {
       document.getElementById('ocrStatus').style.display = "none";
+      checkAutoLink(text); // REVISAR SI YA EXISTE EN MEMORIA
       showEditor(text);
     }).catch(e => { alert("Error lectura"); document.getElementById('ocrStatus').style.display = "none"; });
+  }
+
+  // AUTO-LINK CON MEMORIA
+  function checkAutoLink(scannedText) {
+      // Busca si alguna dirección de la memoria está dentro del texto escaneado
+      const bestMatch = historyDB.find(h => scannedText.includes(h.text) || similarity(h.text, scannedText) > 0.6);
+      if(bestMatch) {
+          if(confirm(`¡Dirección conocida en Memoria!\n"${bestMatch.text}"\n¿Usar datos guardados?`)) {
+              document.getElementById('finalText').value = bestMatch.text;
+          }
+      }
   }
 
   function showEditor(text) {
@@ -183,7 +280,7 @@
     text.split('\n').filter(l => l.trim().length > 3).forEach(l => {
       linesDiv.innerHTML += `<div class="line-item"><input type="checkbox" value="${l}" onchange="updateInput()"><span>${l}</span></div>`;
     });
-    document.getElementById('finalText').value = "";
+    if(!document.getElementById('finalText').value) document.getElementById('finalText').value = "";
   }
   
   function updateInput() {
@@ -196,6 +293,7 @@
     document.getElementById('editorSection').style.display="none";
     document.getElementById('cameraInput').value="";
     document.getElementById('fileInput').value="";
+    document.getElementById('finalText').value="";
   }
 
   /* GUARDAR INTELIGENTE */
@@ -203,7 +301,7 @@
     const txt = document.getElementById('finalText').value.trim();
     if(!txt) return showToast("⚠️ Texto vacío");
 
-    let foundInHistory = historyDB.find(h => similarity(h.text, txt) > 0.8);
+    let foundInHistory = historyDB.find(h => h.text === txt || similarity(h.text, txt) > 0.8);
     let newAddr = {
       id: Date.now(), text: txt, status: 'pending',
       lat: foundInHistory ? foundInHistory.lat : null,
@@ -213,7 +311,7 @@
     };
     addresses.unshift(newAddr);
     saveData(); clearImage();
-    if(foundInHistory) showToast("🧠 ¡Dirección recordada!"); else showToast("✅ Guardado");
+    if(foundInHistory) showToast("🧠 ¡Usando Memoria!"); else showToast("✅ Guardado");
   }
   
   function similarity(s1, s2) {
@@ -226,20 +324,24 @@
   /* RENDER LISTA */
   function renderList() {
     const list = document.getElementById('addressList'); list.innerHTML = "";
-    document.getElementById('countPending').textContent = addresses.filter(a => a.status === 'pending').length;
+    const pendingCount = addresses.filter(a => a.status === 'pending').length;
+    document.getElementById('countPending').textContent = pendingCount;
 
-    if(addresses.length === 0) { list.innerHTML = "<div style='text-align:center;color:#64748b;padding:20px;'>Lista vacía / Vuoto</div>"; return; }
+    // CELEBRACIÓN
+    if(pendingCount === 0 && addresses.length > 0 && !sessionStorage.getItem('celebrated')) {
+        // Solo celebra si la última acción fue marcar como completado
+    }
+
+    if(addresses.length === 0) { list.innerHTML = "<div style='text-align:center;color:#64748b;padding:20px;'>Lista vacía</div>"; return; }
 
     addresses.forEach((item, index) => {
       const li = document.createElement('li');
       li.className = `card ${item.status}`;
       
-      // TELEFONO IT/PE
       let waBtn = "";
       const phoneMatch = item.text.replace(/\s/g, '').match(/(?:\+|00)?(3\d{9}|9\d{8})/);
       if (phoneMatch) {
-         let rawNum = phoneMatch[1]; 
-         let countryCode = ""; let waMsg = "";
+         let rawNum = phoneMatch[1]; let countryCode = ""; let waMsg = "";
          if (rawNum.startsWith('3')) { countryCode = "39"; waMsg = "Ciao,%20sono%20il%20corriere."; } 
          else if (rawNum.startsWith('9')) { countryCode = "51"; waMsg = "Hola,%20soy%20el%20repartidor."; }
          if(countryCode) waBtn = `<button class="icon-btn btn-wa" onclick="window.open('https://wa.me/${countryCode}${rawNum}?text=${waMsg}', '_blank')">📞</button>`;
@@ -261,165 +363,4 @@
         </div>
         <div class="card-actions">
           <button class="icon-btn btn-map" onclick="openMap('${item.text.replace(/'/g,"\\'")}')">🗺️</button>
-          
-          <button class="icon-btn btn-edit" onclick="editItem(${index})">✏️</button>
-          ${waBtn} 
-          <button class="icon-btn btn-done" onclick="markDone(${index})">✅</button>
-          <button class="icon-btn btn-issue" onclick="markIssue(${index})">⚠️</button>
-          <button class="icon-btn btn-del" onclick="deleteItem(${index})">🗑️</button>
-        </div>
-      `;
-      list.appendChild(li);
-    });
-  }
-
-  function moveItem(index, dir) {
-    if(index + dir < 0 || index + dir >= addresses.length) return;
-    const item = addresses[index]; addresses.splice(index, 1); addresses.splice(index + dir, 0, item); saveData();
-  }
-
-  /* ESTADOS + MEMORIA */
-  function markDone(index) {
-    const item = addresses[index];
-    item.status = 'done';
-    
-    // GUARDAR EN MEMORIA
-    if(item.lat && item.lon && !historyDB.some(h => h.text === item.text)) { 
-      historyDB.push({ text: item.text, lat: item.lat, lon: item.lon }); 
-      saveHistory(); 
-    }
-    
-    addresses.push(addresses.splice(index, 1)[0]); 
-    showToast("🎉 ¡Listo!");
-    saveData();
-  }
-
-  function markIssue(idx) { addresses[idx].status='issue'; saveData(); }
-  function deleteItem(idx) { if(confirm("¿Borrar?")) { addresses.splice(idx,1); saveData(); } }
-  function deleteAll() { if(confirm("¿BORRAR TODO?")) { addresses=[]; saveData(); } }
-  function editItem(idx) { const txt = prompt("Editar:", addresses[idx].text); if(txt) { addresses[idx].text = txt; addresses[idx].lat=null; addresses[idx].fromHistory=false; saveData(); } }
-
-  /* CORRECCIÓN: EL MAPA SIEMPRE USA GOOGLE MAPS DIRECTO (Texto) */
-  function openMap(txt) {
-    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(txt)}`;
-    window.open(url, '_blank');
-  }
-
-  /* --- ORDENAR GPS INTELIGENTE --- */
-  async function sortWithGPS() {
-    const btn=document.getElementById('sortBtn');
-    if(!navigator.geolocation) return alert("Activa GPS");
-    btn.disabled=true; btn.textContent="🛰️ ...";
-    
-    navigator.geolocation.getCurrentPosition(async p => {
-      const myLat=p.coords.latitude; const myLon=p.coords.longitude;
-      
-      for(let item of addresses) {
-        if(item.status==='pending' && !item.lat && !item.fromHistory) {
-           try {
-               let clean = item.text.toLowerCase();
-               
-               // 1. DETECCIÓN DE CALLE (CORTAR EL RUIDO)
-               // Busca palabras clave de calles (IT/ES) y toma todo lo que sigue
-               const streetMatch = clean.match(/\b(via|viale|piazza|corso|vicolo|strada|calle|av\.|avenida|jiron|jr\.|pasaje)\b/i);
-               
-               if(streetMatch) {
-                   clean = clean.substring(streetMatch.index); // Cortar desde "Via..."
-               } else {
-                   // Fallback: limpieza básica
-                   clean = clean.replace(/cliente|entregar|consegna|tel|cel|cell|citofono|piso|piano|scala|gomme|autoservice|pneumatici|srl|spa|taller|llantas|autoservizi|di\s+[a-z]+/gi, "").trim();
-               }
-
-               // 2. DETECCIÓN DE PAÍS
-               let countrySuffix = "";
-               if (clean.match(/via|viale|piazza|corso|strada|sondrio|so\b|23\d{3}/i)) countrySuffix = ", Italia";
-               else if (clean.match(/calle|av\.|avenida|jr\.|jiron|lima|peru/i)) countrySuffix = ", Peru";
-
-               let searchQuery = clean + countrySuffix;
-               
-               const res = await fetch(`https://api.openrouteservice.org/geocode/search?api_key=${API_KEY}&text=${encodeURIComponent(searchQuery)}&size=1`);
-               const d = await res.json();
-               if(d.features?.length) { 
-                 item.lon = d.features[0].geometry.coordinates[0]; 
-                 item.lat = d.features[0].geometry.coordinates[1]; 
-               }
-               await new Promise(r=>setTimeout(r, 600)); 
-           } catch(e){}
-        }
-        if(item.lat) item.dist = calcDist(myLat, myLon, item.lat, item.lon);
-      }
-      addresses.sort((a,b) => (a.status!=='pending'?1:(a.dist||999)-(b.dist||999)));
-      saveData(); btn.disabled=false; btn.textContent="🔄 Ordenar GPS"; showToast("✅ OK");
-    });
-  }
-  
-  function calcDist(lat1,lon1,lat2,lon2) {
-    const R=6371; 
-    const dLat=(lat2-lat1)*(Math.PI/180); 
-    const dLon=(lon2-lon1)*(Math.PI/180);
-    const a = Math.sin(dLat/2)*Math.sin(dLat/2) + 
-              Math.cos(lat1*(Math.PI/180))*Math.cos(lat2*(Math.PI/180)) * Math.sin(dLon/2)*Math.sin(dLon/2);
-    return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
-  }
-
-  /* RASTREO VIVO */
-  function startLiveTracking() {
-    if (!navigator.geolocation) { alert("GPS Error"); return; }
-    liveWatchId = navigator.geolocation.watchPosition(
-      (pos) => { updateDistancesLive(pos.coords.latitude, pos.coords.longitude); },
-      (err) => { stopLiveTracking(); },
-      { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 }
-    );
-    liveTrackingActive = true;
-    document.getElementById('liveBtn').textContent = "🛰️ Detener";
-  }
-
-  function stopLiveTracking() {
-    if (liveWatchId != null) { navigator.geolocation.clearWatch(liveWatchId); liveWatchId = null; }
-    liveTrackingActive = false;
-    document.getElementById('liveBtn').textContent = "🛰️ Rastreo Vivo";
-  }
-
-  function toggleLiveTracking() {
-    if (!addresses.length) return alert("Lista vacía");
-    if (!liveTrackingActive) startLiveTracking(); else stopLiveTracking();
-  }
-  
-  function updateDistancesLive(lat, lon) {
-    let changed = false;
-    for (let item of addresses) {
-      if (item.lat && item.lon && item.status === 'pending') {
-        item.dist = calcDist(lat, lon, item.lat, item.lon);
-        changed = true;
-      }
-    }
-    if (changed) { handleAutoArrival(); saveData(); }
-  }
-
-  function handleAutoArrival() {
-    const pending = addresses.map((item, index) => ({ item, index })).filter(p => p.item.status === 'pending' && typeof p.item.dist === 'number');
-    if (pending.length === 0) return;
-    pending.sort((a, b) => a.item.dist - b.item.dist);
-    if (pending[0].item.dist <= 0.15) {
-       const i = pending[0].index;
-       markDone(i); 
-       showToast("📍 Llegaste!");
-       if(navigator.vibrate) navigator.vibrate([200,100,200]);
-    }
-  }
-
-  /* BACKUP */
-  function exportData() {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(addresses));
-    const node = document.createElement('a'); node.setAttribute("href", dataStr); node.setAttribute("download", "backup_somardrive.json");
-    document.body.appendChild(node); node.click(); node.remove();
-  }
-  function importData(input) {
-    const file = input.files[0]; if(!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => { addresses = JSON.parse(e.target.result); saveData(); showToast("✅ Backup OK"); };
-    reader.readAsText(file);
-  }
-</script>
-</body>
-</html>
+          <button class="ic
