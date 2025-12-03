@@ -80,7 +80,7 @@
     
     /* AQUÍ VA TU IMAGEN */
     .truck-image {
-      width: 90%; max-width: 160px; /* Tamaño controlado */
+      width: 30%; max-width: 163px; /* Tamaño controlado */
       height: auto;
       display: block; margin: 0 auto;
       filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6)); /* Sombra realista */
@@ -202,10 +202,26 @@
     }).catch(e => { alert("Error lectura"); document.getElementById('ocrStatus').style.display = "none"; });
   }
 
-  function checkAutoLink(scanned) {
-      const match = historyDB.find(h => scanned.includes(h.text) || similarity(h.text, scanned) > 0.6);
-      if(match && confirm(`🧠 ¡Encontré "${match.text}" en memoria!\n¿Usar?`)) {
-          document.getElementById('finalText').value = match.text;
+    // AUTO-LINK MEJORADO (Más flexible)
+  function checkAutoLink(scannedText) {
+      // Limpiamos el texto escaneado para que sea más fácil de comparar
+      const cleanScan = scannedText.toLowerCase().replace(/[^a-z0-9]/g, "");
+      
+      const bestMatch = historyDB.find(h => {
+          const cleanHist = h.text.toLowerCase().replace(/[^a-z0-9]/g, "");
+          // 1. Si el texto guardado está DENTRO del escaneado (incluso sucio)
+          if(cleanScan.includes(cleanHist)) return true;
+          // 2. Si se parecen al menos un 45% (Más tolerante a errores)
+          return similarity(h.text, scannedText) > 0.45;
+      });
+
+      if(bestMatch) {
+          // Usamos vibración para avisar que encontró algo
+          if(navigator.vibrate) navigator.vibrate(200);
+          
+          if(confirm(`🧠 ¡ENCONTRÉ ESTO EN MEMORIA!\n\n"${bestMatch.text}"\n\n¿Quieres usar los datos guardados para ahorrar tiempo?`)) {
+              document.getElementById('finalText').value = bestMatch.text;
+          }
       }
   }
 
