@@ -211,7 +211,7 @@
           const cleanHist = h.text.toLowerCase().replace(/[^a-z0-9]/g, "");
           // 1. Si el texto guardado está DENTRO del escaneado (incluso sucio)
           if(cleanScan.includes(cleanHist)) return true;
-          // 2. Si se parecen al menos un 45% (Más tolerante a errores)
+          // 2. Si se parecen al menos un 30% (Más tolerante a errores)
           return similarity(h.text, scannedText) > 0.45;
       });
 
