@@ -113,13 +113,6 @@
       box-shadow: 0 4px 0 #15803d;
     }
 
-    .btn-gold {
-      background: linear-gradient(to bottom, #fbbf24, #d97706);
-      box-shadow: 0 4px 0 #b45309;
-      color: #000;
-      text-shadow: none;
-    }
-
     /* FOTO & OCR */
     #previewContainer {
       display: none;
@@ -215,7 +208,7 @@
 
     .card.done {
       border-left-color: var(--green);
-      opacity: 0.75;
+      opacity: 0.8;
     }
 
     .card.issue {
@@ -438,9 +431,11 @@
   // CONFIGURACIÓN GENERAL
   // ==========================
 
-  // IMPORTANTE: pon aquí tu API KEY real de OpenRouteService
-  // y RESTRINGE su uso por dominio en el panel de ORS.
-  const ORS_API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImI5NjlmYzJiMDY0YjQzMWQ5NDBmMGE0NjYzOWJiMWI2IiwiaCI6Im11cm11cjY0In0=";
+  // IMPORTANTE:
+  // - Si aún no tienes API KEY de OpenRouteService,
+  //   deja este valor como está y simplemente no uses "Ordenar por GPS".
+  // - Cuando tengas tu API real, ponla aquí y RESTRINGE por dominio en ORS.
+  const ORS_API_KEY = "PON_AQUI_TU_API_KEY_DE_ORS";
 
   const DB_KEY   = "SomarDriveV16_Route";
   const HIST_KEY = "SomarDriveV16_Memory";
@@ -453,7 +448,9 @@
   function showToast(msg) {
     toastEl.textContent = msg;
     toastEl.className = "show";
-    setTimeout(() => { toastEl.className = toastEl.className.replace("show", ""); }, 3000);
+    setTimeout(() => {
+      toastEl.className = toastEl.className.replace("show", "");
+    }, 3000);
   }
 
   function saveData() {
@@ -470,20 +467,24 @@
     document.getElementById("historyBadge").textContent = "Memoria: " + historyDB.length;
   }
 
-  window.onload = () => {
+  window.addEventListener("load", () => {
     try {
       const r = localStorage.getItem(DB_KEY);
       if (r) addresses = JSON.parse(r);
-    } catch(e){ addresses = []; }
+    } catch (e) {
+      addresses = [];
+    }
 
     try {
       const m = localStorage.getItem(HIST_KEY);
       if (m) historyDB = JSON.parse(m);
-    } catch(e){ historyDB = []; }
+    } catch (e) {
+      historyDB = [];
+    }
 
     renderList();
     updateHistoryBadge();
-  };
+  });
 
   // ==========================
   // OCR (solo ITALIA)
@@ -531,8 +532,9 @@
     lines.forEach(l => {
       const div = document.createElement("div");
       div.className = "line-item";
+      const safeVal = l.replace(/"/g, '&quot;');
       div.innerHTML = `
-        <input type="checkbox" onchange="updateInput()" value="${l.replace(/"/g,'&quot;')}">
+        <input type="checkbox" onchange="updateInput()" value="${safeVal}">
         <span>${l}</span>
       `;
       linesContainer.appendChild(div);
@@ -559,7 +561,7 @@
   // ==========================
 
   function normalizeText(str) {
-    return str
+    return (str || "")
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
@@ -571,6 +573,7 @@
     a = normalizeText(a);
     b = normalizeText(b);
 
+    if (!a || !b) return 0;
     if (a === b) return 1;
 
     const wordsA = a.split(/[\s,.-]+/).filter(w => w.length > 2);
@@ -585,7 +588,7 @@
   }
 
   function extractNumber(str) {
-    const m = str.match(/\b\d+\b/);
+    const m = (str || "").match(/\b\d+\b/);
     return m ? Number(m[0]) : null;
   }
 
@@ -626,7 +629,6 @@
     }
 
     // 3) Coincidencia dudosa (posible error OCR) → preguntar
-    // Umbral B3: 0.50–0.85
     if (bestMatch && bestScore >= 0.50 && bestScore <= 0.85) {
       return {
         type: "possible_error",
@@ -654,7 +656,7 @@
       addresses.unshift({
         id: Date.now(),
         text: analysis.mem.text,
-        status: 'pending',
+        status: "pending",
         lat: analysis.mem.lat || null,
         lon: analysis.mem.lon || null,
         dist: null,
@@ -672,7 +674,7 @@
       addresses.unshift({
         id: Date.now(),
         text: txt,
-        status: 'pending',
+        status: "pending",
         lat: null,
         lon: null,
         dist: null,
@@ -685,7 +687,7 @@
 
     // 3) Posible error OCR → preguntar
     if (analysis.type === "possible_error") {
-      const msg = 
+      const msg =
 `🧠 Posible coincidencia encontrada:
 
 En memoria:
@@ -702,7 +704,7 @@ Nueva:
         addresses.unshift({
           id: Date.now(),
           text: analysis.mem.text,
-          status: 'pending',
+          status: "pending",
           lat: analysis.mem.lat || null,
           lon: analysis.mem.lon || null,
           dist: null,
@@ -717,7 +719,7 @@ Nueva:
         addresses.unshift({
           id: Date.now(),
           text: txt,
-          status: 'pending',
+          status: "pending",
           lat: null,
           lon: null,
           dist: null,
@@ -735,7 +737,7 @@ Nueva:
     addresses.unshift({
       id: Date.now(),
       text: txt,
-      status: 'pending',
+      status: "pending",
       lat: null,
       lon: null,
       dist: null,
@@ -754,7 +756,312 @@ Nueva:
     const list = document.getElementById("addressList");
     list.innerHTML = "";
 
-    const pendingCount = addresses.filter(a => a.status === 'pending').length;
+    const pendingCount = addresses.filter(a => a.status === "pending").length;
     document.getElementById("countPending").textContent = pendingCount;
 
-    if (address
+    if (!addresses.length) {
+      list.innerHTML = "<div style='text-align:center;padding:20px;color:#64748b;'>Sin direcciones.<br>Empieza capturando una foto.</div>";
+      return;
+    }
+
+    addresses.forEach((item, index) => {
+      const li = document.createElement("li");
+      li.className = "card " + (item.status || "pending");
+
+      const isFromMem = item.fromMemory;
+      const distTag = item.dist != null
+        ? `<span style="color:var(--accent);font-weight:700;">🏁 ${item.dist.toFixed(1)} km</span>`
+        : "";
+      const memTag = isFromMem
+        ? `<span style="color:#d946ef;font-weight:700;">🧠 Memoria</span>`
+        : "";
+
+      // detectar teléfono para WhatsApp (IT: 3xxxxxxxxx, PE: 9xxxxxxxx)
+      let waBtn = "";
+      const digits = (item.text || "").replace(/\D/g, "");
+      const phoneMatch = digits.match(/(3\d{9}|9\d{8})/);
+      if (phoneMatch) {
+        waBtn = `<button class="icon-btn" style="color:var(--wa);" onclick="openWa(${index})">📞</button>`;
+      }
+
+      li.innerHTML = `
+        <div class="card-header">
+          <div class="card-text">${item.text}</div>
+          <div class="manual-sort">
+            <button class="sort-arrow" onclick="moveItem(${index}, -1)">▲</button>
+            <button class="sort-arrow" onclick="moveItem(${index}, 1)">▼</button>
+          </div>
+        </div>
+        <div class="card-meta">
+          ${distTag} ${memTag}
+        </div>
+        <div class="card-actions">
+          <button class="icon-btn" onclick="openMap(${index})">🗺️</button>
+          <button class="icon-btn" onclick="editItem(${index})">✏️</button>
+          ${waBtn}
+          <button class="icon-btn" onclick="markDone(${index})">✅</button>
+          <button class="icon-btn" onclick="markIssue(${index})">⚠️</button>
+          <button class="icon-btn" onclick="deleteItem(${index})">🗑️</button>
+        </div>
+      `;
+      list.appendChild(li);
+    });
+  }
+
+  // ==========================
+  // ACCIONES LISTA
+  // ==========================
+
+  function moveItem(index, dir) {
+    const newIndex = index + dir;
+    if (newIndex < 0 || newIndex >= addresses.length) return;
+    const item = addresses[index];
+    addresses.splice(index, 1);
+    addresses.splice(newIndex, 0, item);
+    saveData();
+  }
+
+  function openMap(index) {
+    const item = addresses[index];
+    if (item.lat != null && item.lon != null) {
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lon}`;
+      window.open(url, "_blank");
+    } else {
+      const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.text)}`;
+      window.open(url, "_blank");
+    }
+  }
+
+  function openWa(index) {
+    const text = addresses[index].text || "";
+    const digits = text.replace(/\D/g, "");
+    const match = digits.match(/(3\d{9}|9\d{8})/);
+    if (!match) {
+      showToast("No se detectó celular en la dirección");
+      return;
+    }
+    const num = match[1];
+    let code;
+    let msg;
+    if (num.startsWith("3")) {
+      code = "39";
+      msg = "Ciao,%20sono%20il%20corriere%20(SomarDrive).%20Sono%20qui%20fuori.";
+    } else {
+      code = "51";
+      msg = "Hola,%20soy%20tu%20repartidor%20(SomarDrive).%20Estoy%20afuera.";
+    }
+    const url = `https://wa.me/${code}${num}?text=${msg}`;
+    window.open(url, "_blank");
+  }
+
+  function markDone(index) {
+    const item = addresses[index];
+    item.status = "done";
+
+    // Sincronizar GPS con memoria si existe
+    const memIndex = historyDB.findIndex(
+      h => normalizeText(h.text) === normalizeText(item.text)
+    );
+    if (memIndex >= 0 && item.lat != null && item.lon != null) {
+      historyDB[memIndex].lat = item.lat;
+      historyDB[memIndex].lon = item.lon;
+      saveMem();
+    }
+
+    saveData();
+    showToast("✅ Marcado como entregado");
+  }
+
+  function markIssue(index) {
+    addresses[index].status = "issue";
+    saveData();
+    showToast("⚠️ Marcado con problema");
+  }
+
+  function deleteItem(index) {
+    if (!confirm("¿Borrar esta dirección de la ruta?\nLa memoria se mantiene.")) return;
+    addresses.splice(index, 1);
+    saveData();
+  }
+
+  function editItem(index) {
+    const current = addresses[index].text;
+    const updated = prompt("Editar dirección:", current);
+    if (!updated) return;
+    addresses[index].text = updated.trim();
+    addresses[index].lat = null;
+    addresses[index].lon = null;
+    addresses[index].dist = null;
+    saveData();
+  }
+
+  // ==========================
+  // ORDENAR POR GPS
+  // ==========================
+
+  function haversine(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const toRad = deg => (deg * Math.PI) / 180;
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) *
+        Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  async function sortWithGPS() {
+    const btn = document.getElementById("sortBtn");
+
+    if (!navigator.geolocation) {
+      alert("Tu dispositivo no permite obtener la ubicación.");
+      return;
+    }
+
+    if (!ORS_API_KEY || ORS_API_KEY === "PON_AQUI_TU_API_KEY_DE_ORS") {
+      showToast("Configura tu API KEY de ORS para usar el GPS.");
+      return;
+    }
+
+    if (!addresses.length) {
+      showToast("No hay direcciones para ordenar.");
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "🛰️ Calculando...";
+
+    navigator.geolocation.getCurrentPosition(async pos => {
+      const myLat = pos.coords.latitude;
+      const myLon = pos.coords.longitude;
+
+      for (const item of addresses) {
+        if (item.status === "pending" && (item.lat == null || item.lon == null)) {
+          try {
+            const clean = (item.text || "")
+              .replace(/cliente|entregar|consegna|tel|cel|cell|citofono|piso|piano|scala/gi, "")
+              .trim();
+
+            const url =
+              "https://api.openrouteservice.org/geocode/search?" +
+              "api_key=" + encodeURIComponent(ORS_API_KEY) +
+              "&text=" + encodeURIComponent(clean) +
+              "&size=1";
+
+            const res = await fetch(url);
+            if (!res.ok) throw new Error("Error ORS");
+            const data = await res.json();
+            if (data.features && data.features.length) {
+              item.lon = data.features[0].geometry.coordinates[0];
+              item.lat = data.features[0].geometry.coordinates[1];
+            }
+            await new Promise(r => setTimeout(r, 600));
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        if (item.lat != null && item.lon != null) {
+          item.dist = haversine(myLat, myLon, item.lat, item.lon);
+        } else {
+          item.dist = null;
+        }
+      }
+
+      addresses.sort((a, b) => {
+        // Primero pendientes
+        if (a.status !== "pending" && b.status === "pending") return 1;
+        if (a.status === "pending" && b.status !== "pending") return -1;
+
+        // Luego por distancia
+        if (a.dist == null && b.dist == null) return 0;
+        if (a.dist == null) return 1;
+        if (b.dist == null) return -1;
+        return a.dist - b.dist;
+      });
+
+      saveData();
+      btn.disabled = false;
+      btn.textContent = "🔄 Ordenar por GPS";
+      showToast("✅ Ruta reordenada por distancia");
+    }, err => {
+      console.error(err);
+      showToast("No se pudo obtener tu ubicación");
+      btn.disabled = false;
+      btn.textContent = "🔄 Ordenar por GPS";
+    });
+  }
+
+  function toggleLiveTracking() {
+    showToast("🛰️ Rastreo en vivo se implementará más adelante.");
+  }
+
+  // ==========================
+  // BACKUP Y LIMPIEZA
+  // ==========================
+
+  function exportData() {
+    if (!addresses.length) {
+      showToast("No hay ruta para exportar.");
+      return;
+    }
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(addresses));
+    const a = document.createElement("a");
+    a.href = dataStr;
+    a.download = "somardrive_ruta.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  function importData(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const imported = JSON.parse(e.target.result);
+        if (Array.isArray(imported)) {
+          addresses = imported;
+          saveData();
+          showToast("✅ Ruta cargada desde archivo");
+        } else {
+          showToast("Formato de archivo incorrecto");
+        }
+      } catch (err) {
+        console.error(err);
+        showToast("Error al leer el archivo");
+      }
+      input.value = "";
+    };
+    reader.readAsText(file);
+  }
+
+  function clearRoute() {
+    if (!addresses.length) {
+      showToast("No hay ruta para borrar.");
+      return;
+    }
+    if (!confirm("¿Borrar SOLO la ruta?\nLa memoria se mantiene.")) return;
+    addresses = [];
+    saveData();
+    showToast("🗑️ Ruta borrada");
+  }
+
+  function clearMemory() {
+    if (!historyDB.length) {
+      showToast("No hay memoria para borrar.");
+      return;
+    }
+    if (!confirm("⚠️ ¿Borrar TODA la memoria guardada?\nLa ruta actual se mantiene.")) return;
+    historyDB = [];
+    saveMem();
+    showToast("💣 Memoria borrada");
+    }
+</script>
+</body>
+</html>
