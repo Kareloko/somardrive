@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>SomarDrive V16 🚚🧠</title>
+  <title>SomarDrive V18 🚚🧠</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#0d1b3d">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -20,7 +20,6 @@
       --green: #22c55e;
       --red: #ef4444;
       --yellow: #eab308;
-      --wa: #25D366;
     }
 
     * {
@@ -43,7 +42,32 @@
       padding: 15px;
     }
 
-    /* HEADER */
+    /* ENCABEZADO SOMAR DRIVE */
+    .app-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .app-header-title {
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: 1px;
+    }
+
+    .app-header-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: #1e3a8a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    /* HEADER DIOS */
     .god-banner {
       background: linear-gradient(135deg, #1e3a8a, #172554);
       padding: 15px;
@@ -86,6 +110,7 @@
       transition: transform 0.1s, opacity 0.2s;
       color: white;
       text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+      white-space: nowrap;
     }
 
     .btn-main:active {
@@ -204,11 +229,7 @@
       border-left: 5px solid var(--yellow);
       position: relative;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-
-    .card.done {
-      border-left-color: var(--green);
-      opacity: 0.8;
+      transition: transform 0.1s ease;
     }
 
     .card.issue {
@@ -295,9 +316,37 @@
       color: #94a3b8;
       font-size: 0.9rem;
       display: block;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       font-weight: 600;
       text-transform: uppercase;
+    }
+
+    /* Fila horizontal con 4 botones */
+    .backup-buttons-row {
+      display: flex;
+      gap: 8px;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+    }
+
+    .backup-buttons-row .btn-main {
+      flex: 1 1 0;
+      font-size: 0.8rem;
+      padding: 10px 6px;
+    }
+
+    /* Logo debajo de los botones */
+    .logo-box {
+      margin-top: 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .logo-box img {
+      max-width: 250px;
+      width: 80%;
+      height: auto;
+      display: block;
     }
 
     /* FOOTER FIJO */
@@ -357,11 +406,34 @@
       from {bottom: 40px; opacity: 1;}
       to {bottom: 20px; opacity: 0;}
     }
+
+    /* BOTÓN MEMORIA */
+    .memory-btn {
+      background: #eab308;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border: none;
+      color: #111827;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .memory-btn:active {
+      transform: scale(0.96);
+    }
   </style>
 </head>
 <body>
 
 <div class="container">
+
+  <!-- ENCABEZADO SOMAR DRIVE -->
+  <div class="app-header">
+    <div class="app-header-icon">🚚</div>
+    <div class="app-header-title">SOMAR DRIVE</div>
+  </div>
 
   <div class="god-banner">
     <div class="god-title">👑 EL PRIMER LUGAR ES DE DIOS</div>
@@ -389,12 +461,13 @@
     <button class="btn-main btn-green" onclick="saveAddress()" style="margin-top:10px;">💾 Guardar en Ruta</button>
   </div>
 
+  <!-- RUTA + MEMORIA -->
   <div style="display:flex; justify-content:space-between; align-items:center; margin-top:30px;">
     <h2 style="margin:0; display:flex; align-items:center; gap:8px;">
       📍 Ruta 
       <span style="background:#334155; padding:2px 8px; border-radius:10px; font-size:0.9rem;" id="countPending">0</span>
     </h2>
-    <small style="color:#fbbf24; font-weight:bold;" id="historyBadge">Memoria: 0</small>
+    <button id="historyBadge" class="memory-btn" title="Ver memoria">Memoria: 0</button>
   </div>
   
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
@@ -404,17 +477,21 @@
 
   <ul id="addressList"></ul>
 
+  <!-- COPIAS Y LIMPIEZA + LOGO -->
   <div class="backup-area">
     <span class="backup-label">🛡️ COPIAS Y LIMPIEZA</span>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
-      <button class="btn-main btn-green" style="font-size:0.9rem;" onclick="exportData()">⬇️ Descargar Ruta</button>
-      <button class="btn-main btn-gray" style="font-size:0.9rem;" onclick="document.getElementById('importInput').click()">⬆️ Cargar Ruta</button>
+
+    <div class="backup-buttons-row">
+      <button class="btn-main btn-green" onclick="exportData()">⬇️ Descargar Ruta</button>
+      <button class="btn-main btn-gray" onclick="document.getElementById('importInput').click()">⬆️ Cargar Ruta</button>
+      <button class="btn-main btn-red" onclick="clearRoute()">🗑️ Borrar SOLO Ruta</button>
+      <button class="btn-main btn-red" onclick="clearMemory()">💣 Borrar SOLO Memoria</button>
     </div>
+
     <input type="file" id="importInput" accept=".json" hidden onchange="importData(this)">
 
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-      <button class="btn-main btn-red" style="font-size:0.85rem;" onclick="clearRoute()">🗑️ Borrar SOLO Ruta</button>
-      <button class="btn-main btn-red" style="font-size:0.85rem;" onclick="clearMemory()">💣 Borrar SOLO Memoria</button>
+    <div class="logo-box">
+      <img src="somardrive_logo.png" alt="SomarDrive Logo">
     </div>
   </div>
 
@@ -427,18 +504,9 @@
 <div id="toast">Notificación</div>
 
 <script>
-  // ==========================
-  // CONFIGURACIÓN GENERAL
-  // ==========================
-
-  // IMPORTANTE:
-  // - Si aún no tienes API KEY de OpenRouteService,
-  //   deja este valor como está y simplemente no uses "Ordenar por GPS".
-  // - Cuando tengas tu API real, ponla aquí y RESTRINGE por dominio en ORS.
   const ORS_API_KEY = "PON_AQUI_TU_API_KEY_DE_ORS";
-
-  const DB_KEY   = "SomarDriveV16_Route";
-  const HIST_KEY = "SomarDriveV16_Memory";
+  const DB_KEY   = "SomarDriveV18_Route";
+  const HIST_KEY = "SomarDriveV18_Memory";
 
   let addresses = [];
   let historyDB = [];
@@ -486,9 +554,7 @@
     updateHistoryBadge();
   });
 
-  // ==========================
-  // OCR (solo ITALIA)
-  // ==========================
+  document.getElementById("historyBadge").addEventListener("click", openMemoryPanel);
 
   const previewContainer = document.getElementById("previewContainer");
   const previewImg = document.getElementById("preview");
@@ -508,7 +574,6 @@
     linesContainer.innerHTML = "";
     finalText.value = "";
 
-    // Solo italiano para máxima precisión en direcciones IT
     Tesseract.recognize(file, 'ita').then(({ data: { text } }) => {
       ocrStatus.style.display = "none";
       showEditor(text);
@@ -544,7 +609,10 @@
   }
 
   function updateInput() {
-    const vals = Array.from(linesContainer.querySelectorAll("input[type='checkbox']:checked")).map(c => c.value);
+    const vals = Array.from(
+      linesContainer.querySelectorAll("input[type='checkbox']:checked")
+    ).map(c => c.value);
+
     finalText.value = vals.join(", ");
   }
 
@@ -555,10 +623,6 @@
     document.getElementById("fileInput").value = "";
     finalText.value = "";
   }
-
-  // ==========================
-  // MOTOR V16 · COINCIDENCIAS
-  // ==========================
 
   function normalizeText(str) {
     return (str || "")
@@ -592,7 +656,6 @@
     return m ? Number(m[0]) : null;
   }
 
-  // Analiza la dirección contra la memoria (B3 · 85%)
   function analyzeAddress(newText) {
     const newClean = normalizeText(newText);
     const newNum = extractNumber(newClean);
@@ -608,16 +671,13 @@
       }
     }
 
-    // 1) Coincidencia EXACTA → misma dirección, reusar
     if (bestScore === 1 && bestMatch) {
       return { type: "identical", mem: bestMatch, score: bestScore };
     }
 
-    // 2) Misma calle (alta similitud) pero distinto número → casa nueva
     if (bestMatch) {
       const oldNum = extractNumber(bestMatch.text);
       if (oldNum !== null && newNum !== null && oldNum !== newNum) {
-        // Si la similitud es alta, pero el número cambia, lo tratamos como nueva dirección
         if (bestScore >= 0.6) {
           return {
             type: "same_street_new_number",
@@ -628,7 +688,6 @@
       }
     }
 
-    // 3) Coincidencia dudosa (posible error OCR) → preguntar
     if (bestMatch && bestScore >= 0.50 && bestScore <= 0.85) {
       return {
         type: "possible_error",
@@ -637,13 +696,8 @@
       };
     }
 
-    // 4) Nueva dirección
     return { type: "new", mem: null, score: bestScore };
   }
-
-  // ==========================
-  // GUARDAR DIRECCIÓN (V16)
-  // ==========================
 
   function saveAddress() {
     const txt = finalText.value.trim();
@@ -651,7 +705,6 @@
 
     const analysis = analyzeAddress(txt);
 
-    // 1) Idéntica a la memoria → reusar
     if (analysis.type === "identical") {
       addresses.unshift({
         id: Date.now(),
@@ -667,7 +720,6 @@
       return showToast("🧠 Dirección ya conocida · usada de memoria");
     }
 
-    // 2) Misma calle, número distinto → nueva dirección
     if (analysis.type === "same_street_new_number") {
       historyDB.push({ text: txt, lat: null, lon: null });
       saveMem();
@@ -685,7 +737,6 @@
       return showToast("📍 Nueva dirección en la misma calle");
     }
 
-    // 3) Posible error OCR → preguntar
     if (analysis.type === "possible_error") {
       const msg =
 `🧠 Posible coincidencia encontrada:
@@ -731,7 +782,6 @@ Nueva:
       }
     }
 
-    // 4) Totalmente nueva
     historyDB.push({ text: txt, lat: null, lon: null });
     saveMem();
     addresses.unshift({
@@ -748,10 +798,6 @@ Nueva:
     return showToast("🧠 Nueva dirección aprendida");
   }
 
-  // ==========================
-  // LISTA · RENDER
-  // ==========================
-
   function renderList() {
     const list = document.getElementById("addressList");
     list.innerHTML = "";
@@ -767,6 +813,7 @@ Nueva:
     addresses.forEach((item, index) => {
       const li = document.createElement("li");
       li.className = "card " + (item.status || "pending");
+      li.dataset.index = index;
 
       const isFromMem = item.fromMemory;
       const distTag = item.dist != null
@@ -775,14 +822,6 @@ Nueva:
       const memTag = isFromMem
         ? `<span style="color:#d946ef;font-weight:700;">🧠 Memoria</span>`
         : "";
-
-      // detectar teléfono para WhatsApp (IT: 3xxxxxxxxx, PE: 9xxxxxxxx)
-      let waBtn = "";
-      const digits = (item.text || "").replace(/\D/g, "");
-      const phoneMatch = digits.match(/(3\d{9}|9\d{8})/);
-      if (phoneMatch) {
-        waBtn = `<button class="icon-btn" style="color:var(--wa);" onclick="openWa(${index})">📞</button>`;
-      }
 
       li.innerHTML = `
         <div class="card-header">
@@ -798,19 +837,46 @@ Nueva:
         <div class="card-actions">
           <button class="icon-btn" onclick="openMap(${index})">🗺️</button>
           <button class="icon-btn" onclick="editItem(${index})">✏️</button>
-          ${waBtn}
           <button class="icon-btn" onclick="markDone(${index})">✅</button>
           <button class="icon-btn" onclick="markIssue(${index})">⚠️</button>
           <button class="icon-btn" onclick="deleteItem(${index})">🗑️</button>
         </div>
       `;
+
+      let touchStartX = null;
+      li.addEventListener("touchstart", (e) => {
+        if (e.changedTouches && e.changedTouches.length) {
+          touchStartX = e.changedTouches[0].screenX;
+        }
+      });
+
+      li.addEventListener("touchend", (e) => {
+        if (touchStartX === null || !e.changedTouches || !e.changedTouches.length) return;
+        const endX = e.changedTouches[0].screenX;
+        const dx = endX - touchStartX;
+        const threshold = 60;
+
+        const idx = parseInt(li.dataset.index, 10);
+
+        if (Math.abs(dx) > threshold) {
+          if (dx > 0) {
+            markDone(idx);
+          } else {
+            deleteItem(idx);
+          }
+        }
+        touchStartX = null;
+      });
+
       list.appendChild(li);
     });
   }
 
-  // ==========================
-  // ACCIONES LISTA
-  // ==========================
+  function checkIfDayCompleted() {
+    if (addresses.length === 0) {
+      showToast("🎉 Día completado · Todo lo puedo en Cristo que me fortalece");
+    }
+  }
 
   function moveItem(index, dir) {
     const newIndex = index + dir;
@@ -832,33 +898,9 @@ Nueva:
     }
   }
 
-  function openWa(index) {
-    const text = addresses[index].text || "";
-    const digits = text.replace(/\D/g, "");
-    const match = digits.match(/(3\d{9}|9\d{8})/);
-    if (!match) {
-      showToast("No se detectó celular en la dirección");
-      return;
-    }
-    const num = match[1];
-    let code;
-    let msg;
-    if (num.startsWith("3")) {
-      code = "39";
-      msg = "Ciao,%20sono%20il%20corriere%20(SomarDrive).%20Sono%20qui%20fuori.";
-    } else {
-      code = "51";
-      msg = "Hola,%20soy%20tu%20repartidor%20(SomarDrive).%20Estoy%20afuera.";
-    }
-    const url = `https://wa.me/${code}${num}?text=${msg}`;
-    window.open(url, "_blank");
-  }
-
   function markDone(index) {
     const item = addresses[index];
-    item.status = "done";
 
-    // Sincronizar GPS con memoria si existe
     const memIndex = historyDB.findIndex(
       h => normalizeText(h.text) === normalizeText(item.text)
     );
@@ -868,8 +910,10 @@ Nueva:
       saveMem();
     }
 
+    addresses.splice(index, 1);
     saveData();
-    showToast("✅ Marcado como entregado");
+    showToast("✅ Entrega completada");
+    checkIfDayCompleted();
   }
 
   function markIssue(index) {
@@ -882,6 +926,7 @@ Nueva:
     if (!confirm("¿Borrar esta dirección de la ruta?\nLa memoria se mantiene.")) return;
     addresses.splice(index, 1);
     saveData();
+    checkIfDayCompleted();
   }
 
   function editItem(index) {
@@ -895,15 +940,11 @@ Nueva:
     saveData();
   }
 
-  // ==========================
-  // ORDENAR POR GPS
-  // ==========================
-
   function haversine(lat1, lon1, lat2, lon2) {
     const R = 6371;
     const toRad = deg => (deg * Math.PI) / 180;
     const dLat = toRad(lat2 - lat1);
-    const dLon = toRad(lon2 - lon1);
+    const dLon = toRad(lat2 - lon1);
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(toRad(lat1)) *
@@ -959,7 +1000,7 @@ Nueva:
               item.lon = data.features[0].geometry.coordinates[0];
               item.lat = data.features[0].geometry.coordinates[1];
             }
-            await new Promise(r => setTimeout(r, 600));
+            await new Promise(r => setTimeout(r, 2000));
           } catch (e) {
             console.error(e);
           }
@@ -973,11 +1014,9 @@ Nueva:
       }
 
       addresses.sort((a, b) => {
-        // Primero pendientes
         if (a.status !== "pending" && b.status === "pending") return 1;
         if (a.status === "pending" && b.status !== "pending") return -1;
 
-        // Luego por distancia
         if (a.dist == null && b.dist == null) return 0;
         if (a.dist == null) return 1;
         if (b.dist == null) return -1;
@@ -1000,9 +1039,32 @@ Nueva:
     showToast("🛰️ Rastreo en vivo se implementará más adelante.");
   }
 
-  // ==========================
-  // BACKUP Y LIMPIEZA
-  // ==========================
+  function openMemoryPanel() {
+    if (!historyDB.length) {
+      showToast("No hay direcciones en memoria.");
+      return;
+    }
+
+    let listado = historyDB
+      .map((h, i) => (i + 1) + ". " + h.text)
+      .join("\n");
+
+    const choice = prompt(
+      "MEMORIA (" + historyDB.length + " direcciones)\n\n" +
+      listado +
+      "\n\nEscribe el número para usarla en la dirección actual, o deja vacío para solo ver."
+    );
+
+    if (!choice) return;
+    const idx = parseInt(choice, 10) - 1;
+    if (isNaN(idx) || idx < 0 || idx >= historyDB.length) {
+      showToast("Número inválido.");
+      return;
+    }
+
+    finalText.value = historyDB[idx].text;
+    showToast("🧠 Dirección de memoria aplicada.");
+  }
 
   function exportData() {
     if (!addresses.length) {
@@ -1061,7 +1123,7 @@ Nueva:
     historyDB = [];
     saveMem();
     showToast("💣 Memoria borrada");
-    }
+  }
 </script>
 </body>
 </html>
