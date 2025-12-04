@@ -2,434 +2,262 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>SomarDrive V18 🚚🧠</title>
+  <title>SomarDrive V18.3 🚚🧠</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#0d1b3d">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
-  <style>
-    :root {
-      --bg-dark: #020617;
-      --card-bg: #1e293b;
-      --accent: #3b82f6;
-      --text: #f1f5f9;
-      --green: #22c55e;
-      --red: #ef4444;
-      --yellow: #eab308;
-    }
+<style>
+/* ===================== */
+/*   VARIABLES GLOBALES  */
+/* ===================== */
+:root {
+  --bg-dark: #020617;
+  --card-bg: #1e293b;
+  --accent: #3b82f6;
+  --text: #f1f5f9;
+  --green: #22c55e;
+  --red: #ef4444;
+  --yellow: #eab308;
+  --wa: #25D366;
+}
 
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
 
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Montserrat', sans-serif;
-      background-color: var(--bg-dark);
-      color: var(--text);
-      padding-bottom: 140px;
-    }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text);
+  padding-bottom: 140px;
+}
 
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 15px;
-    }
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 15px;
+}
 
-    /* ENCABEZADO SOMAR DRIVE */
-    .app-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
+/* ===================== */
+/*   ENCABEZADO PRINCIPAL */
+/* ===================== */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
 
-    .app-header-title {
-      font-weight: 800;
-      font-size: 1.3rem;
-      letter-spacing: 1px;
-    }
+.app-header-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  background: #1e3a8a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
 
-    .app-header-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      background: #1e3a8a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-    }
+.app-header-title {
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+}
 
-    /* HEADER DIOS */
-    .god-banner {
-      background: linear-gradient(135deg, #1e3a8a, #172554);
-      padding: 15px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-      text-align: center;
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
+/* ===================== */
+/* BANNER DE DIOS */
+/* ===================== */
+.god-banner {
+  background: linear-gradient(135deg, #1e3a8a, #172554);
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
 
-    .god-title {
-      font-weight: 800;
-      color: #fbbf24;
-      font-size: 1.1rem;
-      margin-bottom: 5px;
-      text-transform: uppercase;
-    }
+.god-title {
+  font-weight: 800;
+  color: #fbbf24;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
 
-    .god-text {
-      font-size: 0.9rem;
-      line-height: 1.4;
-      color: #e2e8f0;
-      font-style: italic;
-    }
+.god-text {
+  font-size: 0.9rem;
+  color: #e2e8f0;
+  font-style: italic;
+}
 
-    /* BOTONES PRINCIPALES */
-    .btn-main {
-      width: 100%;
-      padding: 14px;
-      margin-bottom: 10px;
-      border: none;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      transition: transform 0.1s, opacity 0.2s;
-      color: white;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-      white-space: nowrap;
-    }
+/* ===================== */
+/*  BOTONES PRINCIPALES  */
+/* ===================== */
+.btn-main {
+  padding: 13px;
+  border-radius: 12px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
 
-    .btn-main:active {
-      transform: scale(0.96);
-    }
+.btn-blue {
+  background: linear-gradient(to bottom, #3b82f6, #2563eb);
+  color: white;
+}
+.btn-gray {
+  background: linear-gradient(to bottom, #475569, #334155);
+  color: #dbeafe;
+}
+.btn-green {
+  background: linear-gradient(to bottom, #22c55e, #16a34a);
+  color: white;
+}
+.btn-red {
+  background: linear-gradient(to bottom, #ef4444, #b91c1c);
+  color: white;
+}
 
-    .btn-blue {
-      background: linear-gradient(to bottom, #3b82f6, #2563eb);
-      box-shadow: 0 4px 0 #1d4ed8;
-    }
+/* ===================== */
+/* PREVIEW FOTO */
+/* ===================== */
+#previewContainer {
+  display: none;
+  margin-top: 15px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid #334155;
+}
+#preview { width: 100%; }
 
-    .btn-gray {
-      background: linear-gradient(to bottom, #475569, #334155);
-      box-shadow: 0 4px 0 #1e293b;
-      color: #cbd5e1;
-    }
+#ocrStatus {
+  text-align: center;
+  color: var(--accent);
+  margin: 15px 0;
+  font-weight: 700;
+  display: none;
+}
 
-    .btn-red {
-      background: linear-gradient(to bottom, #ef4444, #dc2626);
-      box-shadow: 0 4px 0 #b91c1c;
-    }
+/* ===================== */
+/*  EDITOR DE DIRECCIONES */
+/* ===================== */
+#editorSection {
+  display: none;
+  background: var(--card-bg);
+  padding: 15px;
+  border-radius: 15px;
+  margin-top: 20px;
+}
 
-    .btn-green {
-      background: linear-gradient(to bottom, #22c55e, #16a34a);
-      box-shadow: 0 4px 0 #15803d;
-    }
+#linesContainer {
+  max-height: 150px;
+  overflow-y: auto;
+  background: #0f172a;
+  border-radius: 10px;
+  padding: 5px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
 
-    /* FOTO & OCR */
-    #previewContainer {
-      display: none;
-      margin-top: 15px;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 2px solid #334155;
-      position: relative;
-    }
+.line-item {
+  padding: 7px;
+  display: flex;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
 
-    #preview {
-      width: 100%;
-      display: block;
-    }
+/* ===================== */
+/* LISTA DE RUTA */
+/* ===================== */
+.card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  padding: 14px;
+  border-left: 5px solid var(--yellow);
+}
 
-    #ocrStatus {
-      text-align: center;
-      color: var(--accent);
-      margin: 15px;
-      font-weight: 600;
-      display: none;
-    }
+/* ===================== */
+/* BOTÓN MEMORIA */
+/* ===================== */
+.memory-btn {
+  background: var(--yellow);
+  color: #111;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: none;
+  font-weight: 700;
+}
 
-    /* EDITOR */
-    #editorSection {
-      display: none;
-      background: var(--card-bg);
-      padding: 15px;
-      border-radius: 15px;
-      margin-top: 20px;
-      border: 1px solid #334155;
-    }
+/* ===================== */
+/* FILA DE 4 BOTONES DESLIZABLE */
+/* ===================== */
+.backup-buttons-row {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  -webkit-overflow-scrolling: touch;
+}
 
-    #linesContainer {
-      max-height: 150px;
-      overflow-y: auto;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      border: 1px solid rgba(148,163,184,0.4);
-      padding: 6px;
-      background: #0f172a;
-    }
+.backup-buttons-row .btn-main {
+  flex: 0 0 auto;
+  min-width: 150px;
+  font-size: 0.85rem;
+}
 
-    .line-item {
-      padding: 6px 4px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      font-size: 0.9rem;
-      color: #e5e7eb;
-    }
+/* ===================== */
+/* LOGO */
+/* ===================== */
+.logo-box {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+.logo-box img {
+  width: 80%;
+  max-width: 260px;
+}
 
-    .line-item:last-child {
-      border-bottom: none;
-    }
-
-    .address-input {
-      width: 100%;
-      background: #0f172a;
-      border: 2px solid #334155;
-      color: white;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 1rem;
-      min-height: 80px;
-      font-family: inherit;
-      margin-top: 10px;
-      resize: vertical;
-    }
-
-    .address-input:focus {
-      border-color: var(--accent);
-      outline: none;
-    }
-
-    /* LISTA RUTA */
-    #addressList {
-      list-style: none;
-      padding: 0;
-      margin-top: 15px;
-    }
-
-    .card {
-      background: var(--card-bg);
-      margin-bottom: 12px;
-      border-radius: 12px;
-      padding: 15px;
-      border-left: 5px solid var(--yellow);
-      position: relative;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      transition: transform 0.1s ease;
-    }
-
-    .card.issue {
-      border-left-color: var(--red);
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
-    }
-
-    .card-text {
-      font-size: 1.0rem;
-      font-weight: 600;
-      line-height: 1.3;
-      color: white;
-      word-break: break-word;
-    }
-
-    .card-meta {
-      margin-top: 8px;
-      font-size: 0.85rem;
-      color: #94a3b8;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    /* REORDENAR */
-    .manual-sort {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .sort-arrow {
-      background: none;
-      border: 1px solid #475569;
-      color: #94a3b8;
-      border-radius: 4px;
-      padding: 2px 6px;
-      cursor: pointer;
-      font-size: 0.75rem;
-    }
-
-    /* ACCIONES CARD */
-    .card-actions {
-      display: flex;
-      gap: 6px;
-      margin-top: 10px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding-top: 8px;
-    }
-
-    .icon-btn {
-      flex: 1;
-      padding: 9px 0;
-      border: none;
-      border-radius: 8px;
-      font-size: 1.3rem;
-      cursor: pointer;
-      background: rgba(255,255,255,0.06);
-      color: #e5e7eb;
-    }
-
-    .icon-btn:active {
-      transform: scale(0.97);
-    }
-
-    /* BACKUP / MEMORIA */
-    .backup-area {
-      margin-top: 30px;
-      padding: 18px;
-      background: #0f172a;
-      border-radius: 15px;
-      border: 2px dashed #334155;
-      text-align: center;
-    }
-
-    .backup-label {
-      color: #94a3b8;
-      font-size: 0.9rem;
-      display: block;
-      margin-bottom: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    /* Fila horizontal con 4 botones */
-    .backup-buttons-row {
-      display: flex;
-      gap: 8px;
-      justify-content: space-between;
-      flex-wrap: nowrap;
-    }
-
-    .backup-buttons-row .btn-main {
-      flex: 1 1 0;
-      font-size: 0.8rem;
-      padding: 10px 6px;
-    }
-
-    /* Logo debajo de los botones */
-    .logo-box {
-      margin-top: 16px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .logo-box img {
-      max-width: 250px;
-      width: 80%;
-      height: auto;
-      display: block;
-    }
-
-    /* FOOTER FIJO */
-    .footer-static {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: linear-gradient(to top, #020617 80%, transparent);
-      z-index: 900;
-      text-align: center;
-      padding-bottom: 8px;
-      pointer-events: none;
-    }
-
-    .safety-text {
-      color: var(--red);
-      font-weight: 800;
-      font-size: 0.9rem;
-      margin-bottom: 4px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    /* TOAST */
-    #toast {
-      visibility: hidden;
-      min-width: 260px;
-      max-width: 90%;
-      background-color: #111827;
-      color: #fff;
-      text-align: center;
-      border-radius: 50px;
-      padding: 14px 16px;
-      position: fixed;
-      z-index: 1000;
-      left: 50%;
-      bottom: 40px;
-      transform: translateX(-50%);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    #toast.show {
-      visibility: visible;
-      animation: fadein 0.25s, fadeout 0.25s 2.7s;
-    }
-
-    @keyframes fadein {
-      from {bottom: 20px; opacity: 0;}
-      to {bottom: 40px; opacity: 1;}
-    }
-
-    @keyframes fadeout {
-      from {bottom: 40px; opacity: 1;}
-      to {bottom: 20px; opacity: 0;}
-    }
-
-    /* BOTÓN MEMORIA */
-    .memory-btn {
-      background: #eab308;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      border: none;
-      color: #111827;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .memory-btn:active {
-      transform: scale(0.96);
-    }
-  </style>
+/* ===================== */
+/* FOOTER */
+/* ===================== */
+.footer-static {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #020617;
+  padding: 6px;
+  text-align: center;
+}
+.footer-static span {
+  color: #ef4444;
+  font-weight: 800;
+}
+</style>
 </head>
+
 <body>
 
+<!-- ===================== -->
+<!--   ENCABEZADO SOMAR DRIVE -->
+<!-- ===================== -->
 <div class="container">
 
-  <!-- ENCABEZADO SOMAR DRIVE -->
   <div class="app-header">
     <div class="app-header-icon">🚚</div>
     <div class="app-header-title">SOMAR DRIVE</div>
@@ -437,693 +265,241 @@
 
   <div class="god-banner">
     <div class="god-title">👑 EL PRIMER LUGAR ES DE DIOS</div>
-    <div class="god-text">"Encomienda a Jehová tu camino, y confía en él; y él hará." (Salmos 37:5)</div>
+    <div class="god-text">"Encomienda a Jehová tu camino, y confía en él; y él hará."</div>
   </div>
 
-  <h2 style="color:#94a3b8; margin:20px 0 10px;">📸 1. Capturar direcciones</h2>
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+  <!-- ===================== -->
+  <!-- CAPTURAR IMAGEN -->
+  <!-- ===================== -->
+  <h2>📸 1. Capturar direcciones</h2>
+
+  <div style="display:flex; gap:10px;">
     <button class="btn-main btn-blue" onclick="document.getElementById('cameraInput').click()">📷 Cámara</button>
-    <button class="btn-main btn-gray" onclick="document.getElementById('fileInput').click()">📂 Galería</button>
+    <button class="btn-main btn-gray" onclick="document.getElementById('fileInput').click()">📁 Galería</button>
   </div>
+
   <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden onchange="processImage(this)">
   <input type="file" id="fileInput" accept="image/*" hidden onchange="processImage(this)">
 
-  <div id="previewContainer">
-    <img id="preview" />
-    <button class="btn-main btn-red" onclick="clearImage()" style="margin:10px; width:calc(100% - 20px);">❌ Cancelar foto</button>
-  </div>
-  <div id="ocrStatus">⏳ Leyendo texto (IT)...</div>
+  <div id="previewContainer"><img id="preview"></div>
+  <div id="ocrStatus">⏳ Leyendo texto...</div>
 
+  <!-- ===================== -->
+  <!-- EDITOR -->
+  <!-- ===================== -->
   <div id="editorSection">
-    <h3 style="margin-top:0; color:#fbbf24;">📝 2. Selecciona y forma la dirección</h3>
+    <h3>📝 2. Selecciona líneas</h3>
     <div id="linesContainer"></div>
-    <textarea id="finalText" class="address-input" placeholder="Aquí aparecerá la dirección combinada..."></textarea>
-    <button class="btn-main btn-green" onclick="saveAddress()" style="margin-top:10px;">💾 Guardar en Ruta</button>
+    <textarea id="finalText" style="width:100%;height:80px;margin-top:10px;"></textarea>
+    <button class="btn-main btn-green" onclick="saveAddress()">💾 Guardar en Ruta</button>
   </div>
 
+  <!-- ===================== -->
   <!-- RUTA + MEMORIA -->
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-top:30px;">
-    <h2 style="margin:0; display:flex; align-items:center; gap:8px;">
-      📍 Ruta 
-      <span style="background:#334155; padding:2px 8px; border-radius:10px; font-size:0.9rem;" id="countPending">0</span>
-    </h2>
-    <button id="historyBadge" class="memory-btn" title="Ver memoria">Memoria: 0</button>
-  </div>
-  
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
-    <button id="sortBtn" class="btn-main btn-gray" onclick="sortWithGPS()">🔄 Ordenar por GPS</button>
-    <button id="liveBtn" class="btn-main btn-gray" onclick="toggleLiveTracking()">🛰️ Rastreo vivo (futuro)</button>
+  <!-- ===================== -->
+  <div style="display:flex;justify-content:space-between;margin-top:20px;">
+    <h2>📍 Ruta <span id="countPending">0</span></h2>
+    <button id="historyBadge" class="memory-btn">Memoria: 0</button>
   </div>
 
-  <ul id="addressList"></ul>
+  <div style="display:flex; gap:10px; margin-top:10px;">
+    <button class="btn-main btn-gray" onclick="sortWithGPS()">🔄 Ordenar GPS</button>
+    <button class="btn-main btn-gray" onclick="toggleLiveTracking()">🛰️ Rastreo vivo</button>
+  </div>
 
-  <!-- COPIAS Y LIMPIEZA + LOGO -->
-  <div class="backup-area">
-    <span class="backup-label">🛡️ COPIAS Y LIMPIEZA</span>
+  <ul id="addressList" style="padding-left:0;"></ul>
 
-    <div class="backup-buttons-row">
-      <button class="btn-main btn-green" onclick="exportData()">⬇️ Descargar Ruta</button>
-      <button class="btn-main btn-gray" onclick="document.getElementById('importInput').click()">⬆️ Cargar Ruta</button>
-      <button class="btn-main btn-red" onclick="clearRoute()">🗑️ Borrar SOLO Ruta</button>
-      <button class="btn-main btn-red" onclick="clearMemory()">💣 Borrar SOLO Memoria</button>
-    </div>
+  <!-- ===================== -->
+  <!-- BACKUP + LOGO -->
+  <!-- ===================== -->
+  <h2 style="margin-top:35px;">🛡️ Copias y Limpieza</h2>
 
-    <input type="file" id="importInput" accept=".json" hidden onchange="importData(this)">
+  <div class="backup-buttons-row">
+    <button class="btn-main btn-green" onclick="exportData()">⬇️ Descargar</button>
+    <button class="btn-main btn-gray" onclick="document.getElementById('importInput').click()">⬆️ Cargar</button>
+    <button class="btn-main btn-red" onclick="clearRoute()">🗑️ Borrar Ruta</button>
+    <button class="btn-main btn-red" onclick="clearMemory()">💣 Borrar Memoria</button>
+  </div>
 
-    <div class="logo-box">
-      <img src="somardrive_logo.png" alt="SomarDrive Logo">
-    </div>
+  <input type="file" id="importInput" accept=".json" hidden onchange="importData(this)">
+
+  <div class="logo-box">
+    <img src="somardrive_logo.png">
   </div>
 
 </div>
 
-<div class="footer-static">
-  <div class="safety-text">⚠️ CONDUCE CON CUIDADO · EN CASA TE ESPERAN</div>
-</div>
+<!-- ===================== -->
+<!-- FOOTER -->
+<!-- ===================== -->
+<div class="footer-static"><span>⚠️ CONDUCE CON CUIDADO — EN CASA TE ESPERAN</span></div>
 
-<div id="toast">Notificación</div>
-
+<!-- ===================== -->
+<!--         JS           -->
+<!-- ===================== -->
 <script>
-  const ORS_API_KEY = "PON_AQUI_TU_API_KEY_DE_ORS";
-  const DB_KEY   = "SomarDriveV18_Route";
-  const HIST_KEY = "SomarDriveV18_Memory";
+/* ========================= */
+/* VARIABLES */
+const DB_KEY="SomarDrive_Route";
+const HIST_KEY="SomarDrive_Memory";
 
-  let addresses = [];
-  let historyDB = [];
+let addresses=[];
+let historyDB=[];
 
-  const toastEl = document.getElementById("toast");
+/* ========================= */
+/* TOAST */
+function showToast(m){alert(m);}
 
-  function showToast(msg) {
-    toastEl.textContent = msg;
-    toastEl.className = "show";
-    setTimeout(() => {
-      toastEl.className = toastEl.className.replace("show", "");
-    }, 3000);
-  }
+/* ========================= */
+/* LOAD DATA */
+window.onload=()=>{
+  addresses=JSON.parse(localStorage.getItem(DB_KEY) || "[]");
+  historyDB=JSON.parse(localStorage.getItem(HIST_KEY) || "[]");
+  renderList();
+  updateHistoryBadge();
+};
 
-  function saveData() {
-    localStorage.setItem(DB_KEY, JSON.stringify(addresses));
-    renderList();
-  }
+/* ========================= */
+/* SAVE DATA */
+function saveData(){
+  localStorage.setItem(DB_KEY,JSON.stringify(addresses));
+  renderList();
+}
 
-  function saveMem() {
-    localStorage.setItem(HIST_KEY, JSON.stringify(historyDB));
-    updateHistoryBadge();
-  }
+function saveMem(){
+  localStorage.setItem(HIST_KEY,JSON.stringify(historyDB));
+  updateHistoryBadge();
+}
 
-  function updateHistoryBadge() {
-    document.getElementById("historyBadge").textContent = "Memoria: " + historyDB.length;
-  }
+/* ========================= */
+/* OCR */
+function processImage(input){
+  if(!input.files[0])return;
+  const file=input.files[0];
+  document.getElementById("preview").src=URL.createObjectURL(file);
+  previewContainer.style.display="block";
+  ocrStatus.style.display="block";
 
-  window.addEventListener("load", () => {
-    try {
-      const r = localStorage.getItem(DB_KEY);
-      if (r) addresses = JSON.parse(r);
-    } catch (e) {
-      addresses = [];
-    }
-
-    try {
-      const m = localStorage.getItem(HIST_KEY);
-      if (m) historyDB = JSON.parse(m);
-    } catch (e) {
-      historyDB = [];
-    }
-
-    renderList();
-    updateHistoryBadge();
+  Tesseract.recognize(file,"ita").then(({data:{text}})=>{
+    ocrStatus.style.display="none";
+    showEditor(text);
   });
+}
 
-  document.getElementById("historyBadge").addEventListener("click", openMemoryPanel);
+function showEditor(text){
+  editorSection.style.display="block";
+  linesContainer.innerHTML="";
+  const lines=text.split("\n").map(l=>l.trim()).filter(l=>l.length>2);
 
-  const previewContainer = document.getElementById("previewContainer");
-  const previewImg = document.getElementById("preview");
-  const ocrStatus = document.getElementById("ocrStatus");
-  const editorSection = document.getElementById("editorSection");
-  const linesContainer = document.getElementById("linesContainer");
-  const finalText = document.getElementById("finalText");
+  lines.forEach(x=>{
+    const div=document.createElement("div");
+    div.className="line-item";
+    div.innerHTML=`<input type="checkbox" value="${x}" onchange="updateFinal()"><span>${x}</span>`;
+    linesContainer.appendChild(div);
+  });
+}
 
-  function processImage(input) {
-    if (!input.files[0]) return;
-    const file = input.files[0];
+function updateFinal(){
+  const checks=[...linesContainer.querySelectorAll("input:checked")].map(c=>c.value);
+  finalText.value=checks.join(", ");
+}
 
-    previewImg.src = URL.createObjectURL(file);
-    previewContainer.style.display = "block";
-    ocrStatus.style.display = "block";
-    editorSection.style.display = "none";
-    linesContainer.innerHTML = "";
-    finalText.value = "";
+/* ========================= */
+/* SAVE ADDRESS */
+function saveAddress(){
+  const text=finalText.value.trim();
+  if(!text)return showToast("Selecciona algo");
+  addresses.unshift({text});
+  saveData();
+  editorSection.style.display="none";
+}
 
-    Tesseract.recognize(file, 'ita').then(({ data: { text } }) => {
-      ocrStatus.style.display = "none";
-      showEditor(text);
-    }).catch(e => {
-      console.error(e);
-      ocrStatus.style.display = "none";
-      showToast("❌ Error al leer la imagen");
-    });
-  }
+/* ========================= */
+/* RENDER LIST */
+function renderList(){
+  const UL=document.getElementById("addressList");
+  UL.innerHTML="";
+  document.getElementById("countPending").innerText=addresses.length;
 
-  function showEditor(text) {
-    editorSection.style.display = "block";
-    linesContainer.innerHTML = "";
-    const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 3);
+  addresses.forEach((a,i)=>{
+    const li=document.createElement("li");
+    li.className="card";
+    li.innerHTML=`
+      <div>${a.text}</div>
+      <button class="btn-main btn-green" onclick="markDelivered(${i})">✔️ Hecho</button>
+      <button class="btn-main btn-red" onclick="deleteItem(${i})">🗑️</button>
+    `;
+    UL.appendChild(li);
+  });
+}
 
-    if (lines.length === 0) {
-      linesContainer.innerHTML = "<div style='color:#64748b; padding:6px;'>No se detectó texto útil. Prueba otra foto.</div>";
-      return;
-    }
+/* ========================= */
+/* DELETE */
+function deleteItem(i){
+  addresses.splice(i,1);
+  saveData();
+}
 
-    lines.forEach(l => {
-      const div = document.createElement("div");
-      div.className = "line-item";
-      const safeVal = l.replace(/"/g, '&quot;');
-      div.innerHTML = `
-        <input type="checkbox" onchange="updateInput()" value="${safeVal}">
-        <span>${l}</span>
-      `;
-      linesContainer.appendChild(div);
-    });
+/* ========================= */
+/* DELIVERED */
+function markDelivered(i){
+  addresses.splice(i,1);
+  saveData();
+  if(addresses.length===0) showToast("🎉 Día completado");
+}
 
-    finalText.value = "";
-  }
+/* ========================= */
+/* MEMORY BUTTON */
+function updateHistoryBadge(){
+  document.getElementById("historyBadge").innerText="Memoria: "+historyDB.length;
+}
 
-  function updateInput() {
-    const vals = Array.from(
-      linesContainer.querySelectorAll("input[type='checkbox']:checked")
-    ).map(c => c.value);
+document.getElementById("historyBadge").onclick=function(){
+  if(!historyDB.length)return showToast("Memoria vacía");
+  let msg=historyDB.map((x,i)=>`${i+1}. ${x.text}`).join("\n");
+  let n=prompt("MEMORIA:\n\n"+msg+"\n\nNúmero a usar:");
+  if(!n)return;
+  n=parseInt(n)-1;
+  if(historyDB[n]) finalText.value=historyDB[n].text;
+};
 
-    finalText.value = vals.join(", ");
-  }
+/* ========================= */
+/* BACKUP */
+function exportData(){
+  const data=JSON.stringify(addresses);
+  const blob=new Blob([data],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="somardrive_ruta.json";
+  a.click();
+}
 
-  function clearImage() {
-    previewContainer.style.display = "none";
-    editorSection.style.display = "none";
-    document.getElementById("cameraInput").value = "";
-    document.getElementById("fileInput").value = "";
-    finalText.value = "";
-  }
-
-  function normalizeText(str) {
-    return (str || "")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/\s+/g, " ")
-      .trim();
-  }
-
-  function similarityScore(a, b) {
-    a = normalizeText(a);
-    b = normalizeText(b);
-
-    if (!a || !b) return 0;
-    if (a === b) return 1;
-
-    const wordsA = a.split(/[\s,.-]+/).filter(w => w.length > 2);
-    if (wordsA.length === 0) return 0;
-
-    let hits = 0;
-    wordsA.forEach(w => {
-      if (b.includes(w)) hits++;
-    });
-
-    return hits / wordsA.length;
-  }
-
-  function extractNumber(str) {
-    const m = (str || "").match(/\b\d+\b/);
-    return m ? Number(m[0]) : null;
-  }
-
-  function analyzeAddress(newText) {
-    const newClean = normalizeText(newText);
-    const newNum = extractNumber(newClean);
-
-    let bestMatch = null;
-    let bestScore = 0;
-
-    for (const mem of historyDB) {
-      const score = similarityScore(newClean, mem.text);
-      if (score > bestScore) {
-        bestScore = score;
-        bestMatch = mem;
-      }
-    }
-
-    if (bestScore === 1 && bestMatch) {
-      return { type: "identical", mem: bestMatch, score: bestScore };
-    }
-
-    if (bestMatch) {
-      const oldNum = extractNumber(bestMatch.text);
-      if (oldNum !== null && newNum !== null && oldNum !== newNum) {
-        if (bestScore >= 0.6) {
-          return {
-            type: "same_street_new_number",
-            mem: bestMatch,
-            score: bestScore
-          };
-        }
-      }
-    }
-
-    if (bestMatch && bestScore >= 0.50 && bestScore <= 0.85) {
-      return {
-        type: "possible_error",
-        mem: bestMatch,
-        score: bestScore
-      };
-    }
-
-    return { type: "new", mem: null, score: bestScore };
-  }
-
-  function saveAddress() {
-    const txt = finalText.value.trim();
-    if (!txt) return showToast("⚠️ Escribe o selecciona la dirección");
-
-    const analysis = analyzeAddress(txt);
-
-    if (analysis.type === "identical") {
-      addresses.unshift({
-        id: Date.now(),
-        text: analysis.mem.text,
-        status: "pending",
-        lat: analysis.mem.lat || null,
-        lon: analysis.mem.lon || null,
-        dist: null,
-        fromMemory: true
-      });
-      saveData();
-      clearImage();
-      return showToast("🧠 Dirección ya conocida · usada de memoria");
-    }
-
-    if (analysis.type === "same_street_new_number") {
-      historyDB.push({ text: txt, lat: null, lon: null });
-      saveMem();
-      addresses.unshift({
-        id: Date.now(),
-        text: txt,
-        status: "pending",
-        lat: null,
-        lon: null,
-        dist: null,
-        fromMemory: false
-      });
-      saveData();
-      clearImage();
-      return showToast("📍 Nueva dirección en la misma calle");
-    }
-
-    if (analysis.type === "possible_error") {
-      const msg =
-`🧠 Posible coincidencia encontrada:
-
-En memoria:
-"${analysis.mem.text}"
-
-Nueva:
-"${txt}"
-
-¿Es la misma dirección?`;
-
-      const isSame = confirm(msg);
-
-      if (isSame) {
-        addresses.unshift({
-          id: Date.now(),
-          text: analysis.mem.text,
-          status: "pending",
-          lat: analysis.mem.lat || null,
-          lon: analysis.mem.lon || null,
-          dist: null,
-          fromMemory: true
-        });
-        saveData();
-        clearImage();
-        return showToast("✔️ Se usó la dirección guardada en memoria");
-      } else {
-        historyDB.push({ text: txt, lat: null, lon: null });
-        saveMem();
-        addresses.unshift({
-          id: Date.now(),
-          text: txt,
-          status: "pending",
-          lat: null,
-          lon: null,
-          dist: null,
-          fromMemory: false
-        });
-        saveData();
-        clearImage();
-        return showToast("📍 Nueva dirección añadida");
-      }
-    }
-
-    historyDB.push({ text: txt, lat: null, lon: null });
-    saveMem();
-    addresses.unshift({
-      id: Date.now(),
-      text: txt,
-      status: "pending",
-      lat: null,
-      lon: null,
-      dist: null,
-      fromMemory: false
-    });
+function importData(input){
+  const file=input.files[0];
+  const reader=new FileReader();
+  reader.onload=e=>{
+    addresses=JSON.parse(e.target.result);
     saveData();
-    clearImage();
-    return showToast("🧠 Nueva dirección aprendida");
-  }
+  };
+  reader.readAsText(file);
+}
 
-  function renderList() {
-    const list = document.getElementById("addressList");
-    list.innerHTML = "";
+function clearRoute(){
+  addresses=[];
+  saveData();
+}
 
-    const pendingCount = addresses.filter(a => a.status === "pending").length;
-    document.getElementById("countPending").textContent = pendingCount;
+function clearMemory(){
+  historyDB=[];
+  saveMem();
+}
 
-    if (!addresses.length) {
-      list.innerHTML = "<div style='text-align:center;padding:20px;color:#64748b;'>Sin direcciones.<br>Empieza capturando una foto.</div>";
-      return;
-    }
-
-    addresses.forEach((item, index) => {
-      const li = document.createElement("li");
-      li.className = "card " + (item.status || "pending");
-      li.dataset.index = index;
-
-      const isFromMem = item.fromMemory;
-      const distTag = item.dist != null
-        ? `<span style="color:var(--accent);font-weight:700;">🏁 ${item.dist.toFixed(1)} km</span>`
-        : "";
-      const memTag = isFromMem
-        ? `<span style="color:#d946ef;font-weight:700;">🧠 Memoria</span>`
-        : "";
-
-      li.innerHTML = `
-        <div class="card-header">
-          <div class="card-text">${item.text}</div>
-          <div class="manual-sort">
-            <button class="sort-arrow" onclick="moveItem(${index}, -1)">▲</button>
-            <button class="sort-arrow" onclick="moveItem(${index}, 1)">▼</button>
-          </div>
-        </div>
-        <div class="card-meta">
-          ${distTag} ${memTag}
-        </div>
-        <div class="card-actions">
-          <button class="icon-btn" onclick="openMap(${index})">🗺️</button>
-          <button class="icon-btn" onclick="editItem(${index})">✏️</button>
-          <button class="icon-btn" onclick="markDone(${index})">✅</button>
-          <button class="icon-btn" onclick="markIssue(${index})">⚠️</button>
-          <button class="icon-btn" onclick="deleteItem(${index})">🗑️</button>
-        </div>
-      `;
-
-      let touchStartX = null;
-      li.addEventListener("touchstart", (e) => {
-        if (e.changedTouches && e.changedTouches.length) {
-          touchStartX = e.changedTouches[0].screenX;
-        }
-      });
-
-      li.addEventListener("touchend", (e) => {
-        if (touchStartX === null || !e.changedTouches || !e.changedTouches.length) return;
-        const endX = e.changedTouches[0].screenX;
-        const dx = endX - touchStartX;
-        const threshold = 60;
-
-        const idx = parseInt(li.dataset.index, 10);
-
-        if (Math.abs(dx) > threshold) {
-          if (dx > 0) {
-            markDone(idx);
-          } else {
-            deleteItem(idx);
-          }
-        }
-        touchStartX = null;
-      });
-
-      list.appendChild(li);
-    });
-  }
-
-  function checkIfDayCompleted() {
-    if (addresses.length === 0) {
-      showToast("🎉 Día completado · Todo lo puedo en Cristo que me fortalece");
-    }
-  }
-
-  function moveItem(index, dir) {
-    const newIndex = index + dir;
-    if (newIndex < 0 || newIndex >= addresses.length) return;
-    const item = addresses[index];
-    addresses.splice(index, 1);
-    addresses.splice(newIndex, 0, item);
-    saveData();
-  }
-
-  function openMap(index) {
-    const item = addresses[index];
-    if (item.lat != null && item.lon != null) {
-      const url = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lon}`;
-      window.open(url, "_blank");
-    } else {
-      const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.text)}`;
-      window.open(url, "_blank");
-    }
-  }
-
-  function markDone(index) {
-    const item = addresses[index];
-
-    const memIndex = historyDB.findIndex(
-      h => normalizeText(h.text) === normalizeText(item.text)
-    );
-    if (memIndex >= 0 && item.lat != null && item.lon != null) {
-      historyDB[memIndex].lat = item.lat;
-      historyDB[memIndex].lon = item.lon;
-      saveMem();
-    }
-
-    addresses.splice(index, 1);
-    saveData();
-    showToast("✅ Entrega completada");
-    checkIfDayCompleted();
-  }
-
-  function markIssue(index) {
-    addresses[index].status = "issue";
-    saveData();
-    showToast("⚠️ Marcado con problema");
-  }
-
-  function deleteItem(index) {
-    if (!confirm("¿Borrar esta dirección de la ruta?\nLa memoria se mantiene.")) return;
-    addresses.splice(index, 1);
-    saveData();
-    checkIfDayCompleted();
-  }
-
-  function editItem(index) {
-    const current = addresses[index].text;
-    const updated = prompt("Editar dirección:", current);
-    if (!updated) return;
-    addresses[index].text = updated.trim();
-    addresses[index].lat = null;
-    addresses[index].lon = null;
-    addresses[index].dist = null;
-    saveData();
-  }
-
-  function haversine(lat1, lon1, lat2, lon2) {
-    const R = 6371;
-    const toRad = deg => (deg * Math.PI) / 180;
-    const dLat = toRad(lat2 - lat1);
-    const dLon = toRad(lat2 - lon1);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(toRad(lat1)) *
-        Math.cos(toRad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-  }
-
-  async function sortWithGPS() {
-    const btn = document.getElementById("sortBtn");
-
-    if (!navigator.geolocation) {
-      alert("Tu dispositivo no permite obtener la ubicación.");
-      return;
-    }
-
-    if (!ORS_API_KEY || ORS_API_KEY === "PON_AQUI_TU_API_KEY_DE_ORS") {
-      showToast("Configura tu API KEY de ORS para usar el GPS.");
-      return;
-    }
-
-    if (!addresses.length) {
-      showToast("No hay direcciones para ordenar.");
-      return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = "🛰️ Calculando...";
-
-    navigator.geolocation.getCurrentPosition(async pos => {
-      const myLat = pos.coords.latitude;
-      const myLon = pos.coords.longitude;
-
-      for (const item of addresses) {
-        if (item.status === "pending" && (item.lat == null || item.lon == null)) {
-          try {
-            const clean = (item.text || "")
-              .replace(/cliente|entregar|consegna|tel|cel|cell|citofono|piso|piano|scala/gi, "")
-              .trim();
-
-            const url =
-              "https://api.openrouteservice.org/geocode/search?" +
-              "api_key=" + encodeURIComponent(ORS_API_KEY) +
-              "&text=" + encodeURIComponent(clean) +
-              "&size=1";
-
-            const res = await fetch(url);
-            if (!res.ok) throw new Error("Error ORS");
-            const data = await res.json();
-            if (data.features && data.features.length) {
-              item.lon = data.features[0].geometry.coordinates[0];
-              item.lat = data.features[0].geometry.coordinates[1];
-            }
-            await new Promise(r => setTimeout(r, 2000));
-          } catch (e) {
-            console.error(e);
-          }
-        }
-
-        if (item.lat != null && item.lon != null) {
-          item.dist = haversine(myLat, myLon, item.lat, item.lon);
-        } else {
-          item.dist = null;
-        }
-      }
-
-      addresses.sort((a, b) => {
-        if (a.status !== "pending" && b.status === "pending") return 1;
-        if (a.status === "pending" && b.status !== "pending") return -1;
-
-        if (a.dist == null && b.dist == null) return 0;
-        if (a.dist == null) return 1;
-        if (b.dist == null) return -1;
-        return a.dist - b.dist;
-      });
-
-      saveData();
-      btn.disabled = false;
-      btn.textContent = "🔄 Ordenar por GPS";
-      showToast("✅ Ruta reordenada por distancia");
-    }, err => {
-      console.error(err);
-      showToast("No se pudo obtener tu ubicación");
-      btn.disabled = false;
-      btn.textContent = "🔄 Ordenar por GPS";
-    });
-  }
-
-  function toggleLiveTracking() {
-    showToast("🛰️ Rastreo en vivo se implementará más adelante.");
-  }
-
-  function openMemoryPanel() {
-    if (!historyDB.length) {
-      showToast("No hay direcciones en memoria.");
-      return;
-    }
-
-    let listado = historyDB
-      .map((h, i) => (i + 1) + ". " + h.text)
-      .join("\n");
-
-    const choice = prompt(
-      "MEMORIA (" + historyDB.length + " direcciones)\n\n" +
-      listado +
-      "\n\nEscribe el número para usarla en la dirección actual, o deja vacío para solo ver."
-    );
-
-    if (!choice) return;
-    const idx = parseInt(choice, 10) - 1;
-    if (isNaN(idx) || idx < 0 || idx >= historyDB.length) {
-      showToast("Número inválido.");
-      return;
-    }
-
-    finalText.value = historyDB[idx].text;
-    showToast("🧠 Dirección de memoria aplicada.");
-  }
-
-  function exportData() {
-    if (!addresses.length) {
-      showToast("No hay ruta para exportar.");
-      return;
-    }
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(addresses));
-    const a = document.createElement("a");
-    a.href = dataStr;
-    a.download = "somardrive_ruta.json";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  }
-
-  function importData(input) {
-    const file = input.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-      try {
-        const imported = JSON.parse(e.target.result);
-        if (Array.isArray(imported)) {
-          addresses = imported;
-          saveData();
-          showToast("✅ Ruta cargada desde archivo");
-        } else {
-          showToast("Formato de archivo incorrecto");
-        }
-      } catch (err) {
-        console.error(err);
-        showToast("Error al leer el archivo");
-      }
-      input.value = "";
-    };
-    reader.readAsText(file);
-  }
-
-  function clearRoute() {
-    if (!addresses.length) {
-      showToast("No hay ruta para borrar.");
-      return;
-    }
-    if (!confirm("¿Borrar SOLO la ruta?\nLa memoria se mantiene.")) return;
-    addresses = [];
-    saveData();
-    showToast("🗑️ Ruta borrada");
-  }
-
-  function clearMemory() {
-    if (!historyDB.length) {
-      showToast("No hay memoria para borrar.");
-      return;
-    }
-    if (!confirm("⚠️ ¿Borrar TODA la memoria guardada?\nLa ruta actual se mantiene.")) return;
-    historyDB = [];
-    saveMem();
-    showToast("💣 Memoria borrada");
-  }
+/* ========================= */
+/* GPS FUTURO */
+function sortWithGPS(){showToast("GPS se agregará después");}
+function toggleLiveTracking(){showToast("Rastreo vivo pronto");}
 </script>
+
 </body>
 </html>
