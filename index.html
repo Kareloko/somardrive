@@ -1421,8 +1421,15 @@ Nueva:
 
     const q = normalizeText(memorySearch.value || "");
     const filtered = q
-      ? memoryDB.filter(m => normalizeText(m.text).includes(q))
-      : memoryDB.slice();
+  ? memoryDB.filter(m => normalizeText(m.text).includes(q))
+  : memoryDB.slice();
+
+// 🔠 Ordenar de A a Z
+filtered.sort((a, b) => {
+  const textA = normalizeText(a.text);
+  const textB = normalizeText(b.text);
+  return textA.localeCompare(textB);
+});
 
     if (!filtered.length) {
       memoryList.innerHTML =
