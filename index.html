@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>SomarDrive V20 GPS 🧠🚚</title>
+  <title>SomarDrive V21 🚚🧠</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#0d1b3d">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -20,14 +20,19 @@
       --green: #22c55e;
       --red: #ef4444;
       --yellow: #eab308;
-      --blue: #3b82f6;
+      --blue: #38bdf8;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       margin: 0;
       background: var(--bg-dark);
-      font-family: 'Montserrat', sans-serif;
       color: var(--text);
+      font-family: 'Montserrat', sans-serif;
       padding-bottom: 140px;
     }
 
@@ -37,195 +42,225 @@
       padding: 15px;
     }
 
-    /* HEADER */
+    /* HEADER APP */
     .app-header {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-top: 10px;
-      margin-bottom: 10px;
+      margin: 10px 0;
     }
     .app-header-icon {
-      font-size: 33px;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
       background: #1e3a8a;
-      width: 45px;
-      height: 45px;
-      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 28px;
     }
     .app-header-title {
-      font-size: 1.4rem;
       font-weight: 800;
+      font-size: 1.4rem;
     }
 
-    /* DIOS */
+    /* BANNER DIOS */
     .god-banner {
       background: linear-gradient(135deg, #1e3a8a, #172554);
       padding: 15px;
       border-radius: 12px;
-      text-align: center;
       margin-bottom: 20px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.12);
     }
-
     .god-title {
       font-weight: 900;
       color: #fbbf24;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
+      font-size: 1rem;
     }
-
     .god-text {
+      font-size: 0.9rem;
       font-style: italic;
       color: #e2e8f0;
     }
 
-    /* BOTONES PRINCIPALES */
+    /* BOTONES MAIN */
     .btn-main {
       padding: 13px;
       border-radius: 12px;
-      font-weight: 700;
       border: none;
+      font-weight: 700;
+      font-size: 0.95rem;
       cursor: pointer;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       gap: 6px;
-      margin-bottom: 10px;
-      white-space: nowrap;
       text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+      white-space: nowrap;
     }
+    .btn-main:active { transform: scale(0.97); }
 
-    .btn-blue { background: linear-gradient(to bottom, #3b82f6, #1d4ed8); color:white; }
-    .btn-gray { background: #334155; color:#e5e7eb; }
-    .btn-red { background: #dc2626; color:white; }
-    .btn-green { background: #16a34a; color:white; }
+    .btn-blue  { background: linear-gradient(to bottom, #3b82f6, #1d4ed8); color:#fff; }
+    .btn-gray  { background: #334155; color:#e5e7eb; }
+    .btn-red   { background: #dc2626; color:#fff; }
+    .btn-green { background: #16a34a; color:#fff; }
 
     /* PREVIEW FOTO */
     #previewContainer {
-      display:none;
-      margin-top:15px;
-      border:2px solid #334155;
-      border-radius:10px;
-      overflow:hidden;
+      display: none;
+      margin-top: 10px;
+      border-radius: 10px;
+      border: 2px solid #334155;
+      overflow: hidden;
     }
-
-    #preview { width:100%; display:block; }
+    #preview { width: 100%; display: block; }
 
     #clearPhotoBtn {
-      margin-top:10px;
-      background:#ef4444;
-      border-radius:10px;
-      padding:10px;
-      font-weight:700;
-      border:none;
-      width:100%;
-      color:white;
+      width: 100%;
+      margin-top: 6px;
+      border: none;
+      border-radius: 10px;
+      background: #ef4444;
+      color: #fff;
+      font-weight: 700;
+      padding: 8px;
+      cursor: pointer;
     }
 
     #ocrStatus {
       display:none;
+      margin: 10px 0;
       text-align:center;
       font-weight:700;
-      color:var(--blue);
-      margin:10px 0;
+      color: var(--accent);
     }
 
     /* EDITOR */
     #editorSection {
       display:none;
-      background:var(--card-bg);
-      padding:15px;
-      border-radius:15px;
-      margin-top:20px;
+      margin-top: 15px;
+      padding: 15px;
+      border-radius: 15px;
+      background: var(--card-bg);
     }
-
     #linesContainer {
-      max-height:150px;
+      max-height: 150px;
       overflow-y:auto;
-      background:#0f172a;
+      background:#020617;
       border-radius:8px;
       padding:6px;
-      border:1px solid rgba(255,255,255,0.1);
+      border:1px solid rgba(148,163,184,0.5);
     }
-
     .line-item {
       display:flex;
-      gap:10px;
-      padding:7px;
+      gap:8px;
+      padding:6px;
       border-bottom:1px solid rgba(255,255,255,0.05);
+      font-size:0.9rem;
     }
+    .line-item:last-child { border-bottom:none; }
 
     #finalText {
       width:100%;
-      margin-top:10px;
-      background:#020617;
-      color:white;
-      border:2px solid #334155;
-      border-radius:10px;
+      margin-top:8px;
       padding:10px;
+      border-radius:10px;
+      border:2px solid #334155;
+      background:#020617;
+      color:#fff;
       min-height:70px;
+      font-family:inherit;
+      font-size:0.9rem;
+      resize:vertical;
     }
 
     /* RUTA */
-    #addressList { padding:0; list-style:none; margin-top:15px; }
+    #addressList {
+      list-style:none;
+      padding:0;
+      margin-top:15px;
+    }
 
     .card {
-      background:var(--card-bg);
-      padding:15px;
-      border-radius:12px;
-      border-left:5px solid var(--yellow);
-      margin-bottom:12px;
       position:relative;
-      overflow:hidden;
-      transition: transform .25s, opacity .25s;
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+      border-left: 5px solid var(--yellow);
+      transition: border-color .25s;
     }
+    .card-near { border-left-color: #38bdf8; }
+    .card-arrived { border-left-color: #22c55e; }
 
+    .card-text {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
     .card-dist {
-      color:#38bdf8;
-      font-size:0.8rem;
-      margin-bottom:6px;
+      font-size: 0.8rem;
+      color: var(--blue);
+      margin-bottom: 6px;
     }
 
-    /* SWIPE COLORS */
-    .swipe-bg-left, .swipe-bg-right {
-      position:absolute; top:0; left:0; width:100%; height:100%;
-      display:flex; align-items:center; font-size:1.4rem;
-      opacity:0; transition:opacity .2s;
+    .card-actions {
+      display:flex;
+      gap:8px;
+      margin-top:4px;
     }
-    .swipe-bg-left { justify-content:flex-start; padding-left:20px; color:white; background:#dc2626; }
-    .swipe-bg-right { justify-content:flex-end; padding-right:20px; color:white; background:#16a34a; }
+    .btn-icon {
+      width:54px;
+      height:40px;
+      border-radius:12px;
+      border:none;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.4rem;
+      cursor:pointer;
+      box-shadow:0 2px 4px rgba(0,0,0,0.35);
+    }
+    .btn-icon-map   { background:linear-gradient(to bottom,#38bdf8,#1d4ed8); color:#fff; }
+    .btn-icon-trash { background:linear-gradient(to bottom,#f97316,#dc2626); color:#fff; }
 
+    /* MEMORIA HEADER */
     .memory-btn {
-      background:var(--yellow);
-      padding:8px 14px;
+      background: var(--yellow);
+      color:#111827;
       border-radius:999px;
       border:none;
-      font-weight:900;
+      padding:6px 12px;
+      font-weight:800;
+      font-size:0.9rem;
+      display:flex;
+      align-items:center;
+      gap:6px;
       cursor:pointer;
-      color:#111;
     }
 
-    /* BOTONES FINALES (2x2) */
-    .backup-buttons-grid {
+    /* BOTONES FINALES */
+    .backup-grid {
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:10px;
       margin-top:15px;
     }
-
     .btn-slim {
-      padding:10px;
-      font-size:0.9rem;
-      border-radius:10px;
       border:none;
+      border-radius:10px;
+      padding:9px;
+      font-size:0.9rem;
       font-weight:700;
-      text-shadow:0 1px 2px rgba(0,0,0,0.3);
+      cursor:pointer;
       white-space:nowrap;
+      text-shadow:0 1px 2px rgba(0,0,0,0.35);
     }
 
     .logo-box {
-      margin-top:18px;
+      margin-top:16px;
       display:flex;
       justify-content:center;
     }
@@ -235,41 +270,43 @@
       border-radius:12px;
     }
 
+    /* FOOTER */
     .footer-static {
       position:fixed;
       bottom:0;
+      left:0;
       width:100%;
       background:#020617;
-      padding:8px;
       text-align:center;
+      padding:8px;
       font-weight:800;
       color:#ef4444;
       font-size:0.9rem;
-      box-shadow:0 -2px 8px rgba(0,0,0,0.5);
+      box-shadow:0 -2px 8px rgba(0,0,0,0.6);
     }
   </style>
 </head>
-
 <body>
 
 <div class="container">
 
+  <!-- HEADER -->
   <div class="app-header">
     <div class="app-header-icon">🚚</div>
     <div class="app-header-title">SOMAR DRIVE</div>
   </div>
 
+  <!-- DIOS -->
   <div class="god-banner">
     <div class="god-title">👑 EL PRIMER LUGAR ES DE DIOS</div>
-    <div class="god-text">"Encomienda a Jehová tu camino, y confía en él; y él hará."</div>
+    <div class="god-text">"Encomienda a Jehová tu camino, y confía en él; y él hará." (Salmos 37:5)</div>
   </div>
 
-  <!-- FOTO -->
+  <!-- CAPTURA -->
   <h2>📸 1. Capturar dirección</h2>
-
-  <div style="display:flex; gap:10px;">
-    <button class="btn-main btn-blue" onclick="cameraInput.click()">📷 Cámara</button>
-    <button class="btn-main btn-gray" onclick="fileInput.click()">📂 Galería</button>
+  <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <button class="btn-main btn-blue" onclick="document.getElementById('cameraInput').click()">📷 Cámara</button>
+    <button class="btn-main btn-gray" onclick="document.getElementById('fileInput').click()">📂 Galería</button>
   </div>
 
   <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden onchange="processImage(this)">
@@ -277,45 +314,52 @@
 
   <div id="previewContainer">
     <img id="preview">
-    <button id="clearPhotoBtn" onclick="clearImage()">❌ Borrar foto</button>
   </div>
+  <button id="clearPhotoBtn" style="display:none;" onclick="clearImage()">❌ Borrar foto</button>
 
   <div id="ocrStatus">⏳ Leyendo texto (IT)...</div>
 
   <!-- EDITOR -->
   <div id="editorSection">
-    <h3>📝 2. Selecciona líneas</h3>
+    <h3>📝 2. Selecciona y arma la dirección</h3>
     <div id="linesContainer"></div>
-    <textarea id="finalText"></textarea>
-    <button class="btn-main btn-green" onclick="saveAddress()">💾 Guardar en Ruta</button>
+    <textarea id="finalText" placeholder="Aquí aparecerá la dirección combinada..."></textarea>
+    <button class="btn-main btn-green" style="margin-top:8px;" onclick="saveAddress()">💾 Guardar en Ruta</button>
   </div>
 
   <!-- RUTA + MEMORIA -->
   <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
-    <h2>📍 Ruta <span id="countPending">0</span></h2>
+    <h2 style="margin:0;">📍 Ruta <span id="routeCount">0</span></h2>
     <button class="memory-btn" onclick="openMemory()">🧠 Memoria <span id="memCount">0</span></button>
   </div>
 
-  <div style="display:flex; gap:10px;">
-    <button class="btn-main btn-gray" onclick="sortWithGPS()">🔄 Ordenar por GPS</button>
-    <button class="btn-main btn-gray" onclick="saveAllToMemory()">🛡️ Guardar ruta en memoria</button>
+  <!-- CONTROLES GPS -->
+  <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;">
+    <button id="gpsBtn" class="btn-main btn-gray" onclick="sortWithGPS()">🔄 Ordenar por GPS</button>
+    <button id="liveBtn" class="btn-main btn-gray" onclick="toggleLiveTracking()">🛰 Rastreo vivo: OFF</button>
   </div>
+
+  <button id="saveRouteBtn" class="btn-main btn-gray" style="margin-top:8px;" onclick="saveAllToMemory()">🛡️ Guardar ruta en memoria</button>
+
+  <button id="autoSortBtn" class="btn-main btn-gray" style="margin-top:6px; font-size:0.8rem; padding:8px 10px;" onclick="toggleAutoSort()">⚙️ Auto-organizar: OFF</button>
 
   <ul id="addressList"></ul>
 
-  <h2 style="margin-top:25px;">🛡️ Copias y limpieza</h2>
-
-  <div class="backup-buttons-grid">
-    <button class="btn-slim btn-green" onclick="exportData()">⬇️ Descargar</button>
-    <button class="btn-slim btn-gray" onclick="importInput.click()">⬆️ Cargar</button>
-    <button class="btn-slim btn-red" onclick="clearRoute()">🗑 Ruta</button>
-    <button class="btn-slim btn-red" onclick="clearMemory()">💣 Memoria</button>
+  <!-- COPIAS Y LIMPIEZA -->
+  <h2 style="margin-top:22px;">🛡️ Copias y limpieza</h2>
+  <div class="backup-grid">
+    <button class="btn-slim btn-green" onclick="exportData()">⬇️ Descargar ruta</button>
+    <button class="btn-slim btn-gray" onclick="document.getElementById('importInput').click()">⬆️ Cargar ruta</button>
+    <button class="btn-slim btn-red" onclick="clearRoute()">🗑 Borrar SOLO ruta</button>
+    <button class="btn-slim btn-red" onclick="clearMemory()">💣 Borrar SOLO memoria</button>
   </div>
 
   <input type="file" id="importInput" accept=".json" hidden onchange="importData(this)">
 
+  <!-- LOGO -->
   <div class="logo-box">
-    <img src="somardrive_logo.png">
+    <!-- Cambia el src si tu archivo se llama distinto -->
+    <img src="somardrive_logo.png" alt="SomarDrive Logo">
   </div>
 
 </div>
@@ -323,351 +367,528 @@
 <div class="footer-static">⚠️ CONDUCE CON CUIDADO · EN CASA TE ESPERAN</div>
 
 <script>
-/* ===========================
-   CONFIGURACIÓN GENERAL
-=========================== */
+  // ==============================
+  // CONFIGURACIÓN GENERAL
+  // ==============================
 
-const DB_KEY   = "SomarDrive_Route_V20";
-const HIST_KEY = "SomarDrive_Memory_V20";
+  const DB_KEY   = "SomarDrive_Route_V21";
+  const HIST_KEY = "SomarDrive_Memory_V21";
 
-// PON AQUÍ TU API KEY REAL
-const ORS_API_KEY = "PON_AQUI_TU_API_KEY_DE_ORS";
+  // PON AQUÍ TU CLAVE REAL DE OPENROUTESERVICE
+  const ORS_API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImI5NjlmYzJiMDY0YjQzMWQ5NDBmMGE0NjYzOWJiMWI2IiwiaCI6Im11cm11cjY0In0=";
 
-let addresses = [];
-let historyDB = [];
+  const LIVE_INTERVAL_MS = 10000; // 10 segundos (referencia)
 
-window.addEventListener("load", () => {
-  addresses = JSON.parse(localStorage.getItem(DB_KEY)) || [];
-  historyDB = JSON.parse(localStorage.getItem(HIST_KEY)) || [];
+  let addresses = []; // { text, lat, lon, dist, nearAlerted, arrivedAlerted }
+  let historyDB = []; // { text, lat, lon }
 
-  renderList();
-  updateMemoryCount();
-});
+  let liveWatchId = null;
+  let liveTracking = false;
+  let autoSortEnabled = false;
 
-/* ===========================
-   FUNCIONES BÁSICAS
-=========================== */
+  // ==============================
+  // INICIO
+  // ==============================
 
-function saveData() {
-  localStorage.setItem(DB_KEY, JSON.stringify(addresses));
-  renderList();
-}
+  window.addEventListener("load", () => {
+    try {
+      const r = localStorage.getItem(DB_KEY);
+      if (r) addresses = JSON.parse(r);
+    } catch (e) {
+      addresses = [];
+    }
 
-function saveMem() {
-  localStorage.setItem(HIST_KEY, JSON.stringify(historyDB));
-  updateMemoryCount();
-}
+    try {
+      const m = localStorage.getItem(HIST_KEY);
+      if (m) historyDB = JSON.parse(m);
+    } catch (e) {
+      historyDB = [];
+    }
 
-function updateMemoryCount() {
-  document.getElementById("memCount").textContent = historyDB.length;
-}
-
-/* ===========================
-   FOTO / OCR
-=========================== */
-
-function processImage(input){
-  if(!input.files[0]) return;
-  preview.src = URL.createObjectURL(input.files[0]);
-  previewContainer.style.display = "block";
-  ocrStatus.style.display = "block";
-  editorSection.style.display = "none";
-
-  Tesseract.recognize(input.files[0], 'ita')
-  .then(({data:{text}})=>{
-    ocrStatus.style.display="none";
-    showEditor(text);
-  })
-}
-
-function clearImage(){
-  previewContainer.style.display="none";
-  cameraInput.value="";
-  fileInput.value="";
-}
-
-/* ===========================
-   EDITOR
-=========================== */
-
-function showEditor(text){
-  editorSection.style.display="block";
-  let lines = text.split("\n").map(a=>a.trim()).filter(a=>a.length>2);
-
-  linesContainer.innerHTML="";
-  finalText.value="";
-
-  lines.forEach(l=>{
-    let div=document.createElement("div");
-    div.className="line-item";
-    div.innerHTML=`<input type="checkbox" value="${l}" onchange="updateFinal()"><span>${l}</span>`;
-    linesContainer.appendChild(div);
+    renderList();
+    updateMemoryCount();
+    updateLiveBtn();
+    updateAutoSortBtn();
   });
-}
 
-function updateFinal(){
-  let checks=[...linesContainer.querySelectorAll("input[type='checkbox']:checked")];
-  finalText.value = checks.map(c=>c.value).join(", ");
-}
-
-/* ===========================
-   RUTA + GUARDAR DIRECCIÓN
-=========================== */
-
-function saveAddress(){
-  let text = finalText.value.trim();
-  if(!text){ alert("Texto vacío"); return; }
-
-  // NO duplicados en memoria
-  if(historyDB.some(h=>h.text.toLowerCase()==text.toLowerCase())){
-    alert("❌ Esta dirección ya existe en la memoria.");
-    return;
+  function saveData() {
+    localStorage.setItem(DB_KEY, JSON.stringify(addresses));
+    renderList();
   }
 
-  addresses.unshift({text, lat:null, lon:null, dist:null});
-  saveData();
+  function saveMem() {
+    localStorage.setItem(HIST_KEY, JSON.stringify(historyDB));
+    updateMemoryCount();
+  }
 
-  historyDB.push({text});
-  saveMem();
+  function updateMemoryCount() {
+    document.getElementById("memCount").textContent = historyDB.length;
+  }
 
-  alert("💾 Guardado en ruta y memoria.");
+  // ==============================
+  // FOTO / OCR
+  // ==============================
 
-  editorSection.style.display="none";
-  previewContainer.style.display="none";
-}
+  function processImage(input) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
 
-/* ===========================
-   RENDER RUTA
-=========================== */
+    const preview = document.getElementById("preview");
+    const previewContainer = document.getElementById("previewContainer");
+    const clearBtn = document.getElementById("clearPhotoBtn");
 
-function renderList(){
-  let ul=document.getElementById("addressList");
-  ul.innerHTML="";
+    preview.src = URL.createObjectURL(file);
+    previewContainer.style.display = "block";
+    clearBtn.style.display = "block";
 
-  document.getElementById("countPending").textContent = addresses.length;
+    document.getElementById("ocrStatus").style.display = "block";
+    document.getElementById("editorSection").style.display = "none";
+    document.getElementById("linesContainer").innerHTML = "";
+    document.getElementById("finalText").value = "";
 
-  addresses.forEach((item,index)=>{
-    let li=document.createElement("li");
-    li.className="card";
-    li.innerHTML=`
-      <div class="swipe-bg-left">🗑</div>
-      <div class="swipe-bg-right">✔</div>
-      <div class="card-text">${item.text}</div>
-      ${item.dist!=null? `<div class="card-dist">🏁 ${item.dist.toFixed(1)} km</div>` : ""}
-      <div class="card-actions">
-        <button class="btn-main btn-blue" onclick="openMap(${index})">🗺 Navegar</button>
-        <button class="btn-main btn-red" onclick="deleteItem(${index})">🗑</button>
-      </div>
-    `;
+    Tesseract.recognize(file, "ita")
+      .then(({ data: { text } }) => {
+        document.getElementById("ocrStatus").style.display = "none";
+        showEditor(text);
+      })
+      .catch(() => {
+        document.getElementById("ocrStatus").style.display = "none";
+        alert("❌ Error al leer la imagen.");
+      });
+  }
 
-    setupSwipe(li,index);
+  function clearImage() {
+    document.getElementById("previewContainer").style.display = "none";
+    document.getElementById("clearPhotoBtn").style.display = "none";
+    document.getElementById("cameraInput").value = "";
+    document.getElementById("fileInput").value = "";
+    document.getElementById("editorSection").style.display = "none";
+  }
 
-    ul.appendChild(li);
-  });
-}
+  // ==============================
+  // EDITOR
+  // ==============================
 
-function openMap(i){
-  let a=addresses[i];
-  if(a.lat && a.lon)
-    window.open(`https://www.google.com/maps/dir/?api=1&destination=${a.lat},${a.lon}`);
-  else
-    window.open(`https://www.google.com/maps/search/?q=${encodeURIComponent(a.text)}`);
-}
+  function showEditor(text) {
+    const lines = text
+      .split("\n")
+      .map(l => l.trim())
+      .filter(l => l.length > 3);
 
-function deleteItem(i){
-  addresses.splice(i,1);
-  saveData();
-}
+    const editor = document.getElementById("editorSection");
+    const container = document.getElementById("linesContainer");
+    const finalText = document.getElementById("finalText");
 
-function markDelivered(i){
-  addresses.splice(i,1);
-  saveData();
-}
+    editor.style.display = "block";
+    container.innerHTML = "";
+    finalText.value = "";
 
-/* ===========================
-   SWIPE PROFESIONAL SOMARDRIVE
-=========================== */
-
-function setupSwipe(card,index){
-  let startX=0, currentX=0, dragging=false;
-
-  const leftBg = card.querySelector(".swipe-bg-left");
-  const rightBg = card.querySelector(".swipe-bg-right");
-
-  card.addEventListener("touchstart",e=>{
-    startX = e.touches[0].clientX;
-    dragging = true;
-  });
-
-  card.addEventListener("touchmove",e=>{
-    if(!dragging) return;
-    currentX = e.touches[0].clientX - startX;
-
-    card.style.transform = `translateX(${currentX}px)`;
-
-    if(currentX > 40){
-      rightBg.style.opacity=1;
-    } else rightBg.style.opacity=0;
-
-    if(currentX < -40){
-      leftBg.style.opacity=1;
-    } else leftBg.style.opacity=0;
-  });
-
-  card.addEventListener("touchend",()=>{
-    dragging=false;
-
-    if(currentX > 100){
-      navigator.vibrate?.(30);
-      animateRemoval(card,()=>markDelivered(index));
+    if (!lines.length) {
+      container.innerHTML = "<div style='color:#94a3b8; padding:6px;'>No se detectó texto útil. Prueba otra foto.</div>";
+      return;
     }
-    else if(currentX < -100){
-      navigator.vibrate?.(30);
-      animateRemoval(card,()=>deleteItem(index));
+
+    lines.forEach(line => {
+      const div = document.createElement("div");
+      div.className = "line-item";
+      div.innerHTML = `
+        <input type="checkbox" value="${line.replace(/"/g, '&quot;')}" onchange="updateFinalText()">
+        <span>${line}</span>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function updateFinalText() {
+    const checks = Array.from(
+      document.querySelectorAll("#linesContainer input[type='checkbox']:checked")
+    );
+    const vals = checks.map(c => c.value);
+    document.getElementById("finalText").value = vals.join(", ");
+  }
+
+  function saveAddress() {
+    const txt = document.getElementById("finalText").value.trim();
+    if (!txt) {
+      alert("⚠️ Escribe o selecciona la dirección.");
+      return;
     }
-    else {
-      card.style.transform="translateX(0)";
-      leftBg.style.opacity=0;
-      rightBg.style.opacity=0;
+
+    // no duplicar en memoria
+    const exists = historyDB.some(h => (h.text || "").toLowerCase() === txt.toLowerCase());
+    if (exists) {
+      alert("❌ Esta dirección ya existe en la memoria.");
+      return;
     }
-    currentX=0;
-  });
-}
 
-function animateRemoval(card,callback){
-  card.style.opacity="0";
-  card.style.transform="scale(0.85)";
-  setTimeout(callback,250);
-}
-
-/* ===========================
-   MEMORIA
-=========================== */
-
-function openMemory(){
-  if(!historyDB.length){ alert("Memoria vacía"); return; }
-
-  let list = historyDB.map((h,i)=>`${i+1}. ${h.text}`).join("\n");
-  let pick = prompt("🧠 MEMORIA:\n\n"+list+"\n\nNúmero:");
-
-  if(!pick) return;
-  let idx = parseInt(pick)-1;
-  if(idx<0 || idx>=historyDB.length) return;
-
-  finalText.value = historyDB[idx].text;
-  editorSection.style.display="block";
-}
-
-function saveAllToMemory(){
-  let added=0;
-
-  addresses.forEach(a=>{
-    if(!historyDB.some(h=>h.text.toLowerCase()==a.text.toLowerCase())){
-      historyDB.push({text:a.text});
-      added++;
-    }
-  });
-
-  saveMem();
-  alert("🧠 Se añadieron "+added+" nuevas direcciones a la memoria.");
-}
-
-/* ===========================
-   BACKUP
-=========================== */
-
-function exportData(){
-  let data = JSON.stringify(addresses);
-  let a=document.createElement("a");
-  a.href="data:application/json,"+encodeURIComponent(data);
-  a.download="somardrive_ruta.json";
-  a.click();
-}
-
-function importData(input){
-  let file=input.files[0];
-  if(!file) return;
-
-  let reader=new FileReader();
-  reader.onload=e=>{
-    addresses = JSON.parse(e.target.result);
+    addresses.unshift({
+      text: txt,
+      lat: null,
+      lon: null,
+      dist: null,
+      nearAlerted: false,
+      arrivedAlerted: false
+    });
     saveData();
-  }
-  reader.readAsText(file);
-}
 
-function clearRoute(){
-  if(confirm("¿Borrar toda la ruta?")){
-    addresses=[];
-    saveData();
-  }
-}
-
-function clearMemory(){
-  if(confirm("¿Borrar memoria completa?")){
-    historyDB=[];
+    historyDB.push({ text: txt, lat: null, lon: null });
     saveMem();
-  }
-}
 
-/* ===========================
-   GPS REAL
-=========================== */
-
-function haversine(lat1,lon1,lat2,lon2){
-  const R=6371;
-  const toRad=d=>(d*Math.PI)/180;
-  let dLat=toRad(lat2-lat1);
-  let dLon=toRad(lon2-lon1);
-  let a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-}
-
-async function sortWithGPS(){
-  if(!addresses.length){ alert("No hay direcciones"); return; }
-  if(!navigator.geolocation){ alert("GPS no disponible"); return; }
-  if(!ORS_API_KEY || ORS_API_KEY==="PON_AQUI_TU_API_KEY_DE_ORS"){
-    alert("Falta clave ORS");
-    return;
+    alert("💾 Guardado en ruta y memoria.");
+    clearImage();
   }
 
-  navigator.geolocation.getCurrentPosition(async pos=>{
-    let myLat=pos.coords.latitude;
-    let myLon=pos.coords.longitude;
+  // ==============================
+  // RENDER RUTA
+  // ==============================
 
-    for(const a of addresses){
-      if(!a.lat || !a.lon){
-        try{
-          let clean = a.text.replace(/cliente|entregar|tel|cell/gi,"").trim();
-          let url = `https://api.openrouteservice.org/geocode/search?api_key=${ORS_API_KEY}&text=${encodeURIComponent(clean)}&size=1`;
-          let res = await fetch(url);
-          let data = await res.json();
+  function renderList() {
+    const ul = document.getElementById("addressList");
+    ul.innerHTML = "";
 
-          if(data.features?.length){
-            let c=data.features[0].geometry.coordinates;
-            a.lon=c[0];
-            a.lat=c[1];
-          }
-          await new Promise(r=>setTimeout(r,2000));
-        }catch(e){}
-      }
+    document.getElementById("routeCount").textContent = addresses.length;
 
-      if(a.lat && a.lon){
-        a.dist = haversine(myLat,myLon,a.lat,a.lon);
-      }
+    if (!addresses.length) {
+      ul.innerHTML = "<div style='text-align:center; padding:20px; color:#64748b;'>Sin direcciones.<br>Empieza capturando una foto.</div>";
+      return;
     }
 
-    addresses.sort((x,y)=>{
-      if(x.dist==null) return 1;
-      if(y.dist==null) return -1;
-      return x.dist - y.dist;
+    addresses.forEach((item, index) => {
+      const li = document.createElement("li");
+      let cls = "card";
+      if (item.arrivedAlerted) cls += " card-arrived";
+      else if (item.nearAlerted) cls += " card-near";
+      li.className = cls;
+
+      const distHtml = item.dist != null
+        ? `<div class="card-dist">🏁 ${item.dist < 1 ? (item.dist * 1000).toFixed(0) + " m" : item.dist.toFixed(1) + " km"}</div>`
+        : "";
+
+      li.innerHTML = `
+        <div class="card-text">${item.text}</div>
+        ${distHtml}
+        <div class="card-actions">
+          <button class="btn-icon btn-icon-map" onclick="openMap(${index})">🗺️</button>
+          <button class="btn-icon btn-icon-trash" onclick="deleteItem(${index})">🗑️</button>
+        </div>
+      `;
+      ul.appendChild(li);
+    });
+  }
+
+  function openMap(index) {
+    const item = addresses[index];
+    if (item.lat != null && item.lon != null) {
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lon}`;
+      window.open(url, "_blank");
+    } else {
+      const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.text)}`;
+      window.open(url, "_blank");
+    }
+  }
+
+  function deleteItem(index) {
+    if (!confirm("¿Borrar esta dirección de la ruta?")) return;
+    addresses.splice(index, 1);
+    saveData();
+  }
+
+  // ==============================
+  // MEMORIA
+  // ==============================
+
+  function openMemory() {
+    if (!historyDB.length) {
+      alert("Memoria vacía.");
+      return;
+    }
+
+    const listado = historyDB.map((h, i) => `${i + 1}. ${h.text}`).join("\n");
+    const resp = prompt("🧠 MEMORIA\n\n" + listado + "\n\nEscribe el número para traerlo a la ruta:");
+
+    if (!resp) return;
+    const idx = parseInt(resp, 10) - 1;
+    if (isNaN(idx) || idx < 0 || idx >= historyDB.length) return;
+
+    const mem = historyDB[idx];
+    addresses.unshift({
+      text: mem.text,
+      lat: mem.lat || null,
+      lon: mem.lon || null,
+      dist: null,
+      nearAlerted: false,
+      arrivedAlerted: false
+    });
+    saveData();
+  }
+
+  function saveAllToMemory() {
+    let added = 0;
+
+    addresses.forEach(item => {
+      const exists = historyDB.some(h => (h.text || "").toLowerCase() === item.text.toLowerCase());
+      if (!exists) {
+        historyDB.push({ text: item.text, lat: item.lat || null, lon: item.lon || null });
+        added++;
+      }
     });
 
+    saveMem();
+    alert("🧠 Se añadieron " + added + " nuevas direcciones a la memoria.");
+  }
+
+  // ==============================
+  // BACKUP
+  // ==============================
+
+  function exportData() {
+    if (!addresses.length) {
+      alert("No hay ruta para exportar.");
+      return;
+    }
+    const dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(JSON.stringify(addresses));
+    const a = document.createElement("a");
+    a.href = dataStr;
+    a.download = "somardrive_ruta.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  function importData(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const imported = JSON.parse(e.target.result);
+        if (Array.isArray(imported)) {
+          addresses = imported;
+          saveData();
+          alert("✅ Ruta cargada.");
+        } else {
+          alert("Formato incorrecto.");
+        }
+      } catch (err) {
+        alert("Error al leer el archivo.");
+      }
+      input.value = "";
+    };
+    reader.readAsText(file);
+  }
+
+  function clearRoute() {
+    if (!addresses.length) {
+      alert("No hay ruta.");
+      return;
+    }
+    if (!confirm("¿Borrar SOLO la ruta? La memoria se mantiene.")) return;
+    addresses = [];
     saveData();
+  }
 
-  }, err=>alert("No se pudo obtener ubicación"));
-}
+  function clearMemory() {
+    if (!historyDB.length) {
+      alert("No hay memoria.");
+      return;
+    }
+    if (!confirm("⚠️ ¿Borrar TODA la memoria? La ruta se mantiene.")) return;
+    historyDB = [];
+    saveMem();
+  }
 
+  // ==============================
+  // GPS / ORDENAR POR DISTANCIA
+  // ==============================
+
+  function haversine(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const toRad = d => d * Math.PI / 180;
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  async function sortWithGPS() {
+    if (!addresses.length) {
+      alert("No hay direcciones para ordenar.");
+      return;
+    }
+    if (!navigator.geolocation) {
+      alert("Tu dispositivo no permite obtener la ubicación.");
+      return;
+    }
+    if (!ORS_API_KEY || ORS_API_KEY === "PON_AQUI_TU_API_KEY_DE_ORS") {
+      alert("Configura tu API KEY de OpenRouteService en el código.");
+      return;
+    }
+
+    alert("🛰 Calculando ruta por GPS...");
+
+    navigator.geolocation.getCurrentPosition(async pos => {
+      const myLat = pos.coords.latitude;
+      const myLon = pos.coords.longitude;
+
+      for (const item of addresses) {
+        if (item.lat == null || item.lon == null) {
+          try {
+            const clean = (item.text || "").replace(/cliente|entregar|tel|cell|piso|scala|citofono/gi, "").trim();
+            const url =
+              "https://api.openrouteservice.org/geocode/search?" +
+              "api_key=" + encodeURIComponent(ORS_API_KEY) +
+              "&text=" + encodeURIComponent(clean) +
+              "&size=1";
+
+            const res = await fetch(url);
+            if (res.ok) {
+              const data = await res.json();
+              if (data.features && data.features.length) {
+                item.lon = data.features[0].geometry.coordinates[0];
+                item.lat = data.features[0].geometry.coordinates[1];
+              }
+            }
+            await new Promise(r => setTimeout(r, 2000));
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        if (item.lat != null && item.lon != null) {
+          item.dist = haversine(myLat, myLon, item.lat, item.lon);
+        } else {
+          item.dist = null;
+        }
+      }
+
+      addresses.sort((a, b) => {
+        if (a.dist == null && b.dist == null) return 0;
+        if (a.dist == null) return 1;
+        if (b.dist == null) return -1;
+        return a.dist - b.dist;
+      });
+
+      saveData();
+      alert("✅ Ruta reordenada por distancia.");
+    }, err => {
+      alert("No se pudo obtener tu ubicación.");
+    });
+  }
+
+  // ==============================
+  // RASTREO VIVO
+  // ==============================
+
+  function updateLiveBtn() {
+    const btn = document.getElementById("liveBtn");
+    if (!btn) return;
+    if (liveTracking) {
+      btn.textContent = "🛰 Rastreo vivo: ON";
+      btn.classList.remove("btn-gray");
+      btn.classList.add("btn-blue");
+    } else {
+      btn.textContent = "🛰 Rastreo vivo: OFF";
+      btn.classList.remove("btn-blue");
+      btn.classList.add("btn-gray");
+    }
+  }
+
+  function toggleLiveTracking() {
+    if (!liveTracking) {
+      if (!navigator.geolocation) {
+        alert("Tu dispositivo no permite obtener la ubicación.");
+        return;
+      }
+
+      liveWatchId = navigator.geolocation.watchPosition(
+        handleLivePosition,
+        () => {
+          alert("Error en rastreo GPS.");
+          stopLiveTracking();
+        },
+        { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
+      );
+
+      liveTracking = true;
+      updateLiveBtn();
+      alert("🛰 Rastreo vivo ACTIVADO.");
+    } else {
+      stopLiveTracking();
+      alert("🛰 Rastreo vivo detenido.");
+    }
+  }
+
+  function stopLiveTracking() {
+    if (liveWatchId != null) {
+      navigator.geolocation.clearWatch(liveWatchId);
+      liveWatchId = null;
+    }
+    liveTracking = false;
+    updateLiveBtn();
+  }
+
+  function handleLivePosition(pos) {
+    const myLat = pos.coords.latitude;
+    const myLon = pos.coords.longitude;
+
+    addresses.forEach(item => {
+      if (item.lat != null && item.lon != null) {
+        const d = haversine(myLat, myLon, item.lat, item.lon);
+        item.dist = d;
+
+        const meters = d * 1000;
+
+        if (meters <= 100 && !item.nearAlerted) {
+          item.nearAlerted = true;
+          if (navigator.vibrate) navigator.vibrate(40);
+        }
+
+        if (meters <= 20 && !item.arrivedAlerted) {
+          item.arrivedAlerted = true;
+          if (navigator.vibrate) navigator.vibrate([60, 40, 60]);
+        }
+      }
+    });
+
+    if (autoSortEnabled) {
+      addresses.sort((a, b) => {
+        if (a.dist == null && b.dist == null) return 0;
+        if (a.dist == null) return 1;
+        if (b.dist == null) return -1;
+        return a.dist - b.dist;
+      });
+    }
+
+    saveData();
+  }
+
+  // ==============================
+  // AUTO-ORGANIZAR
+  // ==============================
+
+  function updateAutoSortBtn() {
+    const btn = document.getElementById("autoSortBtn");
+    if (!btn) return;
+    if (autoSortEnabled) {
+      btn.textContent = "⚙️ Auto-organizar: ON";
+      btn.classList.remove("btn-gray");
+      btn.classList.add("btn-blue");
+    } else {
+      btn.textContent = "⚙️ Auto-organizar: OFF";
+      btn.classList.remove("btn-blue");
+      btn.classList.add("btn-gray");
+    }
+  }
+
+  function toggleAutoSort() {
+    autoSortEnabled = !autoSortEnabled;
+    updateAutoSortBtn();
+  }
 </script>
 </body>
 </html>
