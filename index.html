@@ -54,28 +54,28 @@
       margin-bottom: 20px;
     }
 
-   .app-logo {
-  font-size: 3rem;   /* tamaño del emoji */
-  line-height: 1;
-  display: flex;
-  align-items: center;
-}
+    .app-logo {
+      font-size: 3rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+    }
 
-.app-title-block {
-  display: flex;
-  flex-direction: column;
-}
+    .app-title-block {
+      display: flex;
+      flex-direction: column;
+    }
 
-.app-title {
-  font-size: 2rem;
-  font-weight: 800;
-}
+    .app-title {
+      font-size: 2rem;
+      font-weight: 800;
+    }
 
-.app-subtitle {
-  font-size: 1rem;
-  color: #94a3b8;
-  margin-top: -4px;
-}
+    .app-subtitle {
+      font-size: 1rem;
+      color: #94a3b8;
+      margin-top: -4px;
+    }
 
     /* BANNER DIOS */
     .god-banner {
@@ -295,6 +295,32 @@
       box-shadow: none;
     }
 
+    .history-row {
+      margin-top: 4px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .history-btn {
+      border-radius: 999px;
+      border: none;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: #111827;
+      color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .history-btn:active {
+      transform: scale(0.96);
+    }
+
     /* LISTA RUTA */
     #addressList {
       list-style: none;
@@ -473,7 +499,7 @@
       to {bottom: 20px; opacity: 0;}
     }
 
-    /* MODAL MEMORIA */
+    /* MODAL BASE */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -605,6 +631,7 @@
       display: flex;
       gap: 10px;
       margin-top: 2px;
+      flex-wrap: wrap;
     }
 
     .btn-footer {
@@ -631,16 +658,18 @@
       color: #f9fafb;
     }
 
+    .status-chip {
+      font-size: 0.8rem;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+
     /* BOTONES NAVEGACIÓN SUPERIOR */
     .nav-block {
       margin-top: 10px;
       display: grid;
       grid-template-columns: 1fr;
       gap: 8px;
-    }
-
-    .status-chip {
-      font-size: 0.9rem;
     }
 
     /* small screens adjustments */
@@ -702,6 +731,16 @@
       </div>
       <button class="mem-btn" onclick="openMemoryModal()">
         🧠 <span id="memBadge">Memoria: 0</span>
+      </button>
+    </div>
+
+    <!-- ENTREGADOS / BORRADOS -->
+    <div class="history-row">
+      <button class="history-btn" onclick="openDeliveredModal()">
+        ✅ Entregados: <span id="deliveredCount">0</span>
+      </button>
+      <button class="history-btn" onclick="openDeletedModal()">
+        🗑️ Borrados: <span id="deletedCount">0</span>
       </button>
     </div>
 
@@ -775,13 +814,48 @@
     </div>
   </div>
 
+  <!-- MODAL HISTORIAL ENTREGADOS/BORRADOS -->
+  <div id="historyModal" class="modal-backdrop">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <div class="modal-title" id="historyTitle">Historial</div>
+        <button class="btn-close-modal" onclick="closeHistoryModal()">✕</button>
+      </div>
+      <div id="historyList" class="memory-list"></div>
+    </div>
+  </div>
+
+  <!-- MODAL DUPLICADOS (SomarDrive POPUP B) -->
+  <div id="duplicateModal" class="modal-backdrop">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <div class="modal-title">🧠 Posibles duplicados</div>
+        <button class="btn-close-modal" onclick="skipDuplicateGroup()">✕</button>
+      </div>
+      <div style="font-size:0.85rem;color:#e5e7eb;margin-bottom:8px;">
+        Estas dos direcciones parecen la misma. ¿Qué quieres hacer?
+      </div>
+      <div class="memory-item">
+        <div class="memory-text" id="dupOriginalText"></div>
+        <div class="status-chip" style="color:#facc15;">Conservar</div>
+      </div>
+      <div class="memory-item">
+        <div class="memory-text" id="dupDuplicateText"></div>
+        <div class="status-chip" style="color:#fca5a5;">Posible duplicado</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-footer btn-footer-gray" onclick="viewDuplicateBoth()">👁️ Ver ambas</button>
+        <button class="btn-footer btn-footer-red" onclick="skipDuplicateGroup()">❌ Cancelar</button>
+        <button class="btn-footer btn-footer-gray" onclick="confirmDuplicateRemoval()">🧹 Borrar duplicado</button>
+      </div>
+    </div>
+  </div>
+
 <script>
   // ==========================
   // CONFIG GENERAL
   // ==========================
 
-  // Cambia esto por tu API real de OpenRouteService
-  // Ejemplo: const ORS_API_KEY = "5af3d3c9xxxxxxxxxxxxxxxxxxxxxxx";
   const ORS_API_KEY = "PON_AQUI_TU_API_KEY_DE_ORS";
 
   const DB_KEY   = "SomarDrive_Route_V20";
@@ -796,12 +870,29 @@
   let autoOrganize = false;
   let liveInterval = null;
 
+  // Duplicados (popup B)
+  let duplicateFlow = null;
+
   function showToast(msg) {
     toastEl.textContent = msg;
     toastEl.className = "show";
     setTimeout(() => {
       toastEl.className = toastEl.className.replace("show", "");
     }, 2900);
+  }
+
+  function updateRouteCounters() {
+    const pending = addresses.filter(a => (a.status || "pending") === "pending").length;
+    const delivered = addresses.filter(a => a.status === "done").length;
+    const deleted   = addresses.filter(a => a.status === "deleted").length;
+
+    const routeCountEl = document.getElementById("routeCount");
+    if (routeCountEl) routeCountEl.textContent = pending;
+
+    const delEl = document.getElementById("deliveredCount");
+    const borEl = document.getElementById("deletedCount");
+    if (delEl) delEl.textContent = delivered;
+    if (borEl) borEl.textContent = deleted;
   }
 
   function saveRoute() {
@@ -816,10 +907,6 @@
 
   function updateMemBadge() {
     document.getElementById("memBadge").textContent = "Memoria: " + memoryDB.length;
-  }
-
-  function updateRouteCount() {
-    document.getElementById("routeCount").textContent = addresses.length;
   }
 
   window.addEventListener("load", () => {
@@ -962,7 +1049,6 @@
   function addToMemory(text, lat = null, lon = null) {
     const existing = findMemoryByText(text);
     if (existing) {
-      // Actualizamos coords si vienen mejores
       if (lat != null && lon != null) {
         existing.lat = lat;
         existing.lon = lon;
@@ -1132,24 +1218,57 @@ Nueva:
   }
 
   // ==========================
-  // LISTA RUTA
+  // LISTA RUTA + SWIPE
   // ==========================
+
+  function addSwipeHandlers(element, index) {
+    let startX = 0;
+    let startY = 0;
+
+    element.addEventListener("touchstart", e => {
+      if (!e.changedTouches || !e.changedTouches.length) return;
+      const t = e.changedTouches[0];
+      startX = t.clientX;
+      startY = t.clientY;
+    }, { passive: true });
+
+    element.addEventListener("touchend", e => {
+      if (!e.changedTouches || !e.changedTouches.length) return;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - startX;
+      const dy = t.clientY - startY;
+
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
+        if (dx > 0) {
+          // derecha -> entregado
+          markDone(index);
+        } else {
+          // izquierda -> borrado sin confirmar
+          deleteItem(index, false);
+        }
+      }
+    });
+  }
 
   function renderList() {
     const list = document.getElementById("addressList");
     list.innerHTML = "";
 
-    updateRouteCount();
+    const pendingItems = addresses.filter(a => (a.status || "pending") === "pending");
+    updateRouteCounters();
 
-    if (!addresses.length) {
+    if (!pendingItems.length) {
+      if (addresses.length) {
+        showToast("🎉 Wow, felicidades, terminaste tu ruta. Todo lo puedo en Cristo que me fortalece.");
+      }
       list.innerHTML =
-        "<div style='text-align:center;padding:20px;color:#64748b;'>Sin direcciones.<br>Empieza capturando una foto.</div>";
+        "<div style='text-align:center;padding:20px;color:#64748b;'>Sin direcciones pendientes.<br>Empieza capturando una foto.</div>";
       return;
     }
 
-    addresses.forEach((item, index) => {
+    pendingItems.forEach((item, indexInPending) => {
       const li = document.createElement("li");
-      li.className = "card " + (item.status || "pending");
+      li.className = "card pending";
 
       const distTag = item.dist != null
         ? `<span style="color:var(--accent);font-weight:700;">🏁 ${item.dist.toFixed(1)} km</span>`
@@ -1166,18 +1285,43 @@ Nueva:
           ${memTag}
         </div>
         <div class="card-actions">
-          <button class="btn-nav" onclick="openMap(${index})">
+          <button class="btn-nav" onclick="openMapFromPending(${indexInPending})">
             🗺️ Navegar
           </button>
-          <button class="btn-trash" onclick="deleteItem(${index})">🗑️</button>
+          <button class="btn-trash" onclick="deleteItemFromPending(${indexInPending}, true)">🗑️</button>
         </div>
       `;
       list.appendChild(li);
+      addSwipeHandlers(li, indexInPending);
     });
+  }
+
+  // Helpers porque trabajamos con lista de pendientes
+  function getPendingIndexes() {
+    const indexes = [];
+    addresses.forEach((a, i) => {
+      if ((a.status || "pending") === "pending") indexes.push(i);
+    });
+    return indexes;
+  }
+
+  function openMapFromPending(pendingIndex) {
+    const pendingIndexes = getPendingIndexes();
+    const realIndex = pendingIndexes[pendingIndex];
+    if (realIndex == null) return;
+    openMap(realIndex);
+  }
+
+  function deleteItemFromPending(pendingIndex, askConfirm) {
+    const pendingIndexes = getPendingIndexes();
+    const realIndex = pendingIndexes[pendingIndex];
+    if (realIndex == null) return;
+    deleteItem(realIndex, askConfirm);
   }
 
   function openMap(index) {
     const item = addresses[index];
+    if (!item) return;
     if (item.lat != null && item.lon != null) {
       const url = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lon}`;
       window.open(url, "_blank");
@@ -1187,11 +1331,23 @@ Nueva:
     }
   }
 
-  function deleteItem(index) {
-    if (!confirm("¿Borrar esta dirección de la ruta?\nLa memoria se mantiene.")) return;
-    addresses.splice(index, 1);
+  function markDone(index) {
+    const item = addresses[index];
+    if (!item) return;
+    item.status = "done";
     saveRoute();
-    showToast("🗑️ Dirección borrada de la ruta");
+    showToast("✅ Marcado como entregado");
+  }
+
+  function deleteItem(index, askConfirm = true) {
+    const item = addresses[index];
+    if (!item) return;
+    if (askConfirm) {
+      if (!confirm("¿Marcar esta dirección como borrada de la ruta?\nLa memoria se mantiene.")) return;
+    }
+    item.status = "deleted";
+    saveRoute();
+    showToast("🗑️ Dirección marcada como borrada");
   }
 
   // ==========================
@@ -1213,8 +1369,9 @@ Nueva:
   }
 
   async function sortWithGPS(fromLive = false) {
-    if (!addresses.length) {
-      if (!fromLive) showToast("No hay direcciones para ordenar.");
+    const pendingIndexes = getPendingIndexes();
+    if (!pendingIndexes.length) {
+      if (!fromLive) showToast("No hay direcciones pendientes para ordenar.");
       return;
     }
 
@@ -1234,7 +1391,8 @@ Nueva:
       const myLat = pos.coords.latitude;
       const myLon = pos.coords.longitude;
 
-      for (const item of addresses) {
+      for (const idx of pendingIndexes) {
+        const item = addresses[idx];
         if (item.lat == null || item.lon == null) {
           try {
             const clean = (item.text || "")
@@ -1267,7 +1425,14 @@ Nueva:
         }
       }
 
+      // Ordenar solo pendientes al frente según distancia
       addresses.sort((a, b) => {
+        const statusA = a.status || "pending";
+        const statusB = b.status || "pending";
+
+        if (statusA !== "pending" && statusB === "pending") return 1;
+        if (statusA === "pending" && statusB !== "pending") return -1;
+
         if (a.dist == null && b.dist == null) return 0;
         if (a.dist == null) return 1;
         if (b.dist == null) return -1;
@@ -1289,7 +1454,7 @@ Nueva:
 
     if (liveTracking) {
       if (liveInterval) clearInterval(liveInterval);
-      liveInterval = setInterval(() => sortWithGPS(true), 10000); // cada 10s
+      liveInterval = setInterval(() => sortWithGPS(true), 10000);
       showToast("🛰️ Rastreo vivo activado");
     } else {
       if (liveInterval) clearInterval(liveInterval);
@@ -1398,9 +1563,9 @@ Nueva:
   // MODAL MEMORIA
   // ==========================
 
-  const memoryModal = document.getElementById("memoryModal");
-  const memoryList  = document.getElementById("memoryList");
-  const memorySearch = document.getElementById("memorySearch");
+  const memoryModal   = document.getElementById("memoryModal");
+  const memoryList    = document.getElementById("memoryList");
+  const memorySearch  = document.getElementById("memorySearch");
 
   function openMemoryModal() {
     memoryModal.classList.add("show");
@@ -1420,16 +1585,16 @@ Nueva:
     }
 
     const q = normalizeText(memorySearch.value || "");
-    const filtered = q
-  ? memoryDB.filter(m => normalizeText(m.text).includes(q))
-  : memoryDB.slice();
+    let filtered = q
+      ? memoryDB.filter(m => normalizeText(m.text).includes(q))
+      : memoryDB.slice();
 
-// 🔠 Ordenar de A a Z
-filtered.sort((a, b) => {
-  const textA = normalizeText(a.text);
-  const textB = normalizeText(b.text);
-  return textA.localeCompare(textB);
-});
+    // Ordenar A → Z
+    filtered.sort((a, b) => {
+      const textA = normalizeText(a.text);
+      const textB = normalizeText(b.text);
+      return textA.localeCompare(textB);
+    });
 
     if (!filtered.length) {
       memoryList.innerHTML =
@@ -1487,26 +1652,107 @@ filtered.sort((a, b) => {
     showToast("🗑️ Dirección borrada de memoria");
   }
 
+  // ==========================
+  // LIMPIAR DUPLICADOS (POPUP B)
+  // ==========================
+
+  const duplicateModal     = document.getElementById("duplicateModal");
+  const dupOriginalTextEl  = document.getElementById("dupOriginalText");
+  const dupDuplicateTextEl = document.getElementById("dupDuplicateText");
+
   function cleanDuplicates() {
     if (!memoryDB.length) return;
+    if (duplicateFlow) return; // ya en curso
+
     const map = new Map();
-    const cleaned = [];
     for (const m of memoryDB) {
-      const key = normalizeText(m.text);
-      if (!map.has(key)) {
-        map.set(key, true);
-        cleaned.push(m);
-      }
+      const key = normalizeText(m.text).replace(/[.,]/g, "");
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(m);
     }
-    const removed = memoryDB.length - cleaned.length;
-    memoryDB = cleaned;
-    saveMemory();
-    renderMemoryList();
-    if (removed > 0) {
-      showToast(`🧹 ${removed} duplicados eliminados`);
-    } else {
+
+    const groups = Array.from(map.values()).filter(g => g.length > 1);
+    if (!groups.length) {
       showToast("🧹 No se encontraron duplicados");
+      return;
     }
+
+    duplicateFlow = {
+      groups,
+      index: 0,
+      removed: 0
+    };
+
+    openDuplicateGroup();
+  }
+
+  function openDuplicateGroup() {
+    if (!duplicateFlow) return;
+    const group = duplicateFlow.groups[duplicateFlow.index];
+    if (!group || group.length < 2) {
+      nextDuplicateGroup();
+      return;
+    }
+    const original = group[0];
+    const dup      = group[1];
+
+    dupOriginalTextEl.textContent  = original.text;
+    dupDuplicateTextEl.textContent = dup.text;
+
+    duplicateModal.classList.add("show");
+  }
+
+  function viewDuplicateBoth() {
+    showToast("Revisa las dos direcciones y decide si son duplicadas.");
+  }
+
+  function skipDuplicateGroup() {
+    if (!duplicateFlow) {
+      duplicateModal.classList.remove("show");
+      return;
+    }
+    duplicateModal.classList.remove("show");
+    nextDuplicateGroup();
+  }
+
+  function confirmDuplicateRemoval() {
+    if (!duplicateFlow) return;
+    const group = duplicateFlow.groups[duplicateFlow.index];
+    if (!group || group.length < 2) {
+      skipDuplicateGroup();
+      return;
+    }
+    const keep = group[0];
+    const idsToRemove = group.slice(1).map(m => m.id);
+
+    const before = memoryDB.length;
+    memoryDB = memoryDB.filter(m => !idsToRemove.includes(m.id));
+    const removedNow = before - memoryDB.length;
+    duplicateFlow.removed += removedNow;
+
+    saveMemory();
+    duplicateModal.classList.remove("show");
+    nextDuplicateGroup();
+  }
+
+  function nextDuplicateGroup() {
+    if (!duplicateFlow) {
+      duplicateModal.classList.remove("show");
+      return;
+    }
+    duplicateFlow.index++;
+    if (duplicateFlow.index >= duplicateFlow.groups.length) {
+      const totalRemoved = duplicateFlow.removed;
+      duplicateFlow = null;
+      renderMemoryList();
+      if (totalRemoved > 0) {
+        showToast(`🧹 ${totalRemoved} duplicados eliminados`);
+      } else {
+        showToast("🧹 No se eliminó ningún duplicado");
+      }
+      return;
+    }
+    openDuplicateGroup();
   }
 
   function clearMemoryAll() {
@@ -1519,6 +1765,67 @@ filtered.sort((a, b) => {
     saveMemory();
     renderMemoryList();
     showToast("💣 Memoria borrada por completo");
+  }
+
+  // ==========================
+  // MODAL HISTORIAL
+  // ==========================
+
+  const historyModal = document.getElementById("historyModal");
+  const historyList  = document.getElementById("historyList");
+  const historyTitle = document.getElementById("historyTitle");
+  let historyMode    = "done"; // "done" | "deleted"
+
+  function openDeliveredModal() {
+    historyMode = "done";
+    openHistoryModal();
+  }
+
+  function openDeletedModal() {
+    historyMode = "deleted";
+    openHistoryModal();
+  }
+
+  function openHistoryModal() {
+    historyModal.classList.add("show");
+    renderHistoryList();
+  }
+
+  function closeHistoryModal() {
+    historyModal.classList.remove("show");
+  }
+
+  function renderHistoryList() {
+    historyList.innerHTML = "";
+    const status = historyMode === "done" ? "done" : "deleted";
+    historyTitle.textContent = status === "done" ? "✅ Entregados" : "🗑️ Borrados";
+
+    const items = addresses.filter(a => a.status === status);
+    if (!items.length) {
+      historyList.innerHTML =
+        `<div style="color:#64748b; padding:10px; text-align:center;">No hay direcciones ${status === "done" ? "entregadas" : "borradas"}.</div>`;
+      return;
+    }
+
+    items.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "memory-item";
+      div.innerHTML = `
+        <div class="memory-text">${item.text}</div>
+        <div class="memory-actions">
+          <button class="btn-mini btn-mini-green" onclick="restoreToRoute(${item.id})">🔁 Volver a ruta</button>
+        </div>
+      `;
+      historyList.appendChild(div);
+    });
+  }
+
+  function restoreToRoute(id) {
+    const item = addresses.find(a => a.id === id);
+    if (!item) return;
+    item.status = "pending";
+    saveRoute();
+    showToast("📍 Dirección devuelta a la ruta");
   }
 </script>
 </body>
